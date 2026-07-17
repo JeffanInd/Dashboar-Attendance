@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard Firebase</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="loginPage">
+<h2>Login Dashboard</h2>
+<input id="email" type="email" placeholder="Email">
+<input id="password" 
+type="password" 
+placeholder="Password">
+<button onclick="login()">
+Login
+</button>
+<p id="loginInfo"></p>
+</div>
+<div id="dashboard" style="display:none">
+<header>
+<h2>Dashboard</h2>
+<button onclick="logout()">
+Logout
+</button>
+</header>
+<div class="menu">
+<button onclick="showMenu('utilities')">
+Utilities
+</button>
+<button onclick="showMenu('attendance')">
+Attendance
+</button>
+<button onclick="showMenu('koperasi')">
+Koperasi
+</button>
+</div>
+<div id="content">
+<h3>
+Selamat Datang
+</h3>
+</div>
+</div>
+<script type="module" src="script.js"></script>
+</body>
+</html>
