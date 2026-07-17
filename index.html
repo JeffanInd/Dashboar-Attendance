@@ -1,45 +1,75 @@
+```html
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-    <title>Dashboard Firebase</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard Perusahaan</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
+<!-- LOGIN -->
 <div id="loginPage">
+<div class="login-box">
 <h2>Login Dashboard</h2>
-<input id="email" type="email" placeholder="Email">
-<input id="password" 
-type="password" 
+<input 
+id="email"
+type="email"
+placeholder="Email">
+<input 
+id="password"
+type="password"
 placeholder="Password">
 <button onclick="login()">
 Login
 </button>
 <p id="loginInfo"></p>
 </div>
-<div id="dashboard" style="display:none">
-<header>
-<h2>Dashboard</h2>
+</div>
+<!-- DASHBOARD -->
+<div id="dashboard" style="display:none;">
+<div class="sidebar">
+<h2>
+COMPANY
+</h2>
+<button onclick="loadDashboard()">
+Dashboard
+</button>
+<button onclick="showUtilities()">
+Utilities
+</button>
+<button onclick="showAttendance()">
+Attendance
+</button>
+<button onclick="showKoperasi()">
+Koperasi
+</button>
 <button onclick="logout()">
 Logout
 </button>
-</header>
-<div class="menu">
-<button onclick="showMenu('utilities')">
-Utilities
-</button>
-<button onclick="showMenu('attendance')">
-Attendance
-</button>
-<button onclick="showMenu('koperasi')">
-Koperasi
-</button>
 </div>
-<div id="content">
-<h3>
+<div class="main">
+<header>
+<h2>
+PT. NAMA PERUSAHAAN
+</h2>
+<p id="welcome">
 Selamat Datang
-</h3>
+</p>
+</header>
+<div id="content">
+<div class="card">
+<h2>
+Selamat Datang di Dashboard
+</h2>
+<p>
+Halo Admin, semoga aktivitas hari ini berjalan lancar.
+</p>
+</div>
+</div>
 </div>
 </div>
 <script type="module" src="script.js"></script>
 </body>
 </html>
+```
