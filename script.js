@@ -1,4 +1,3 @@
-```javascript
 import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import{getAuth,signInWithEmailAndPassword,signOut,onAuthStateChanged}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import{getFirestore,collection,getDocs,addDoc,doc,deleteDoc,updateDoc,orderBy,query}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
@@ -214,4 +213,3 @@ document.getElementById("content").innerHTML=`
 <p>Menu koperasi akan dikembangkan.</p>
 </div>`;
 };
-```
