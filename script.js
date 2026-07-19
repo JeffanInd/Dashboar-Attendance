@@ -124,9 +124,7 @@ content.innerHTML=`
 <h1>12</h1>
 <span>Total Division</span>
 </div>
-
 </div>
-
 <div class="chart-grid">
 
 <div class="card chart-box">
@@ -201,11 +199,17 @@ content.innerHTML=`
 <option>Lainnya</option>
 </select>
 
+<select id="gender">
+<option>Male</option>
+<option>Female</option>
+</select>
+
 </div>
 <div style="margin-top:20px;display:flex;gap:10px">
 <button onclick="saveEmployee()">💾 Simpan Data</button>
 <button onclick="clearForm()">🧹 Reset</button>
 </div>
+
 </div>
 <div class="card">
 <h2>Daftar Karyawan</h2>
@@ -214,13 +218,14 @@ content.innerHTML=`
 <thead>
 <tr>
 <th>Kode</th>
-<th>Nama</th>
-<th>Jabatan</th>
-<th>Tanggal Lahir</th>
-<th>Alamat</th>
-<th>Pendidikan</th>
-<th>No HP</th>
-<th>Rekening</th>
+<th>Name</th>
+<th>Gender</th>
+<th>Jobs</th>
+<th>Birthday</th>
+<th>Address</th>
+<th>Education</th>
+<th>Contact</th>
+<th>Salary Account</th>
 <th>Bank</th>
 <th>Action</th>
 </tr>
@@ -256,6 +261,7 @@ const data={
 
 kodeKaryawan:document.getElementById("kode").value,
 namaKaryawan:document.getElementById("nama").value,
+jenisKelamin:document.getElementById("gender").value,
 jabatan:document.getElementById("jabatan").value,
 tanggalLahir:document.getElementById("tanggalLahir").value,
 alamat:document.getElementById("alamat").value,
@@ -313,6 +319,7 @@ tbody.innerHTML+=`
 <tr>
 <td>${d.kodeKaryawan||""}</td>
 <td>${d.namaKaryawan||""}</td>
+<td>${d.jenisKelamin||""}</td>
 <td>${d.jabatan||""}</td>
 <td>${d.tanggalLahir||""}</td>
 <td>${d.alamat||""}</td>
@@ -353,6 +360,7 @@ if(item.id===id){
 const d=item.data();
 document.getElementById("kode").value=d.kodeKaryawan||"";
 document.getElementById("nama").value=d.namaKaryawan||"";
+document.getElementById("gender").value=d.jenisKelamin||"";
 document.getElementById("jabatan").value=d.jabatan||"";
 document.getElementById("tanggalLahir").value=d.tanggalLahir||"";
 document.getElementById("alamat").value=d.alamat||"";
@@ -380,11 +388,9 @@ window.deleteEmployee=async(id)=>{
 if(confirm("Hapus data karyawan?")){
 try{
 
-
 await deleteDoc(
 doc(db,"employees",id)
 );
-
 
 loadEmployees();
 generateCode();
@@ -400,11 +406,13 @@ window.clearForm=()=>{
 const ids=[
 "nama",
 "jabatan",
+"gender"
 "tanggalLahir",
 "alamat",
 "pendidikan",
 "hp",
 "rekening"
+"bank"
 ];
 
 
