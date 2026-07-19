@@ -53,7 +53,6 @@ setInterval(updateClock,1000);
 /* ==============================
    LOGIN
 ============================== */
-
 window.login = () => {
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
@@ -371,30 +370,6 @@ document.getElementById("content").innerHTML=`
 </div>`;
 };
 
-window.loadDashboard=async()=>{
-const total=await getEmployeeCount();
-document.getElementById("content").innerHTML=`
-<div class="card">
-<h2>Dashboard Perusahaan</h2>
-<p>Selamat datang di Sistem Informasi Perusahaan.</p>
-<div class="stat-container">
-<div class="stat">
-<h3>${total}</h3>
-<p>Total Karyawan</p>
-</div>
-<div class="stat">
-<h3 id="tanggalDashboard"></h3>
-<p>Tanggal Hari Ini</p>
-</div>
-<div class="stat">
-<h3 id="jamDashboard"></h3>
-<p>Jam Sekarang</p>
-</div>
-</div>
-</div>`;
-updateDashboardTime();
-};
-
 function updateDashboardTime(){
 const now=new Date();
 const tgl=now.toLocaleDateString("id-ID",{
@@ -403,6 +378,7 @@ day:"2-digit",
 month:"long",
 year:"numeric"
 });
+    
 const jam=now.toLocaleTimeString("id-ID");
 const elTanggal=document.getElementById("tanggalDashboard");
 const elJam=document.getElementById("jamDashboard");
@@ -420,7 +396,7 @@ const loginName=document.getElementById("loginName");
 if(loginName)loginName.innerHTML=user.email;
 }
 });
-};
+
 function createDashboardChart(){
 new Chart(
 document.getElementById("genderChart"),
