@@ -268,14 +268,16 @@ const fields=[
 "rekening",
 "bank"
 ];
+
 for(const id of fields){
 const el=document.getElementById(id);
-if(!el||el.value.trim()===""){
+if(!el||String(el.value).trim()===""){
 alert("Silahkan isi semua data karyawan terlebih dahulu!");
 if(el)el.focus();
 return;
 }
 }
+
 const data={
 kodeKaryawan:document.getElementById("kode").value,
 namaKaryawan:document.getElementById("nama").value,
@@ -288,21 +290,19 @@ noHp:document.getElementById("hp").value,
 nomorRekening:document.getElementById("rekening").value,
 bank:document.getElementById("bank").value
 };
+
 if(editId){
-await updateDoc(doc(db,"employees",editId),data);
+await updateDoc(
+doc(db,"employees",editId),
+data
+);
 editId=null;
 }else{
-await addDoc(collection(db,"employees"),data);
+await addDoc(
+collection(db,"employees"),
+data
+);
 }
-alert("Data berhasil disimpan");
-clearForm();
-generateCode();
-loadEmployees();
-}catch(error){
-console.error(error);
-alert(error.message);
-}
-};
 
 alert("Data berhasil disimpan");
 clearForm();
@@ -314,6 +314,7 @@ console.error(error);
 alert(error.message);
 }
 };
+
 /* LOAD DATA */
 async function loadEmployees(){
 const tbody=
@@ -643,8 +644,6 @@ data:[
 
 backgroundColor:"#2563eb"
 }]
-},
-{
 }
 );
 
@@ -679,6 +678,7 @@ backgroundColor:[
 }]
 }
 );
+    
 /* GROWTH */
 makeChart(
 "growthChart",
