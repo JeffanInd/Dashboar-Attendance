@@ -170,47 +170,43 @@ createDashboardChart();
 
 };
 /* DATA KARYAWAN */
-
 window.showUtilities=()=>{
 const content=document.getElementById("content");
 if(!content)return;
-
 content.innerHTML=`
 <div class="card">
 <h2>Data Karyawan</h2>
 <div class="form-grid">
-
 <input id="kode" placeholder="ID Attendance" readonly>
 <input id="nama" placeholder="Employee Name">
-<input id="gender" placeholder=" Gender">
+<select id="gender">
+<option value="Male">Male</option>
+<option value="Female">Female</option>
+</select>
 <input id="jabatan" placeholder="Jobs">
 <input id="tanggalLahir" type="date">
 <textarea id="alamat" placeholder="Address"></textarea>
 <input id="pendidikan" placeholder="Education">
 <input id="hp" placeholder="Contact">
 <input id="rekening" placeholder="Bank Account">
-
 <select id="bank">
-<option>BCA</option>
-<option>Mandiri</option>
-<option>BNI</option>
-<option>BRI</option>
-<option>CIMB Niaga</option>
-<option>Danamon</option>
-<option>Lainnya</option>
+<option value="BCA">BCA</option>
+<option value="Mandiri">Mandiri</option>
+<option value="BNI">BNI</option>
+<option value="BRI">BRI</option>
+<option value="CIMB Niaga">CIMB Niaga</option>
+<option value="Danamon">Danamon</option>
+<option value="Lainnya">Lainnya</option>
 </select>
-
-<select id="gender">
-<option>Male</option>
-<option>Female</option>
-</select>
-
 </div>
 <div style="margin-top:20px;display:flex;gap:10px">
-<button onclick="saveEmployee()">💾 Simpan Data</button>
-<button onclick="clearForm()">🧹 Reset</button>
+<button onclick="saveEmployee()">
+💾 Simpan Data
+</button>
+<button onclick="clearForm()">
+🧹 Reset
+</button>
 </div>
-
 </div>
 <div class="card">
 <h2>Daftar Karyawan</h2>
@@ -235,31 +231,52 @@ content.innerHTML=`
 </table>
 </div>
 </div>
-`;
 
+`;
 generateCode();
 loadEmployees();
-
 };
-
 /* GENERATE KODE */
 async function generateCode(){
 try{
-const snap=await getDocs(collection(db,"employees"));
+const snap=await getDocs(
+collection(db,"employees")
+);
 const nomor=snap.size+1;
-const kode="KARY"+String(nomor).padStart(3,"0");
+const kode=
+"KARY"+String(nomor).padStart(3,"0");
 const el=document.getElementById("kode");
-if(el)el.value=kode;
+if(el){
+el.value=kode;
+
+}
 }catch(error){
 console.error(error);
 }
 }
-
 /* SAVE DATA */
 window.saveEmployee=async()=>{
 try{
+const fields=[
+"nama",
+"gender",
+"jabatan",
+"tanggalLahir",
+"alamat",
+"pendidikan",
+"hp",
+"rekening",
+"bank"
+];
+for(const id of fields){
+const el=document.getElementById(id);
+if(!el||el.value.trim()===""){
+alert("Silahkan isi semua data karyawan terlebih dahulu!");
+if(el)el.focus();
+return;
+}
+}
 const data={
-
 kodeKaryawan:document.getElementById("kode").value,
 namaKaryawan:document.getElementById("nama").value,
 jenisKelamin:document.getElementById("gender").value,
@@ -271,47 +288,45 @@ noHp:document.getElementById("hp").value,
 nomorRekening:document.getElementById("rekening").value,
 bank:document.getElementById("bank").value
 };
-
-
 if(editId){
-
-await updateDoc(
-doc(db,"employees",editId),
-data
-);
+await updateDoc(doc(db,"employees",editId),data);
 editId=null;
 }else{
-await addDoc(
-collection(db,"employees"),
-data
-);
+await addDoc(collection(db,"employees"),data);
 }
+alert("Data berhasil disimpan");
+clearForm();
+generateCode();
+loadEmployees();
+}catch(error){
+console.error(error);
+alert(error.message);
+}
+};
 
 alert("Data berhasil disimpan");
 clearForm();
 generateCode();
 loadEmployees();
-    
+
 }catch(error){
 console.error(error);
 alert(error.message);
-
 }
 };
-
-
-
 /* LOAD DATA */
 async function loadEmployees(){
-const tbody=document.getElementById("employeeTable");
+const tbody=
+document.getElementById("employeeTable");
+    
 if(!tbody)return;
 tbody.innerHTML="";
+
 try{
 const q=query(
 collection(db,"employees"),
 orderBy("kodeKaryawan")
 );
-
 
 const snap=await getDocs(q);
 snap.forEach(item=>{
@@ -340,14 +355,11 @@ Delete
 </td>
 </tr>
 `;
-
 });
-
 }catch(error){
 console.error(error);
 }
 }
-
 /* EDIT */
 window.editEmployee=async(id)=>{
 try{
@@ -369,16 +381,12 @@ document.getElementById("pendidikan").value=d.pendidikanTerakhir||"";
 document.getElementById("hp").value=d.noHp||"";
 document.getElementById("rekening").value=d.nomorRekening||"";
 document.getElementById("bank").value=d.bank||"";
-
-
 }
 });
-
 window.scrollTo({
 top:0,
 behavior:"smooth"
 });
-
 }catch(error){
 console.error(error);
 }
@@ -388,43 +396,40 @@ console.error(error);
 window.deleteEmployee=async(id)=>{
 if(confirm("Hapus data karyawan?")){
 try{
-
 await deleteDoc(
 doc(db,"employees",id)
 );
 
 loadEmployees();
 generateCode();
+    
 }catch(error){
 console.error(error);
 }
 }
-
 };
-
 /* RESET FORM */
 window.clearForm=()=>{
 const ids=[
 "nama",
+"gender",
 "jabatan",
-"gender"
 "tanggalLahir",
 "alamat",
 "pendidikan",
 "hp",
 "rekening"
-"bank"
 ];
-
-
 ids.forEach(id=>{
 const el=document.getElementById(id);
-if(el)el.value="";
-
+if(el){
+el.value="";
+}
 });
-
 const bank=document.getElementById("bank");
-if(bank)bank.selectedIndex=0;
+if(bank){
+bank.selectedIndex=0;
+}
 editId=null;
 };
 
