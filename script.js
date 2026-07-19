@@ -180,14 +180,15 @@ content.innerHTML=`
 <h2>Data Karyawan</h2>
 <div class="form-grid">
 
-<input id="kode" placeholder="Kode Karyawan" readonly>
-<input id="nama" placeholder="Nama Karyawan">
-<input id="jabatan" placeholder="Jabatan">
+<input id="kode" placeholder="ID Attendance" readonly>
+<input id="nama" placeholder="Employee Name">
+<input id="gender" placeholder=" Gender">
+<input id="jabatan" placeholder="Jobs">
 <input id="tanggalLahir" type="date">
-<textarea id="alamat" placeholder="Alamat"></textarea>
-<input id="pendidikan" placeholder="Pendidikan Terakhir">
-<input id="hp" placeholder="No HP">
-<input id="rekening" placeholder="Nomor Rekening">
+<textarea id="alamat" placeholder="Address"></textarea>
+<input id="pendidikan" placeholder="Education">
+<input id="hp" placeholder="Contact">
+<input id="rekening" placeholder="Bank Account">
 
 <select id="bank">
 <option>BCA</option>
@@ -225,7 +226,7 @@ content.innerHTML=`
 <th>Address</th>
 <th>Education</th>
 <th>Contact</th>
-<th>Salary Account</th>
+<th>Bank Account</th>
 <th>Bank</th>
 <th>Action</th>
 </tr>
