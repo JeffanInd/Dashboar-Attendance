@@ -19,7 +19,6 @@ let editId=null;
 let chartInstances=[];
 
 /* CLOCK */
-/* CLOCK */
 function updateClock() {
     const now = new Date();
 
