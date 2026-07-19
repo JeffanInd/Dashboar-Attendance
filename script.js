@@ -22,23 +22,39 @@ let editId = null;
    JAM REALTIME
 ============================== */
 
-function updateClock() {
-    const now = new Date();
+function updateClock(){
 
-    const tanggal = now.toLocaleDateString("id-ID", {
-        weekday: "long",
-        day: "2-digit",
-        month: "long",
-        year: "numeric"
-    });
+const now=new Date();
 
-    const jam = now.toLocaleTimeString("id-ID");
+const time=now.toLocaleTimeString("en-US",{
+hour12:false,
+hour:"2-digit",
+minute:"2-digit",
+second:"2-digit"
+});
 
-    const clock = document.getElementById("clock");
+const day=now.toLocaleDateString("en-US",{
+weekday:"long"
+});
 
-    if (clock) {
-        clock.innerHTML = `${tanggal}<br>${jam}`;
-    }
+const date=now.toLocaleDateString("en-US",{
+month:"long",
+day:"numeric",
+year:"numeric"
+});
+
+const clock=document.getElementById("clock");
+
+if(clock){
+
+clock.innerHTML=`
+<div class="time">${time}</div>
+<div class="day">Day : ${day}</div>
+<div class="date">${date}</div>
+`;
+
+}
+
 }
 
 setInterval(updateClock, 1000);
@@ -48,23 +64,16 @@ setInterval(updateClock, 1000);
 ============================== */
 
 window.login = () => {
-
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
-
     signInWithEmailAndPassword(auth, email, password)
-
         .then((userCredential) => {
 
             document.getElementById("loginPage").style.display = "none";
             document.getElementById("dashboard").style.display = "flex";
-
             const user = userCredential.user;
-
             document.getElementById("loginName").innerHTML = user.email;
-
             updateClock();
-
             loadDashboard();
 
         })
@@ -72,26 +81,19 @@ window.login = () => {
         .catch((error) => {
 
             document.getElementById("loginInfo").innerHTML = error.message;
-
         });
-
 };
 
 /* ==============================
    AUTH STATE
 ============================== */
-
 onAuthStateChanged(auth, (user) => {
-
     if (user) {
 
         document.getElementById("loginPage").style.display = "none";
         document.getElementById("dashboard").style.display = "flex";
-
         document.getElementById("loginName").innerHTML = user.email;
-
         updateClock();
-
         loadDashboard();
 
     }
@@ -101,40 +103,26 @@ onAuthStateChanged(auth, (user) => {
 /* ==============================
    LOGOUT
 ============================== */
-
 window.logout = () => {
-
     signOut(auth).then(() => {
-
         location.reload();
-
     });
-
 };
 
 /* ==============================
    DASHBOARD
 ============================== */
-
 window.loadDashboard = () => {
-
     document.getElementById("content").innerHTML = `
-
 <div class="card">
-
 <h2>Dashboard Perusahaan</h2>
-
 <p>Selamat datang di Sistem Informasi Perusahaan.</p>
-
 <br>
-
 <div class="stat-container">
-
 <div class="stat">
 <h3>120</h3>
 <p>Total Karyawan</p>
 </div>
-
 <div class="stat">
 <h3>115</h3>
 <p>Hadir Hari Ini</p>
@@ -392,11 +380,8 @@ if(elTanggal)elTanggal.innerHTML=tgl;
 if(elJam)elJam.innerHTML=jam;
 }
 
-setInterval(()=>{
 updateClock();
-updateDashboardTime();
-},1000);
-
+setInterval(updateClock,1000);
 document.addEventListener("DOMContentLoaded",()=>{
 updateClock();
 const user=auth.currentUser;
