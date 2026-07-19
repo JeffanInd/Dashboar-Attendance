@@ -177,18 +177,57 @@ content.innerHTML=`
 <div class="card">
 <h2>Data Karyawan</h2>
 <div class="form-grid">
+
+<div class="form-group">
+<label>ID Attendance</label>
 <input id="kode" placeholder="ID Attendance" readonly>
+</div>
+
+<div class="form-group">
+<label>Employee Name</label>
 <input id="nama" placeholder="Employee Name">
+</div>
+
+<div class="form-group">
+<label>Gender</label>
 <select id="gender">
 <option value="Male">Male</option>
 <option value="Female">Female</option>
 </select>
+</div>
+
+<div class="form-group">
+<label>Jobs</label>
 <input id="jabatan" placeholder="Jobs">
+</div>
+
+<div class="form-group">
+<label>Birthday</label>
 <input id="tanggalLahir" type="date">
+</div>
+
+<div class="form-group">
+<label>Address</label>
 <textarea id="alamat" placeholder="Address"></textarea>
+</div>
+
+<div class="form-group">
+<label>Education</label>
 <input id="pendidikan" placeholder="Education">
+</div>
+
+<div class="form-group">
+<label>Contact</label>
 <input id="hp" placeholder="Contact">
+</div>
+
+<div class="form-group">
+<label>Bank Account</label>
 <input id="rekening" placeholder="Bank Account">
+</div>
+
+<div class="form-group">
+<label>Bank</label>
 <select id="bank">
 <option value="BCA">BCA</option>
 <option value="Mandiri">Mandiri</option>
@@ -199,15 +238,16 @@ content.innerHTML=`
 <option value="Lainnya">Lainnya</option>
 </select>
 </div>
+</div>
+
 <div style="margin-top:20px;display:flex;gap:10px">
 <button onclick="saveEmployee()">
 💾 Simpan Data
 </button>
-<button onclick="clearForm()">
-🧹 Reset
-</button>
+<button onclick="clearForm()">🧹 Reset</button>
 </div>
 </div>
+
 <div class="card">
 <h2>Daftar Karyawan</h2>
 <div class="table-container">
