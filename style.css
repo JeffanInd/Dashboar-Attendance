@@ -3,7 +3,7 @@ body{background:#f1f5f9;color:#334155;overflow:hidden}
 .form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
 .form-group{display:flex;flex-direction:column}
 .form-group label{font-size:13px;font-weight:600;color:#334155;margin-bottom:4px}
-.form-group input,.form-group select,.form-group textarea{width:100%;padding:10px 12px;border:1px solid #d1d5db;border-radius:8px}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:10px 12px;border:1px solid #d1d5db;border-radius:4px}
 .form-group textarea{min-height:70px;resize:vertical}
 .form-grid textarea{grid-column:span 2}
 /* LOGIN */
