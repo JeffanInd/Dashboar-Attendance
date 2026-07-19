@@ -19,23 +19,35 @@ let editId=null;
 let chartInstances=[];
 
 /* CLOCK */
-function updateClock(){
-const now=new Date();
-const time=now.toLocaleTimeString("id-ID",{timeZone:"Asia/Jakarta",hour:"2-digit",minute:"2-digit",second:"2-digit"});
-const day=now.toLocaleDateString("en-US",{timeZone:"Asia/Jakarta",weekday:"long"});
-const date=now.toLocaleDateString("en-US",{timeZone:"Asia/Jakarta",month:"long",day:"numeric",year:"numeric"});
+/* CLOCK */
+function updateClock() {
+    const now = new Date();
 
-const t=document.querySelector(".time");
-const d=document.querySelector(".day");
-const dt=document.querySelector(".date");
+    const time = now.toLocaleTimeString("en-GB", {
+        timeZone: "Asia/Jakarta",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: false
+    });
 
-if(t)t.innerHTML=time;
-if(d)d.innerHTML="Day : "+day;
-if(dt)dt.innerHTML=date;
+    const datetime = now.toLocaleDateString("en-US", {
+        timeZone: "Asia/Jakarta",
+        weekday: "long",
+        month: "long",
+        day: "numeric",
+        year: "numeric"
+    });
+
+    const t = document.querySelector(".time");
+    const dt = document.querySelector(".datetime");
+
+    if (t) t.textContent = time;
+    if (dt) dt.textContent = datetime;
 }
 
-setInterval(updateClock,1000);
 updateClock();
+setInterval(updateClock, 1000);
 
 /* LOGIN */
 window.login=async()=>{
