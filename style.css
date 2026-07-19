@@ -10,52 +10,58 @@ color:#334155;
 overflow:hidden
 }
 #loginPage{
-height:100vh;
-display:flex;
-justify-content:center;
-align-items:center;
-background:linear-gradient(135deg,#2563eb,#1e3a8a)
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:linear-gradient(135deg,#2563eb,#1e3a8a);
+}
+.login-box{
+    width:380px;
+    background:#fff;
+    padding:50px 40px 45px; /* atas kanan-kiri bawah */
+    border-radius:18px;
+    box-shadow:0 20px 50px rgba(0,0,0,.18);
+    text-align:center;
 }
 .company-logo{
     width:100px;
     height:100px;
     object-fit:contain;
     display:block;
-    margin:0 auto 20px;
-}
-.login-box{
-width:380px;
-background:#fff;
-padding:40px;
-border-radius:18px;
-box-shadow:0 20px 50px rgba(0,0,0,.18)
+    margin:0 auto 25px;
 }
 .login-box h2{
-margin-bottom:25px;
-text-align:center;
-color:#1e293b
+    margin-bottom:25px;
+    text-align:center;
+    color:#1e293b;
 }
-input,textarea,select{
-width:100%;
-padding:10px 12px;
-border:1px solid #d1d5db;
-border-radius:8px;
-margin-bottom:0;
+input,
+textarea,
+select{
+    width:100%;
+    padding:10px 12px;
+    border:1px solid #d1d5db;
+    border-radius:8px;
+    margin-bottom:15px;
 }
-input:focus,textarea:focus,select:focus{
-border-color:#2563eb;
-outline:none
+input:focus,
+textarea:focus,
+select:focus{
+    border-color:#2563eb;
+    outline:none;
 }
 button{
-border:none;
-padding:12px 18px;
-border-radius:10px;
-background:#2563eb;
-color:#fff;
-cursor:pointer
+    width:100%;
+    border:none;
+    padding:12px 18px;
+    border-radius:10px;
+    background:#2563eb;
+    color:#fff;
+    cursor:pointer;
 }
 button:hover{
-background:#1d4ed8
+    background:#1d4ed8;
 }
 #dashboard{
 display:flex;
