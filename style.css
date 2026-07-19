@@ -92,50 +92,42 @@ font-size:14px
 
 
 /* FORM KARYAWAN */
-
 .form-grid{
 display:grid;
 grid-template-columns:repeat(2,1fr);
-gap:10px
+gap:6px;
 }
 
 .form-group{
 display:flex;
-flex-direction:column
+flex-direction:column;
 }
 
 .form-group label{
-font-size:13px;
 font-weight:600;
-color:#334155;
-margin-bottom:4px
+margin-bottom:2px;
+color:#333;
 }
 
 .form-group input,
 .form-group select,
 .form-group textarea{
-width:100%;
-padding:10px 12px;
-border:1px solid #d1d5db;
-border-radius:8px
+padding:10px;
+border:1px solid #ccc;
+border-radius:6px;
+font-size:14px;
 }
 
 .form-group textarea{
-min-height:70px;
-resize:vertical
+min-height:80px;
+resize:vertical;
 }
 
-.form-grid textarea{
-grid-column:span 2
+@media(max-width:700px){
+.form-grid{
+grid-template-columns:1fr;
 }
-
-input:focus,
-textarea:focus,
-select:focus{
-border-color:#2563eb;
-outline:none
 }
-
 
 /* DASHBOARD */
 
@@ -246,9 +238,7 @@ color:#334155;
 margin-top:5px
 }
 
-
 /* CONTENT SCROLL */
-
 #content{
 height:calc(100vh - 120px);
 margin-top:120px;
