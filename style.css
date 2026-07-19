@@ -1,23 +1,25 @@
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Arial,sans-serif}
 body{background:#f1f5f9;color:#334155;overflow:hidden}
+
+/* FORM KARYAWAN */
 .form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
 .form-group{display:flex;flex-direction:column}
 .form-group label{font-size:13px;font-weight:600;color:#334155;margin-bottom:4px}
 .form-group input,.form-group select,.form-group textarea{width:100%;padding:10px 12px;border:1px solid #d1d5db;border-radius:4px}
 .form-group textarea{min-height:70px;resize:vertical}
 .form-grid textarea{grid-column:span 2}
+
 /* LOGIN */
 #loginPage{height:100vh;display:flex;justify-content:center;align-items:center;background:linear-gradient(135deg,#2563eb,#1e3a8a)}
 .login-box{width:380px;background:#fff;padding:40px;border-radius:18px;box-shadow:0 20px 50px rgba(0,0,0,.18);text-align:center}
 .company-logo{width:100px;height:100px;object-fit:contain;display:block;margin:0 auto 20px}
 .login-box h2{margin-bottom:20px;color:#1e293b}
-
 .login-box input{width:100%;height:42px;padding:10px 12px;border:1px solid #d1d5db;border-radius:8px;margin-bottom:12px}
 .login-box input:focus{border-color:#2563eb;outline:none}
 
 .password-box{position:relative;width:100%}
 .password-box input{padding-right:45px}
-.eye{position:absolute;right:14px;top:50%;transform:translateY(-50%);cursor:pointer;font-size:16px;color:#64748b}
+.eye{position:absolute;right:14px;top:50%;transform:translateY(-60%);cursor:pointer;font-size:15px;color:#64748b;line-height:1}
 .eye:hover{color:#2563eb}
 
 .login-box button{width:100%;border:none;padding:11px;border-radius:10px;background:#2563eb;color:white;cursor:pointer;margin-top:5px}
@@ -46,12 +48,11 @@ header{position:fixed;left:250px;right:0;top:0;height:120px;background:white;dis
 .clock b{font-size:14px;color:#334155;margin-top:5px}
 
 /* CONTENT */
-#content{height:calc(100vh-120px);margin-top:120px;overflow-y:auto;padding:30px;background:#f1f5f9}
+#content{height:calc(100vh - 120px);margin-top:120px;overflow-y:auto;padding:30px;background:#f1f5f9}
+
 .card{background:white;padding:25px;border-radius:18px;box-shadow:0 8px 25px rgba(0,0,0,.05);margin-bottom:25px}
 
-.form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-.form-grid textarea{grid-column:span 2}
-
+/* FORM GLOBAL */
 input,textarea,select{width:100%;padding:10px 12px;border:1px solid #d1d5db;border-radius:8px}
 
 /* TABLE */
