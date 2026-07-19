@@ -1,109 +1,71 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Perusahaan</title>
-    <link rel="stylesheet" href="style.css">
-    <!-- Font Awesome -->
-    <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard Perusahaan</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 </head>
 <body>
-    <!-- ================= LOGIN ================= -->
-    <div id="loginPage">
-        <div class="login-box">
-            <h2>Login Dashboard</h2>
-            <input
-                id="email"
-                type="email"
-                placeholder="Email">
-            <input
-                id="password"
-                type="password"
-                placeholder="Password">
-            <button onclick="login()">
-                Login
-            </button>
-            <p id="loginInfo"></p>
-        </div>
-    </div>
-    <!-- ================= DASHBOARD ================= -->
-    <div id="dashboard" style="display:none;">
-        <!-- Sidebar -->
-        <div class="sidebar">
-            <h2>COMPANY</h2>
-            <button onclick="loadDashboard()">
-                <i class="fa-solid fa-chart-line"></i>
-                Dashboard
-            </button>
-            <button onclick="showUtilities()">
-                <i class="fa-solid fa-screwdriver-wrench"></i>
-                Utilities
-            </button>
-            <button onclick="showAttendance()">
-                <i class="fa-solid fa-user-check"></i>
-                Attendance
-            </button>
-            <button onclick="showKoperasi()">
-                <i class="fa-solid fa-building-columns"></i>
-                Koperasi
-            </button>
-            <button onclick="logout()">
-                <i class="fa-solid fa-right-from-bracket"></i>
-                Logout
-            </button>
-        </div>
-        <!-- Main -->
-        <div class="main">
-            <!-- Header -->
-            <header>
-                <!-- Kiri -->
-                <div class="company">
-                    <h2>
-                        PT. NAMA PERUSAHAAN
-                    </h2>
-                    <span>
-                        Sistem Informasi Dashboard Perusahaan
-                    </span>
-                </div>
-                <!-- Kanan -->
-                <div class="header-right">
-                    <div class="clock" id="clock">
-                    <div class="time">00:00:00</div>
-                    <div class="day">Day : Saturday</div>
-                    <div class="date">July 19, 2026</div>
-                </div>
-                    <div class="user">
-                        <img
-                            src="https://ui-avatars.com/api/?name=Admin&background=2563eb&color=ffffff&size=128"
-                            alt="User">
-                        <div class="user-info">
-                            <b id="loginName">
-                                Administrator
-                            </b>
-                            <small>
-                                Login Aktif
-                            </small>
-                        </div>
-                    </div>
-                </div>
-            </header>
-            <!-- Content -->
-            <div id="content">
-                <div class="card">
-                    <h2>
-                        Selamat Datang
-                    </h2>
-                    <p>
-                        Selamat datang di Dashboard Perusahaan.
-                        Silakan pilih menu pada sidebar untuk mengelola data.
-                    </p>
-                </div>
-                <!-- Area ini akan diisi oleh JavaScript -->
-            </div>
-        </div>
-    </div>
-    <script type="module" src="script.js"></script>
+<div id="loginPage">
+<div class="login-box">
+<h2>Login Dashboard</h2>
+<input id="email" type="email" placeholder="Email">
+<input id="password" type="password" placeholder="Password">
+<button onclick="login()">Login</button>
+<p id="loginInfo"></p>
+</div>
+</div>
+<div id="dashboard" style="display:none;">
+<div class="sidebar">
+<h2>COMPANY</h2>
+<button onclick="loadDashboard()">
+<i class="fa-solid fa-chart-line"></i> Dashboard
+</button>
+<button onclick="showUtilities()">
+<i class="fa-solid fa-screwdriver-wrench"></i> Utilities
+</button>
+<button onclick="showAttendance()">
+<i class="fa-solid fa-user-check"></i> Attendance
+</button>
+<button onclick="showKoperasi()">
+<i class="fa-solid fa-building-columns"></i> Koperasi
+</button>
+<button onclick="logout()">
+<i class="fa-solid fa-right-from-bracket"></i> Logout
+</button>
+</div>
+<div class="main">
+<header>
+<div class="company">
+<h2>PT. NAMA PERUSAHAAN</h2>
+<span>Sistem Informasi Dashboard Perusahaan</span>
+</div>
+<div class="header-right">
+<div class="clock" id="clock">
+<div class="time">00:00:00</div>
+<div class="day">Day : Saturday</div>
+<div class="date">July 19, 2026</div>
+<div class="user">
+<img src="https://ui-avatars.com/api/?name=Admin&background=2563eb&color=ffffff&size=128" alt="User">
+<div class="user-info">
+<b id="loginName">Administrator</b>
+<small>Login Aktif</small>
+</div>
+</div>
+</div>
+</div>
+</header>
+<div id="content">
+<div class="card">
+<h2>Selamat Datang</h2>
+<p>Selamat datang di Dashboard Perusahaan.</p>
+<p>Silakan pilih menu pada sidebar untuk mengelola data.</p>
+</div>
+</div>
+</div>
+</div>
+<script type="module" src="script.js"></script>
 </body>
 </html>
