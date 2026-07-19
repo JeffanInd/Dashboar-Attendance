@@ -103,32 +103,71 @@ window.logout = () => {
 /* ==============================
    DASHBOARD
 ============================== */
-window.loadDashboard = () => {
-    document.getElementById("content").innerHTML = `
-<div class="card">
-<h2>Dashboard Perusahaan</h2>
-<p>Selamat datang di Sistem Informasi Perusahaan.</p>
-<br>
-<div class="stat-container">
-<div class="stat">
-<h3>120</h3>
-<p>Total Karyawan</p>
+window.loadDashboard=()=>{
+document.getElementById("content").innerHTML=`
+<div class="dashboard-kpi">
+<div class="kpi-container">
+<div class="kpi-card blue">
+<h4>Total Karyawan</h4>
+<h1>250</h1>
+<span>Employee Active</span>
 </div>
-<div class="stat">
-<h3>115</h3>
-<p>Hadir Hari Ini</p>
+<div class="kpi-card green">
+<h4>Kehadiran Hari Ini</h4>
+<h1>96%</h1>
+<span>Present</span>
 </div>
-
-<div class="stat">
-<h3>5</h3>
-<p>Izin / Sakit</p>
+<div class="kpi-card orange">
+<h4>Terlambat</h4>
+<h1>12</h1>
+<span>Late Employee</span>
 </div>
-
+<div class="kpi-card purple">
+<h4>Karyawan Baru</h4>
+<h1>8</h1>
+<span>This Month</span>
 </div>
-
+<div class="kpi-card red">
+<h4>Departemen</h4>
+<h1>12</h1>
+<span>Total Division</span>
 </div>
-
+</div>
+<div class="chart-grid">
+<div class="card chart-box">
+<h3>Gender Employee</h3>
+<canvas id="genderChart"></canvas>
+</div>
+<div class="card chart-box">
+<h3>Attendance Monthly</h3>
+<canvas id="attendanceChart"></canvas>
+</div>
+<div class="card chart-box">
+<h3>Employee Department</h3>
+<canvas id="departmentChart"></canvas>
+</div>
+<div class="card chart-box">
+<h3>Attendance Status</h3>
+<canvas id="statusChart"></canvas>
+</div>
+<div class="card chart-box">
+<h3>Employee Growth</h3>
+<canvas id="growthChart"></canvas>
+</div>
+<div class="card chart-box">
+<h3>Department Performance</h3>
+<canvas id="performanceChart"></canvas>
+</div>
+<div class="card chart-box">
+<h3>Employee Age</h3>
+<canvas id="ageChart"></canvas>
+</div>
+</div>
+</div>
 `;
+createDashboardChart();
+};
+
   window.showUtilities=()=>{
 document.getElementById("content").innerHTML=`
 <div class="card">
@@ -381,5 +420,218 @@ const loginName=document.getElementById("loginName");
 if(loginName)loginName.innerHTML=user.email;
 }
 });
-
 };
+function createDashboardChart(){
+new Chart(
+document.getElementById("genderChart"),
+{
+type:"doughnut",
+data:{
+labels:[
+"Male",
+"Female"
+],
+datasets:[
+{
+data:[
+150,
+100
+],
+backgroundColor:[
+"#2563eb",
+"#ec4899"
+]
+}
+]
+}
+}
+);
+new Chart(
+document.getElementById("attendanceChart"),
+{
+type:"line",
+data:{
+labels:[
+"1",
+"5",
+"10",
+"15",
+"20",
+"25",
+"30"
+],
+datasets:[
+{
+label:"Attendance",
+data:[
+230,
+245,
+240,
+250,
+248,
+242,
+250
+],
+borderColor:"#16a34a",
+backgroundColor:"rgba(22,163,74,.2)",
+fill:true,
+tension:.4
+}
+]
+}
+}
+);
+new Chart(
+document.getElementById("departmentChart"),
+{
+type:"bar",
+data:{
+labels:[
+"IT",
+"HR",
+"Finance",
+"Production",
+"Marketing"
+],
+datasets:[
+{
+label:"Employee",
+data:[
+35,
+20,
+25,
+80,
+15
+],
+backgroundColor:"#2563eb"
+}
+]
+},
+options:{
+indexAxis:"y"
+}
+}
+);
+new Chart(
+document.getElementById("statusChart"),
+{
+type:"pie",
+data:{
+labels:[
+"Hadir",
+"Izin",
+"Sakit",
+"Alpha"
+],
+datasets:[
+{
+data:[
+220,
+10,
+15,
+5
+],
+backgroundColor:[
+"#16a34a",
+"#eab308",
+"#2563eb",
+"#dc2626"
+]
+}
+]
+}
+}
+);
+new Chart(
+document.getElementById("growthChart"),
+{
+type:"line",
+data:{
+labels:[
+"Jan",
+"Feb",
+"Mar",
+"Apr",
+"May",
+"Jun"
+],
+datasets:[
+{
+label:"Employee",
+data:[
+210,
+220,
+230,
+240,
+245,
+250
+],
+borderColor:"#9333ea",
+backgroundColor:"rgba(147,51,234,.25)",
+fill:true,
+tension:.4
+}
+]
+}
+}
+);
+new Chart(
+document.getElementById("performanceChart"),
+{
+type:"radar",
+data:{
+labels:[
+"IT",
+"HR",
+"Finance",
+"Production",
+"Marketing"
+],
+datasets:[
+{
+label:"Performance",
+data:[
+90,
+80,
+75,
+95,
+70
+],
+backgroundColor:"rgba(37,99,235,.2)",
+borderColor:"#2563eb"
+}
+]
+}
+}
+);
+new Chart(
+document.getElementById("ageChart"),
+{
+type:"polarArea",
+data:{
+labels:[
+"18-25",
+"26-35",
+"36-45",
+"46+"
+],
+datasets:[
+{
+data:[
+80,
+100,
+50,
+20
+],
+backgroundColor:[
+"#2563eb",
+"#16a34a",
+"#eab308",
+"#dc2626"
+]
+}
+]
+}
+}
+);
+}
