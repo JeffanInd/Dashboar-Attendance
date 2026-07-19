@@ -1,177 +1,187 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, collection, getDocs, addDoc, doc, deleteDoc, updateDoc, orderBy, query } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import{getAuth,signInWithEmailAndPassword,signOut,onAuthStateChanged}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import{getFirestore,collection,getDocs,addDoc,doc,deleteDoc,updateDoc,orderBy,query}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-const firebaseConfig = {
-    apiKey: "AIzaSyB6IOPUC-6JdFGhDdLCxfupc1dye92ACr0",
-    authDomain: "dashboard-attendance-c6b7d.firebaseapp.com",
-    projectId: "dashboard-attendance-c6b7d",
-    storageBucket: "dashboard-attendance-c6b7d.firebasestorage.app",
-    messagingSenderId: "1017774629688",
-    appId: "1:1017774629688:web:dd662f017b2cf0200f57cd",
-    measurementId: "G-KCJQ5CKYJ3"
+const firebaseConfig={
+apiKey:"AIzaSyB6IOPUC-6JdFGhDdLCxfupc1dye92ACr0",
+authDomain:"dashboard-attendance-c6b7d.firebaseapp.com",
+projectId:"dashboard-attendance-c6b7d",
+storageBucket:"dashboard-attendance-c6b7d.firebasestorage.app",
+messagingSenderId:"1017774629688",
+appId:"1:1017774629688:web:dd662f017b2cf0200f57cd",
+measurementId:"G-KCJQ5CKYJ3"
 };
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-let editId = null;
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+const db=getFirestore(app);
+let editId=null;
+let chartInstances=[];
 
-/* ==============================
-   JAM REALTIME
-============================== */
+/* CLOCK */
 function updateClock(){
 const now=new Date();
+const time=now.toLocaleTimeString("id-ID",{timeZone:"Asia/Jakarta",hour:"2-digit",minute:"2-digit",second:"2-digit"});
+const day=now.toLocaleDateString("en-US",{timeZone:"Asia/Jakarta",weekday:"long"});
+const date=now.toLocaleDateString("en-US",{timeZone:"Asia/Jakarta",month:"long",day:"numeric",year:"numeric"});
 
-const time=now.toLocaleTimeString("id-ID",{
-timeZone:"Asia/Jakarta",
-hour:"2-digit",
-minute:"2-digit",
-second:"2-digit"
-});
+const t=document.querySelector(".time");
+const d=document.querySelector(".day");
+const dt=document.querySelector(".date");
 
-const day=now.toLocaleDateString("en-US",{
-timeZone:"Asia/Jakarta",
-weekday:"long"
-});
-
-const date=now.toLocaleDateString("en-US",{
-timeZone:"Asia/Jakarta",
-month:"long",
-day:"numeric",
-year:"numeric"
-});
-
-document.querySelector(".time").innerHTML=time;
-document.querySelector(".day").innerHTML="Day : "+day;
-document.querySelector(".date").innerHTML=date;
+if(t)t.innerHTML=time;
+if(d)d.innerHTML="Day : "+day;
+if(dt)dt.innerHTML=date;
 }
 
-updateClock();
 setInterval(updateClock,1000);
+updateClock();
 
-/* ==============================
-   LOGIN
-============================== */
-window.login = () => {
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
-    signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
+/* LOGIN */
+window.login=async()=>{
+try{
+const email=document.getElementById("email").value.trim();
+const password=document.getElementById("password").value.trim();
 
-            document.getElementById("loginPage").style.display = "none";
-            document.getElementById("dashboard").style.display = "flex";
-            const user = userCredential.user;
-            document.getElementById("loginName").innerHTML = user.email;
-            updateClock();
-            loadDashboard();
+const result=await signInWithEmailAndPassword(auth,email,password);
 
-        })
+document.getElementById("loginPage").style.display="none";
+document.getElementById("dashboard").style.display="flex";
 
-        .catch((error) => {
+const name=document.getElementById("loginName");
+if(name)name.innerHTML=result.user.email;
 
-            document.getElementById("loginInfo").innerHTML = error.message;
-        });
+loadDashboard();
+
+}catch(error){
+const info=document.getElementById("loginInfo");
+if(info)info.innerHTML=error.message;
+console.error(error);
+}
 };
 
-/* ==============================
-   AUTH STATE
-============================== */
-onAuthStateChanged(auth, (user) => {
-    if (user) {
+/* AUTH */
+onAuthStateChanged(auth,user=>{
+if(user){
 
-        document.getElementById("loginPage").style.display = "none";
-        document.getElementById("dashboard").style.display = "flex";
-        document.getElementById("loginName").innerHTML = user.email;
-        updateClock();
-        loadDashboard();
+const login=document.getElementById("loginPage");
+const dash=document.getElementById("dashboard");
+const name=document.getElementById("loginName");
 
-    }
+if(login)login.style.display="none";
+if(dash)dash.style.display="flex";
+if(name)name.innerHTML=user.email;
 
+loadDashboard();
+
+}
 });
 
-/* ==============================
-   LOGOUT
-============================== */
-window.logout = () => {
-    signOut(auth).then(() => {
-        location.reload();
-    });
+/* LOGOUT */
+window.logout=async()=>{
+await signOut(auth);
+location.reload();
 };
 
-/* ==============================
-   DASHBOARD
-============================== */
+
+/* DASHBOARD */
 window.loadDashboard=()=>{
-document.getElementById("content").innerHTML=`
+
+const content=document.getElementById("content");
+if(!content)return;
+
+content.innerHTML=`
+
 <div class="dashboard-kpi">
 <div class="kpi-container">
+
 <div class="kpi-card blue">
 <h4>Total Karyawan</h4>
 <h1>250</h1>
 <span>Employee Active</span>
 </div>
+
 <div class="kpi-card green">
 <h4>Kehadiran Hari Ini</h4>
 <h1>96%</h1>
 <span>Present</span>
 </div>
+
 <div class="kpi-card orange">
 <h4>Terlambat</h4>
 <h1>12</h1>
 <span>Late Employee</span>
 </div>
+
 <div class="kpi-card purple">
 <h4>Karyawan Baru</h4>
 <h1>8</h1>
 <span>This Month</span>
 </div>
+
 <div class="kpi-card red">
 <h4>Departemen</h4>
 <h1>12</h1>
 <span>Total Division</span>
 </div>
+
 </div>
+
 <div class="chart-grid">
+
 <div class="card chart-box">
 <h3>Gender Employee</h3>
 <canvas id="genderChart"></canvas>
 </div>
+
 <div class="card chart-box">
 <h3>Attendance Monthly</h3>
 <canvas id="attendanceChart"></canvas>
 </div>
+
 <div class="card chart-box">
 <h3>Employee Department</h3>
 <canvas id="departmentChart"></canvas>
 </div>
+
 <div class="card chart-box">
 <h3>Attendance Status</h3>
 <canvas id="statusChart"></canvas>
 </div>
+
 <div class="card chart-box">
 <h3>Employee Growth</h3>
 <canvas id="growthChart"></canvas>
 </div>
+
 <div class="card chart-box">
 <h3>Department Performance</h3>
 <canvas id="performanceChart"></canvas>
 </div>
+
 <div class="card chart-box">
 <h3>Employee Age</h3>
 <canvas id="ageChart"></canvas>
 </div>
+
 </div>
 </div>
 `;
-createDashboardChart();
-};
 
-  window.showUtilities=()=>{
-document.getElementById("content").innerHTML=`
+createDashboardChart();
+
+};
+/* DATA KARYAWAN */
+
+window.showUtilities=()=>{
+const content=document.getElementById("content");
+if(!content)return;
+
+content.innerHTML=`
 <div class="card">
 <h2>Data Karyawan</h2>
 <div class="form-grid">
+
 <input id="kode" placeholder="Kode Karyawan" readonly>
 <input id="nama" placeholder="Nama Karyawan">
 <input id="jabatan" placeholder="Jabatan">
@@ -180,6 +190,7 @@ document.getElementById("content").innerHTML=`
 <input id="pendidikan" placeholder="Pendidikan Terakhir">
 <input id="hp" placeholder="No HP">
 <input id="rekening" placeholder="Nomor Rekening">
+
 <select id="bank">
 <option>BCA</option>
 <option>Mandiri</option>
@@ -189,8 +200,9 @@ document.getElementById("content").innerHTML=`
 <option>Danamon</option>
 <option>Lainnya</option>
 </select>
+
 </div>
-<div style="margin-top:20px;display:flex;gap:10px;">
+<div style="margin-top:20px;display:flex;gap:10px">
 <button onclick="saveEmployee()">💾 Simpan Data</button>
 <button onclick="clearForm()">🧹 Reset</button>
 </div>
@@ -216,21 +228,32 @@ document.getElementById("content").innerHTML=`
 <tbody id="employeeTable"></tbody>
 </table>
 </div>
-</div>`;
+</div>
+`;
+
 generateCode();
 loadEmployees();
+
 };
 
+/* GENERATE KODE */
 async function generateCode(){
+try{
 const snap=await getDocs(collection(db,"employees"));
 const nomor=snap.size+1;
 const kode="KARY"+String(nomor).padStart(3,"0");
 const el=document.getElementById("kode");
 if(el)el.value=kode;
+}catch(error){
+console.error(error);
+}
 }
 
+/* SAVE DATA */
 window.saveEmployee=async()=>{
+try{
 const data={
+
 kodeKaryawan:document.getElementById("kode").value,
 namaKaryawan:document.getElementById("nama").value,
 jabatan:document.getElementById("jabatan").value,
@@ -241,23 +264,48 @@ noHp:document.getElementById("hp").value,
 nomorRekening:document.getElementById("rekening").value,
 bank:document.getElementById("bank").value
 };
+
+
 if(editId){
-await updateDoc(doc(db,"employees",editId),data);
+
+await updateDoc(
+doc(db,"employees",editId),
+data
+);
 editId=null;
 }else{
-await addDoc(collection(db,"employees"),data);
+await addDoc(
+collection(db,"employees"),
+data
+);
 }
+
 alert("Data berhasil disimpan");
 clearForm();
 generateCode();
 loadEmployees();
+    
+}catch(error){
+console.error(error);
+alert(error.message);
+
+}
 };
 
+
+
+/* LOAD DATA */
 async function loadEmployees(){
 const tbody=document.getElementById("employeeTable");
 if(!tbody)return;
 tbody.innerHTML="";
-const q=query(collection(db,"employees"),orderBy("kodeKaryawan"));
+try{
+const q=query(
+collection(db,"employees"),
+orderBy("kodeKaryawan")
+);
+
+
 const snap=await getDocs(q);
 snap.forEach(item=>{
 const d=item.data();
@@ -272,60 +320,114 @@ tbody.innerHTML+=`
 <td>${d.noHp||""}</td>
 <td>${d.nomorRekening||""}</td>
 <td>${d.bank||""}</td>
-<td class="action">
-<button class="edit" onclick="editEmployee('${item.id}')">Edit</button>
-<button class="delete" onclick="deleteEmployee('${item.id}')">Delete</button>
+<td>
+<button class="edit"
+onclick="editEmployee('${item.id}')">
+Edit
+</button>
+<button class="delete"
+onclick="deleteEmployee('${item.id}')">
+Delete
+</button>
 </td>
-</tr>`;
+</tr>
+`;
+
 });
+
+}catch(error){
+console.error(error);
+}
 }
 
+/* EDIT */
 window.editEmployee=async(id)=>{
+try{
 editId=id;
-const snap=await getDocs(collection(db,"employees"));
+const snap=await getDocs(
+collection(db,"employees")
+);
+
 snap.forEach(item=>{
 if(item.id===id){
 const d=item.data();
-document.getElementById("kode").value=d.kodeKaryawan;
-document.getElementById("nama").value=d.namaKaryawan;
-document.getElementById("jabatan").value=d.jabatan;
-document.getElementById("tanggalLahir").value=d.tanggalLahir;
-document.getElementById("alamat").value=d.alamat;
-document.getElementById("pendidikan").value=d.pendidikanTerakhir;
-document.getElementById("hp").value=d.noHp;
-document.getElementById("rekening").value=d.nomorRekening;
-document.getElementById("bank").value=d.bank;
+document.getElementById("kode").value=d.kodeKaryawan||"";
+document.getElementById("nama").value=d.namaKaryawan||"";
+document.getElementById("jabatan").value=d.jabatan||"";
+document.getElementById("tanggalLahir").value=d.tanggalLahir||"";
+document.getElementById("alamat").value=d.alamat||"";
+document.getElementById("pendidikan").value=d.pendidikanTerakhir||"";
+document.getElementById("hp").value=d.noHp||"";
+document.getElementById("rekening").value=d.nomorRekening||"";
+document.getElementById("bank").value=d.bank||"";
+
+
 }
 });
-document.getElementById("content").scrollTo({
+
+window.scrollTo({
 top:0,
 behavior:"smooth"
 });
+
+}catch(error){
+console.error(error);
+}
 };
 
+/* DELETE */
 window.deleteEmployee=async(id)=>{
 if(confirm("Hapus data karyawan?")){
-await deleteDoc(doc(db,"employees",id));
+try{
+
+
+await deleteDoc(
+doc(db,"employees",id)
+);
+
+
 loadEmployees();
 generateCode();
+}catch(error){
+console.error(error);
 }
+}
+
 };
 
+/* RESET FORM */
 window.clearForm=()=>{
-document.getElementById("nama").value="";
-document.getElementById("jabatan").value="";
-document.getElementById("tanggalLahir").value="";
-document.getElementById("alamat").value="";
-document.getElementById("pendidikan").value="";
-document.getElementById("hp").value="";
-document.getElementById("rekening").value="";
-document.getElementById("bank").selectedIndex=0;
+const ids=[
+"nama",
+"jabatan",
+"tanggalLahir",
+"alamat",
+"pendidikan",
+"hp",
+"rekening"
+];
+
+
+ids.forEach(id=>{
+const el=document.getElementById(id);
+if(el)el.value="";
+
+});
+
+const bank=document.getElementById("bank");
+if(bank)bank.selectedIndex=0;
+editId=null;
 };
-  async function getEmployeeCount(){
-const snap=await getDocs(collection(db,"employees"));
+
+/* HITUNG KARYAWAN */
+async function getEmployeeCount(){
+const snap=await getDocs(
+collection(db,"employees")
+);
+
 return snap.size;
 }
-
+/* ATTENDANCE */
 window.showAttendance=()=>{
 document.getElementById("content").innerHTML=`
 <div class="card">
@@ -345,31 +447,42 @@ document.getElementById("content").innerHTML=`
 <p>Sakit</p>
 </div>
 </div>
-</div>`;
-};
+</div>
+`;
 
+};
+/* KOPERASI */
 window.showKoperasi=()=>{
-document.getElementById("content").innerHTML=`
+const content=document.getElementById("content");
+
+if(!content)return;
+content.innerHTML=`
+
 <div class="card">
 <h2>Koperasi</h2>
 <p>Menu koperasi akan dikembangkan.</p>
 <div class="stat-container">
+
 <div class="stat">
 <h3>Rp 0</h3>
 <p>Total Simpanan</p>
 </div>
+
 <div class="stat">
 <h3>Rp 0</h3>
 <p>Total Pinjaman</p>
 </div>
+
 <div class="stat">
 <h3>0</h3>
 <p>Anggota Aktif</p>
 </div>
 </div>
-</div>`;
+</div>
+`;
 };
 
+/* UPDATE DASHBOARD TIME */
 function updateDashboardTime(){
 const now=new Date();
 const tgl=now.toLocaleDateString("id-ID",{
@@ -378,55 +491,88 @@ day:"2-digit",
 month:"long",
 year:"numeric"
 });
-    
+
+
 const jam=now.toLocaleTimeString("id-ID");
-const elTanggal=document.getElementById("tanggalDashboard");
-const elJam=document.getElementById("jamDashboard");
-if(elTanggal)elTanggal.innerHTML=tgl;
-if(elJam)elJam.innerHTML=jam;
+const tanggal=document.getElementById("tanggalDashboard");
+const waktu=document.getElementById("jamDashboard");
+if(tanggal)tanggal.innerHTML=tgl;
+if(waktu)waktu.innerHTML=jam;
+
 }
 
-updateClock();
-setInterval(updateClock,1000);
+setInterval(updateDashboardTime,1000);
 document.addEventListener("DOMContentLoaded",()=>{
 updateClock();
+updateDashboardTime();
+    
 const user=auth.currentUser;
-if(user){
-const loginName=document.getElementById("loginName");
-if(loginName)loginName.innerHTML=user.email;
+const name=document.getElementById("loginName");
+if(user&&name){
+name.innerHTML=user.email;
 }
+
 });
 
+/* CHART */
 function createDashboardChart(){
-new Chart(
-document.getElementById("genderChart"),
+if(typeof Chart==="undefined"){
+console.error("Chart.js belum dimuat");
+return;
+
+}
+/* HAPUS CHART LAMA */
+chartInstances.forEach(chart=>{
+try{
+chart.destroy();
+}catch(e){}
+
+});
+
+chartInstances=[];
+
+function makeChart(id,type,data){
+const canvas=document.getElementById(id);
+if(!canvas)return;
+const chart=new Chart(canvas,{
+type:type,
+data:data
+});
+
+chartInstances.push(chart);
+}
+
+/* GENDER */
+makeChart(
+"genderChart",
+"doughnut",
 {
-type:"doughnut",
-data:{
+
 labels:[
 "Male",
 "Female"
 ],
-datasets:[
-{
+
+datasets:[{
 data:[
 150,
 100
 ],
+
 backgroundColor:[
 "#2563eb",
 "#ec4899"
 ]
-}
-]
-}
+}]
 }
 );
-new Chart(
-document.getElementById("attendanceChart"),
+
+/* ATTENDANCE */
+makeChart(
+"attendanceChart",
+"line",
 {
-type:"line",
-data:{
+
 labels:[
 "1",
 "5",
@@ -436,9 +582,11 @@ labels:[
 "25",
 "30"
 ],
-datasets:[
-{
+
+datasets:[{
+
 label:"Attendance",
+
 data:[
 230,
 245,
@@ -448,20 +596,19 @@ data:[
 242,
 250
 ],
+
 borderColor:"#16a34a",
 backgroundColor:"rgba(22,163,74,.2)",
 fill:true,
 tension:.4
-}
-]
-}
+}]
 }
 );
-new Chart(
-document.getElementById("departmentChart"),
+/* DEPARTMENT */
+makeChart(
+"departmentChart",
+"bar",
 {
-type:"bar",
-data:{
 labels:[
 "IT",
 "HR",
@@ -469,8 +616,8 @@ labels:[
 "Production",
 "Marketing"
 ],
-datasets:[
-{
+
+datasets:[{
 label:"Employee",
 data:[
 35,
@@ -479,50 +626,51 @@ data:[
 80,
 15
 ],
+
 backgroundColor:"#2563eb"
-}
-]
+}]
 },
-options:{
-indexAxis:"y"
-}
+{
 }
 );
-new Chart(
-document.getElementById("statusChart"),
+
+/* STATUS */
+makeChart(
+"statusChart",
+"pie",
 {
-type:"pie",
-data:{
+
 labels:[
 "Hadir",
 "Izin",
 "Sakit",
 "Alpha"
 ],
-datasets:[
-{
+
+datasets:[{
+
 data:[
 220,
 10,
 15,
 5
 ],
+
 backgroundColor:[
 "#16a34a",
 "#eab308",
 "#2563eb",
 "#dc2626"
 ]
-}
-]
-}
+}]
 }
 );
-new Chart(
-document.getElementById("growthChart"),
+/* GROWTH */
+makeChart(
+"growthChart",
+"line",
 {
-type:"line",
-data:{
+
 labels:[
 "Jan",
 "Feb",
@@ -531,8 +679,8 @@ labels:[
 "May",
 "Jun"
 ],
-datasets:[
-{
+
+datasets:[{
 label:"Employee",
 data:[
 210,
@@ -542,20 +690,21 @@ data:[
 245,
 250
 ],
+
 borderColor:"#9333ea",
 backgroundColor:"rgba(147,51,234,.25)",
 fill:true,
 tension:.4
-}
-]
-}
+}]
 }
 );
-new Chart(
-document.getElementById("performanceChart"),
+
+/* PERFORMANCE */
+makeChart(
+"performanceChart",
+"radar",
 {
-type:"radar",
-data:{
+
 labels:[
 "IT",
 "HR",
@@ -563,8 +712,8 @@ labels:[
 "Production",
 "Marketing"
 ],
-datasets:[
-{
+
+datasets:[{
 label:"Performance",
 data:[
 90,
@@ -573,41 +722,46 @@ data:[
 95,
 70
 ],
+
 backgroundColor:"rgba(37,99,235,.2)",
 borderColor:"#2563eb"
-}
-]
-}
+}]
 }
 );
-new Chart(
-document.getElementById("ageChart"),
+
+/* AGE */
+makeChart(
+"ageChart",
+"polarArea",
 {
-type:"polarArea",
-data:{
+
 labels:[
 "18-25",
 "26-35",
 "36-45",
 "46+"
 ],
-datasets:[
-{
+
+datasets:[{
+
 data:[
 80,
 100,
 50,
 20
 ],
+
 backgroundColor:[
 "#2563eb",
 "#16a34a",
 "#eab308",
 "#dc2626"
 ]
-}
-]
-}
+}]
 }
 );
+
 }
+
+/* END */
+console.log("Dashboard Attendance Loaded Successfully");
