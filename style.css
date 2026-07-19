@@ -59,9 +59,30 @@ button{
     background:#2563eb;
     color:#fff;
     cursor:pointer;
+    margin-top:5px;
 }
 button:hover{
     background:#1d4ed8;
+}
+.password-box{
+    position:relative;
+    width:100%;
+}
+.password-box input{
+    width:100%;
+    padding-right:45px;
+}
+.eye{
+    position:absolute;
+    right:12px;
+    top:50%;
+    transform:translateY(-50%);
+    cursor:pointer;
+    font-size:18px;
+    color:#64748b;
+}
+.eye:hover{
+    color:#2563eb;
 }
 #dashboard{
 display:flex;
