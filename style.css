@@ -55,17 +55,14 @@ padding-right:45px
 }
 
 .eye{
-position:absolute;
-right:14px;
-top:50%;
-transform:translateY(-50%);
-cursor:pointer;
-font-size:17px;
-color:#64748b;
-z-index:10;
-line-height:1
+  position:absolute;
+  right:14px;top:50%;
+  transform:translateY(-65%);
+  cursor:pointer;
+  font-size:17px;
+  color:#64748b;
+  z-index:10
 }
-
 .eye:hover{
 color:#2563eb
 }
@@ -89,7 +86,6 @@ background:#1d4ed8
 margin-top:12px;
 font-size:14px
 }
-
 
 /* FORM KARYAWAN */
 .form-grid{
@@ -290,48 +286,14 @@ table tr:hover{
 background:#f8fafc
 }
 
-.edit,.delete{
-width:auto;
-padding:8px 14px;
-border:none;
-border-radius:8px;
-color:white;
-font-size:13px;
-font-weight:600;
-cursor:pointer;
-display:inline-flex;
-align-items:center;
-justify-content:center;
-gap:5px;
-transition:.3s;
-margin:2px;
+.edit{ 
+  background:#16a34a 
+} 
+.delete{ 
+  background:#dc2626 
 }
-
-.edit{
-background:#16a34a;
-box-shadow:0 4px 10px rgba(22,163,74,.25);
-}
-
-.edit:hover{
-background:#15803d;
-transform:translateY(-2px);
-box-shadow:0 6px 15px rgba(22,163,74,.35);
-}
-
-.delete{
-background:#dc2626;
-box-shadow:0 4px 10px rgba(220,38,38,.25);
-}
-
-.delete:hover{
-background:#b91c1c;
-transform:translateY(-2px);
-box-shadow:0 6px 15px rgba(220,38,38,.35);
-}
-
 
 /* STAT */
-
 .stat-container{
 display:grid;
 grid-template-columns:repeat(3,1fr);
@@ -348,9 +310,7 @@ border-radius:18px
 color:#2563eb
 }
 
-
 /* KPI */
-
 .dashboard-kpi{
 width:100%
 }
