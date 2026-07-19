@@ -15,7 +15,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
-
 let editId = null;
 
 /* ==============================
@@ -23,41 +22,13 @@ let editId = null;
 ============================== */
 function updateClock(){
 const now=new Date();
-const time=now.toLocaleTimeString("en-US",{
-hour12:false,
-hour:"2-digit",
-minute:"2-digit",
-second:"2-digit"
-});
-
-const day=now.toLocaleDateString("en-US",{
-weekday:"long"
-});
-
-const date=now.toLocaleDateString("en-US",{
-month:"long",
-day:"numeric",
-year:"numeric"
-});
-
-const timeElement=document.querySelector(".time");
-const dayElement=document.querySelector(".day");
-const dateElement=document.querySelector(".date");
-
-if(timeElement){
-timeElement.innerHTML=time;
+const time=now.toLocaleTimeString("en-US",{hour12:false});
+const day=now.toLocaleDateString("en-US",{weekday:"long"});
+const date=now.toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric"});
+document.querySelector(".time").innerHTML=time;
+document.querySelector(".day").innerHTML="Day : "+day;
+document.querySelector(".date").innerHTML=date;
 }
-
-if(dayElement){
-dayElement.innerHTML="Day : "+day;
-}
-
-if(dateElement){
-dateElement.innerHTML=date;
-}
-
-}
-
 updateClock();
 setInterval(updateClock,1000);
 
