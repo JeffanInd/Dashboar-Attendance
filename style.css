@@ -137,12 +137,6 @@ color:#475569;
 font-size:14px;
 color:#64748b;
 }
-.user-info{
-display:flex;
-flex-direction:column;
-align-items:flex-end;
-margin-top:8px;
-}
 .user-info b{
 font-size:14px;
 color:#1e293b;
