@@ -149,8 +149,8 @@ content.innerHTML=`
 <span>Total Division</span>
 </div>
 </div>
-<div class="chart-grid">
 
+<div class="chart-grid">
 <div class="card chart-box">
 <h3>Gender Employee</h3>
 <canvas id="genderChart"></canvas>
@@ -169,11 +169,6 @@ content.innerHTML=`
 <div class="card chart-box">
 <h3>Attendance Status</h3>
 <canvas id="statusChart"></canvas>
-</div>
-
-<div class="card chart-box">
-<h3>Employee Growth</h3>
-<canvas id="growthChart"></canvas>
 </div>
 
 <div class="card chart-box">
