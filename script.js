@@ -730,40 +730,6 @@ backgroundColor:[
 }
 );
     
-/* GROWTH */
-makeChart(
-"growthChart",
-"line",
-{
-
-labels:[
-"Jan",
-"Feb",
-"Mar",
-"Apr",
-"May",
-"Jun"
-],
-
-datasets:[{
-label:"Employee",
-data:[
-210,
-220,
-230,
-240,
-245,
-250
-],
-
-borderColor:"#9333ea",
-backgroundColor:"rgba(147,51,234,.25)",
-fill:true,
-tension:.4
-}]
-}
-);
-
 /* PERFORMANCE */
 makeChart(
 "performanceChart",
