@@ -68,21 +68,31 @@ button:hover{
     position:relative;
     width:100%;
 }
+.password-box{
+    position:relative;
+    width:100%;
+}
+
 .password-box input{
     width:100%;
-    padding-right:45px;
+    padding:10px 45px 10px 12px;
+    border:1px solid #d1d5db;
+    border-radius:8px;
+    margin-bottom:15px;
 }
 .eye{
     position:absolute;
-    right:12px;
+    right:14px;
     top:50%;
     transform:translateY(-50%);
     cursor:pointer;
-    font-size:18px;
+    font-size:16px;
     color:#64748b;
+    z-index:10;
 }
 .eye:hover{
     color:#2563eb;
+}
 }
 #dashboard{
 display:flex;
