@@ -21,11 +21,8 @@ let editId = null;
 /* ==============================
    JAM REALTIME
 ============================== */
-
 function updateClock(){
-
 const now=new Date();
-
 const time=now.toLocaleTimeString("en-US",{
 hour12:false,
 hour:"2-digit",
@@ -43,21 +40,26 @@ day:"numeric",
 year:"numeric"
 });
 
-const clock=document.getElementById("clock");
+const timeElement=document.querySelector(".time");
+const dayElement=document.querySelector(".day");
+const dateElement=document.querySelector(".date");
 
-if(clock){
+if(timeElement){
+timeElement.innerHTML=time;
+}
 
-clock.innerHTML=`
-<div class="time">${time}</div>
-<div class="day">Day : ${day}</div>
-<div class="date">${date}</div>
-`;
+if(dayElement){
+dayElement.innerHTML="Day : "+day;
+}
 
+if(dateElement){
+dateElement.innerHTML=date;
 }
 
 }
 
-setInterval(updateClock, 1000);
+updateClock();
+setInterval(updateClock,1000);
 
 /* ==============================
    LOGIN
