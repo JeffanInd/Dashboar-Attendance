@@ -16,6 +16,13 @@ justify-content:center;
 align-items:center;
 background:linear-gradient(135deg,#2563eb,#1e3a8a)
 }
+.company-logo{
+    width:100px;
+    height:100px;
+    object-fit:contain;
+    display:block;
+    margin:0 auto 20px;
+}
 .login-box{
 width:380px;
 background:#fff;
