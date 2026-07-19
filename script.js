@@ -411,11 +411,11 @@ tbody.innerHTML+=`
 <td>
 <button class="edit"
 onclick="editEmployee('${item.id}')">
-Edit
+✏️ Edit
 </button>
 <button class="delete"
 onclick="deleteEmployee('${item.id}')">
-Delete
+🗑 Delete
 </button>
 </td>
 </tr>
