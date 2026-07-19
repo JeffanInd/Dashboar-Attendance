@@ -1,182 +1,340 @@
 *{
+    margin:0;
+    padding:0;
     box-sizing:border-box;
     font-family:'Segoe UI',Arial,sans-serif;
 }
+
 body{
-    margin:0;
     background:#f1f5f9;
-    color:#1e293b;
+    color:#334155;
+    overflow:hidden;
 }
-/* LOGIN */
+
+/* ================= LOGIN ================= */
+
 #loginPage{
     height:100vh;
     display:flex;
     justify-content:center;
     align-items:center;
+    background:linear-gradient(135deg,#2563eb,#1e3a8a);
 }
-.login-box{
-    width:360px;
-    background:white;
-    padding:35px;
-    border-radius:15px;
-    box-shadow:0 10px 30px rgba(0,0,0,.1);
 
+.login-box{
+    width:380px;
+    background:#fff;
+    padding:40px;
+    border-radius:18px;
+    box-shadow:0 20px 50px rgba(0,0,0,.18);
 }
+
 .login-box h2{
-    text-align:center;
     margin-bottom:25px;
+    text-align:center;
+    color:#1e293b;
 }
+
 input,
 textarea,
 select{
     width:100%;
-    padding:12px;
+    padding:12px 14px;
+    border:1px solid #d1d5db;
+    border-radius:10px;
     margin-bottom:15px;
-    border:1px solid #cbd5e1;
-    border-radius:8px;
+    transition:.3s;
+}
+
+input:focus,
+textarea:focus,
+select:focus{
+    border-color:#2563eb;
+    box-shadow:0 0 0 4px rgba(37,99,235,.15);
     outline:none;
 }
-textarea{
-    height:90px;
-    resize:none;
-}
+
 button{
     border:none;
-    background:#2563eb;
-    color:white;
     padding:12px 18px;
-    border-radius:8px;
+    border-radius:10px;
+    background:#2563eb;
+    color:#fff;
     cursor:pointer;
     transition:.3s;
-
 }
+
 button:hover{
     background:#1d4ed8;
 }
-/* DASHBOARD */
+
+/* ================= DASHBOARD ================= */
+
 #dashboard{
     display:flex;
-    min-height:100vh;
+    height:100vh;
 }
+
+/* Sidebar */
+
 .sidebar{
-    width:240px;
+    position:fixed;
+    left:0;
+    top:0;
+    bottom:0;
+
+    width:250px;
+
     background:#0f172a;
-    color:white;
-    padding:25px 15px;
+    color:#fff;
+
+    padding:25px 18px;
+
+    overflow-y:auto;
+    box-shadow:5px 0 15px rgba(0,0,0,.08);
 }
+
 .sidebar h2{
     text-align:center;
     margin-bottom:35px;
+    font-size:22px;
+    font-weight:600;
 }
+
 .sidebar button{
     width:100%;
     margin-bottom:12px;
+    padding:14px;
     background:#1e293b;
     text-align:left;
+    border-radius:10px;
 }
+
 .sidebar button:hover{
     background:#2563eb;
+    transform:translateX(4px);
 }
+
+/* Main */
+
 .main{
-    flex:1;
+    margin-left:250px;
+    width:calc(100% - 250px);
+    height:100vh;
+    overflow:hidden;
 }
+
+/* ================= HEADER ================= */
+
 header{
-    background:white;
-    padding:25px 35px;
-    box-shadow:0 3px 10px rgba(0,0,0,.05);
+    position:fixed;
+    left:250px;
+    right:0;
+    top:0;
+
+    height:75px;
+
+    background:#fff;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    padding:0 35px;
+
+    box-shadow:0 2px 15px rgba(0,0,0,.08);
+
+    z-index:100;
 }
-header h2{
-    margin:0;
+
+/* kiri */
+
+.company{
+    display:flex;
+    flex-direction:column;
 }
-#welcome{
+
+.company h2{
+    font-size:22px;
+    color:#1e293b;
+}
+
+.company span{
+    font-size:13px;
     color:#64748b;
 }
-/* CONTENT */
-#content{
-    padding:30px;
+
+/* kanan */
+
+.header-right{
+    display:flex;
+    align-items:center;
+    gap:30px;
 }
+
+.clock{
+    font-weight:600;
+    color:#2563eb;
+}
+
+.user{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.user img{
+    width:42px;
+    height:42px;
+    border-radius:50%;
+}
+
+.user-info{
+    display:flex;
+    flex-direction:column;
+}
+
+.user-info b{
+    color:#1e293b;
+}
+
+.user-info small{
+    color:#64748b;
+}
+
+/* ================= CONTENT ================= */
+
+#content{
+    height:calc(100vh - 75px);
+
+    margin-top:75px;
+
+    overflow-y:auto;
+
+    padding:30px;
+
+    background:#f1f5f9;
+}
+
+/* Card */
+
 .card{
-    background:white;
+    background:#fff;
     padding:25px;
-    border-radius:15px;
-    box-shadow:0 5px 20px rgba(0,0,0,.05);
+    border-radius:18px;
+    box-shadow:0 8px 25px rgba(0,0,0,.05);
     margin-bottom:25px;
 }
-/* FORM KARYAWAN */
+
+/* ================= FORM ================= */
+
 .form-grid{
     display:grid;
     grid-template-columns:repeat(2,1fr);
-    gap:15px;
+    gap:18px;
 }
+
 .form-grid textarea{
     grid-column:span 2;
 }
-.form-title{
-    margin-bottom:20px;
-}
-/* TABLE */
+
+/* ================= TABLE ================= */
+
 .table-container{
-    overflow-x:auto;
+    overflow:auto;
+    border-radius:15px;
 }
+
 table{
     width:100%;
     border-collapse:collapse;
-    background:white;
 }
+
 table th{
     background:#2563eb;
-    color:white;
-    padding:12px;
-    text-align:left;
+    color:#fff;
+    padding:14px;
 }
+
 table td{
-    padding:12px;
-    border-bottom:1px solid #e2e8f0;
+    padding:14px;
+    border-bottom:1px solid #e5e7eb;
 }
+
 table tr:hover{
     background:#f8fafc;
 }
+
+/* ================= BUTTON ================= */
+
 .action button{
-    padding:7px 10px;
-    margin-right:5px;
+    padding:8px 12px;
 }
+
 .edit{
     background:#16a34a;
 }
+
 .delete{
     background:#dc2626;
 }
-/* STATISTIK */
+
+/* ================= STAT ================= */
+
 .stat-container{
     display:grid;
     grid-template-columns:repeat(3,1fr);
     gap:20px;
 }
+
 .stat{
-    background:white;
+    background:#fff;
     padding:25px;
-    border-radius:15px;
-    box-shadow:0 5px 15px rgba(0,0,0,.05);
+    border-radius:18px;
+    box-shadow:0 8px 25px rgba(0,0,0,.05);
 }
+
 .stat h3{
-    margin:0;
     color:#2563eb;
+    margin-bottom:8px;
 }
-/* MOBILE */
+
+/* ================= MOBILE ================= */
+
 @media(max-width:768px){
-#dashboard{
-    flex-direction:column;
-}
+
 .sidebar{
+    position:relative;
+    width:100%;
+    height:auto;
+}
+
+.main{
+    margin-left:0;
     width:100%;
 }
-.form-grid{
-    grid-template-columns:1fr;
+
+header{
+    position:relative;
+    left:0;
+    height:auto;
+    padding:20px;
+    flex-direction:column;
+    gap:15px;
 }
-.form-grid textarea{
-    grid-column:auto;
+
+#content{
+    margin-top:0;
+    height:auto;
 }
+
+.form-grid,
 .stat-container{
     grid-template-columns:1fr;
 }
+
+.form-grid textarea{
+    grid-column:auto;
+}
+
 }
