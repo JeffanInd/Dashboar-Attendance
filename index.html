@@ -9,14 +9,19 @@
 </head>
 <body>
 <div id="loginPage">
-   <div class="login-box">
-    <img  src="https://link-gambar-logo-perusahaan.com/logo.png" class="company-logo" alt="Company Logo">                  
-    <h2>Login Dashboard</h2>
-    <input id="email" type="email" placeholder="Email">
-    <input id="password" type="password" placeholder="Password">
-    <button onclick="login()">Login</button>
-   <p id="loginInfo"></p>
- </div>
+    <div class="login-box">
+        <img src="https://link-gambar-logo-perusahaan.com/logo.png" 
+             class="company-logo" 
+             alt="Company Logo">
+        <h2>Login Dashboard</h2>
+        <input id="email" type="email" placeholder="Email">
+        <div class="password-box">
+            <input id="password" type="password" placeholder="Password">
+            <span id="togglePassword" class="eye">👁</span>
+        </div>
+        <button onclick="login()">Login</button>
+        <p id="loginInfo"></p>
+    </div>
 </div>
 <div id="dashboard" style="display:none;">
 <div class="sidebar">
