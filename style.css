@@ -137,16 +137,9 @@ color:#475569;
 font-size:14px;
 color:#64748b;
 }
-.user-box{
-display:flex;
-align-items:center;
-height:100%;
-padding-left:20px;
-border-left:1px solid rgba(255,255,255,.3);
-}
-.user-box b{
-font-size:16px;
-white-space:nowrap;
+.clock .b{
+font-size:14px;
+color:#2563eb;
 }
 #content{
 height:calc(100vh - 120px);
