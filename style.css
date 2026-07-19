@@ -276,7 +276,7 @@ color:#dc2626;
 ============================== */
 .chart-grid{
 display:grid;
-grid-template-columns:repeat(2,1fr);
+grid-template-columns:repeat(3,1fr);
 gap:25px;
 width:100%;
 }
@@ -308,14 +308,12 @@ height:calc(100% - 40px)!important;
    RESPONSIVE
 ============================== */
 @media(max-width:1200px){
-
 .kpi-container{
 grid-template-columns:repeat(3,1fr);
 }
 
 }
 @media(max-width:768px){
-
 #dashboard{
 flex-direction:column;
 }
@@ -329,7 +327,6 @@ width:100%;
 margin-left:0;
 width:100%;
 }
-
 
 header{
 position:relative;
@@ -362,7 +359,6 @@ grid-column:auto;
 .chart-box{
 height:350px;
 }
-
 
 .chart-box canvas{
 height:270px!important;
