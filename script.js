@@ -22,13 +22,31 @@ let editId = null;
 ============================== */
 function updateClock(){
 const now=new Date();
-const time=now.toLocaleTimeString("en-US",{hour12:false});
-const day=now.toLocaleDateString("en-US",{weekday:"long"});
-const date=now.toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric"});
+
+const time=now.toLocaleTimeString("id-ID",{
+timeZone:"Asia/Jakarta",
+hour:"2-digit",
+minute:"2-digit",
+second:"2-digit"
+});
+
+const day=now.toLocaleDateString("en-US",{
+timeZone:"Asia/Jakarta",
+weekday:"long"
+});
+
+const date=now.toLocaleDateString("en-US",{
+timeZone:"Asia/Jakarta",
+month:"long",
+day:"numeric",
+year:"numeric"
+});
+
 document.querySelector(".time").innerHTML=time;
 document.querySelector(".day").innerHTML="Day : "+day;
 document.querySelector(".date").innerHTML=date;
 }
+
 updateClock();
 setInterval(updateClock,1000);
 
