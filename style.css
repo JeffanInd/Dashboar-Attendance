@@ -30,10 +30,10 @@ color:#1e293b
 }
 input,textarea,select{
 width:100%;
-padding:12px 14px;
+padding:10px 12px;
 border:1px solid #d1d5db;
-border-radius:10px;
-margin-bottom:15px
+border-radius:8px;
+margin-bottom:0;
 }
 input:focus,textarea:focus,select:focus{
 border-color:#2563eb;
@@ -152,7 +152,7 @@ margin-bottom:25px
 .form-grid{
 display:grid;
 grid-template-columns:repeat(2,1fr);
-gap:18px
+gap:10px
 }
 .form-grid textarea{
 grid-column:span 2
