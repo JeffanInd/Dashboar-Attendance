@@ -1,58 +1,156 @@
-import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import{getAuth,signInWithEmailAndPassword,signOut,onAuthStateChanged}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import{getFirestore,collection,getDocs,addDoc,doc,deleteDoc,updateDoc,orderBy,query}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, collection, getDocs, addDoc, doc, deleteDoc, updateDoc, orderBy, query } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyB6IOPUC-6JdFGhDdLCxfupc1dye92ACr0",
-  authDomain: "dashboard-attendance-c6b7d.firebaseapp.com",
-  projectId: "dashboard-attendance-c6b7d",
-  storageBucket: "dashboard-attendance-c6b7d.firebasestorage.app",
-  messagingSenderId: "1017774629688",
-  appId: "1:1017774629688:web:dd662f017b2cf0200f57cd",
-  measurementId: "G-KCJQ5CKYJ3"
+    apiKey: "AIzaSyB6IOPUC-6JdFGhDdLCxfupc1dye92ACr0",
+    authDomain: "dashboard-attendance-c6b7d.firebaseapp.com",
+    projectId: "dashboard-attendance-c6b7d",
+    storageBucket: "dashboard-attendance-c6b7d.firebasestorage.app",
+    messagingSenderId: "1017774629688",
+    appId: "1:1017774629688:web:dd662f017b2cf0200f57cd",
+    measurementId: "G-KCJQ5CKYJ3"
 };
 
-const app=initializeApp(firebaseConfig);
-const auth=getAuth(app);
-const db=getFirestore(app);
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
 
-let editId=null;
+let editId = null;
 
-window.login=()=>{
-let email=document.getElementById("email").value;
-let password=document.getElementById("password").value;
-signInWithEmailAndPassword(auth,email,password)
-.then(()=>{
-document.getElementById("loginPage").style.display="none";
-document.getElementById("dashboard").style.display="flex";
-})
-.catch(e=>{
-document.getElementById("loginInfo").innerHTML=e.message;
-});
-};
+/* ==============================
+   JAM REALTIME
+============================== */
 
-onAuthStateChanged(auth,user=>{
-if(user){
-document.getElementById("loginPage").style.display="none";
-document.getElementById("dashboard").style.display="flex";
-document.getElementById("welcome").innerHTML="Halo "+user.email;
+function updateClock() {
+    const now = new Date();
+
+    const tanggal = now.toLocaleDateString("id-ID", {
+        weekday: "long",
+        day: "2-digit",
+        month: "long",
+        year: "numeric"
+    });
+
+    const jam = now.toLocaleTimeString("id-ID");
+
+    const clock = document.getElementById("clock");
+
+    if (clock) {
+        clock.innerHTML = `${tanggal}<br>${jam}`;
+    }
 }
+
+setInterval(updateClock, 1000);
+
+/* ==============================
+   LOGIN
+============================== */
+
+window.login = () => {
+
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+
+    signInWithEmailAndPassword(auth, email, password)
+
+        .then((userCredential) => {
+
+            document.getElementById("loginPage").style.display = "none";
+            document.getElementById("dashboard").style.display = "flex";
+
+            const user = userCredential.user;
+
+            document.getElementById("loginName").innerHTML = user.email;
+
+            updateClock();
+
+            loadDashboard();
+
+        })
+
+        .catch((error) => {
+
+            document.getElementById("loginInfo").innerHTML = error.message;
+
+        });
+
+};
+
+/* ==============================
+   AUTH STATE
+============================== */
+
+onAuthStateChanged(auth, (user) => {
+
+    if (user) {
+
+        document.getElementById("loginPage").style.display = "none";
+        document.getElementById("dashboard").style.display = "flex";
+
+        document.getElementById("loginName").innerHTML = user.email;
+
+        updateClock();
+
+        loadDashboard();
+
+    }
+
 });
 
-window.logout=()=>{
-signOut(auth).then(()=>location.reload());
+/* ==============================
+   LOGOUT
+============================== */
+
+window.logout = () => {
+
+    signOut(auth).then(() => {
+
+        location.reload();
+
+    });
+
 };
 
-window.loadDashboard=()=>{
-document.getElementById("content").innerHTML=`
+/* ==============================
+   DASHBOARD
+============================== */
+
+window.loadDashboard = () => {
+
+    document.getElementById("content").innerHTML = `
+
 <div class="card">
-<h2>Selamat Datang di Dashboard</h2>
-<p>PT. NAMA PERUSAHAAN</p>
-<p>Monitoring aktivitas perusahaan secara digital.</p>
-</div>`;
-};
 
-window.showUtilities=()=>{
+<h2>Dashboard Perusahaan</h2>
+
+<p>Selamat datang di Sistem Informasi Perusahaan.</p>
+
+<br>
+
+<div class="stat-container">
+
+<div class="stat">
+<h3>120</h3>
+<p>Total Karyawan</p>
+</div>
+
+<div class="stat">
+<h3>115</h3>
+<p>Hadir Hari Ini</p>
+</div>
+
+<div class="stat">
+<h3>5</h3>
+<p>Izin / Sakit</p>
+</div>
+
+</div>
+
+</div>
+
+`;
+  window.showUtilities=()=>{
 document.getElementById("content").innerHTML=`
 <div class="card">
 <h2>Data Karyawan</h2>
@@ -75,10 +173,13 @@ document.getElementById("content").innerHTML=`
 <option>Lainnya</option>
 </select>
 </div>
-<button onclick="saveEmployee()">Save Data</button>
+<div style="margin-top:20px;display:flex;gap:10px;">
+<button onclick="saveEmployee()">💾 Simpan Data</button>
+<button onclick="clearForm()">🧹 Reset</button>
+</div>
 </div>
 <div class="card">
-<h2>Tabel Data Karyawan</h2>
+<h2>Daftar Karyawan</h2>
 <div class="table-container">
 <table>
 <thead>
@@ -104,14 +205,15 @@ loadEmployees();
 };
 
 async function generateCode(){
-let snap=await getDocs(collection(db,"employees"));
-let nomor=snap.size+1;
-let kode="KARY"+String(nomor).padStart(3,"0");
-document.getElementById("kode").value=kode;
+const snap=await getDocs(collection(db,"employees"));
+const nomor=snap.size+1;
+const kode="KARY"+String(nomor).padStart(3,"0");
+const el=document.getElementById("kode");
+if(el)el.value=kode;
 }
 
 window.saveEmployee=async()=>{
-let data={
+const data={
 kodeKaryawan:document.getElementById("kode").value,
 namaKaryawan:document.getElementById("nama").value,
 jabatan:document.getElementById("jabatan").value,
@@ -130,29 +232,29 @@ await addDoc(collection(db,"employees"),data);
 }
 alert("Data berhasil disimpan");
 clearForm();
-loadEmployees();
 generateCode();
+loadEmployees();
 };
 
 async function loadEmployees(){
-let tbody=document.getElementById("employeeTable");
+const tbody=document.getElementById("employeeTable");
 if(!tbody)return;
 tbody.innerHTML="";
-let q=query(collection(db,"employees"),orderBy("kodeKaryawan"));
-let snap=await getDocs(q);
+const q=query(collection(db,"employees"),orderBy("kodeKaryawan"));
+const snap=await getDocs(q);
 snap.forEach(item=>{
-let d=item.data();
+const d=item.data();
 tbody.innerHTML+=`
 <tr>
-<td>${d.kodeKaryawan}</td>
-<td>${d.namaKaryawan}</td>
-<td>${d.jabatan}</td>
-<td>${d.tanggalLahir}</td>
-<td>${d.alamat}</td>
-<td>${d.pendidikanTerakhir}</td>
-<td>${d.noHp}</td>
-<td>${d.nomorRekening}</td>
-<td>${d.bank}</td>
+<td>${d.kodeKaryawan||""}</td>
+<td>${d.namaKaryawan||""}</td>
+<td>${d.jabatan||""}</td>
+<td>${d.tanggalLahir||""}</td>
+<td>${d.alamat||""}</td>
+<td>${d.pendidikanTerakhir||""}</td>
+<td>${d.noHp||""}</td>
+<td>${d.nomorRekening||""}</td>
+<td>${d.bank||""}</td>
 <td class="action">
 <button class="edit" onclick="editEmployee('${item.id}')">Edit</button>
 <button class="delete" onclick="deleteEmployee('${item.id}')">Delete</button>
@@ -163,39 +265,48 @@ tbody.innerHTML+=`
 
 window.editEmployee=async(id)=>{
 editId=id;
-let snap=await getDocs(collection(db,"employees"));
-snap.forEach(x=>{
-if(x.id==id){
-let d=x.data();
-kode.value=d.kodeKaryawan;
-nama.value=d.namaKaryawan;
-jabatan.value=d.jabatan;
-tanggalLahir.value=d.tanggalLahir;
-alamat.value=d.alamat;
-pendidikan.value=d.pendidikanTerakhir;
-hp.value=d.noHp;
-rekening.value=d.nomorRekening;
-bank.value=d.bank;
+const snap=await getDocs(collection(db,"employees"));
+snap.forEach(item=>{
+if(item.id===id){
+const d=item.data();
+document.getElementById("kode").value=d.kodeKaryawan;
+document.getElementById("nama").value=d.namaKaryawan;
+document.getElementById("jabatan").value=d.jabatan;
+document.getElementById("tanggalLahir").value=d.tanggalLahir;
+document.getElementById("alamat").value=d.alamat;
+document.getElementById("pendidikan").value=d.pendidikanTerakhir;
+document.getElementById("hp").value=d.noHp;
+document.getElementById("rekening").value=d.nomorRekening;
+document.getElementById("bank").value=d.bank;
 }
 });
-window.scrollTo(0,0);
+document.getElementById("content").scrollTo({
+top:0,
+behavior:"smooth"
+});
 };
 
 window.deleteEmployee=async(id)=>{
 if(confirm("Hapus data karyawan?")){
 await deleteDoc(doc(db,"employees",id));
 loadEmployees();
+generateCode();
 }
 };
 
-function clearForm(){
-nama.value="";
-jabatan.value="";
-tanggalLahir.value="";
-alamat.value="";
-pendidikan.value="";
-hp.value="";
-rekening.value="";
+window.clearForm=()=>{
+document.getElementById("nama").value="";
+document.getElementById("jabatan").value="";
+document.getElementById("tanggalLahir").value="";
+document.getElementById("alamat").value="";
+document.getElementById("pendidikan").value="";
+document.getElementById("hp").value="";
+document.getElementById("rekening").value="";
+document.getElementById("bank").selectedIndex=0;
+};
+  async function getEmployeeCount(){
+const snap=await getDocs(collection(db,"employees"));
+return snap.size;
 }
 
 window.showAttendance=()=>{
@@ -203,6 +314,20 @@ document.getElementById("content").innerHTML=`
 <div class="card">
 <h2>Attendance</h2>
 <p>Menu absensi karyawan akan dikembangkan.</p>
+<div class="stat-container">
+<div class="stat">
+<h3>0</h3>
+<p>Hadir</p>
+</div>
+<div class="stat">
+<h3>0</h3>
+<p>Izin</p>
+</div>
+<div class="stat">
+<h3>0</h3>
+<p>Sakit</p>
+</div>
+</div>
 </div>`;
 };
 
@@ -211,5 +336,74 @@ document.getElementById("content").innerHTML=`
 <div class="card">
 <h2>Koperasi</h2>
 <p>Menu koperasi akan dikembangkan.</p>
+<div class="stat-container">
+<div class="stat">
+<h3>Rp 0</h3>
+<p>Total Simpanan</p>
+</div>
+<div class="stat">
+<h3>Rp 0</h3>
+<p>Total Pinjaman</p>
+</div>
+<div class="stat">
+<h3>0</h3>
+<p>Anggota Aktif</p>
+</div>
+</div>
 </div>`;
+};
+
+window.loadDashboard=async()=>{
+const total=await getEmployeeCount();
+document.getElementById("content").innerHTML=`
+<div class="card">
+<h2>Dashboard Perusahaan</h2>
+<p>Selamat datang di Sistem Informasi Perusahaan.</p>
+<div class="stat-container">
+<div class="stat">
+<h3>${total}</h3>
+<p>Total Karyawan</p>
+</div>
+<div class="stat">
+<h3 id="tanggalDashboard"></h3>
+<p>Tanggal Hari Ini</p>
+</div>
+<div class="stat">
+<h3 id="jamDashboard"></h3>
+<p>Jam Sekarang</p>
+</div>
+</div>
+</div>`;
+updateDashboardTime();
+};
+
+function updateDashboardTime(){
+const now=new Date();
+const tgl=now.toLocaleDateString("id-ID",{
+weekday:"long",
+day:"2-digit",
+month:"long",
+year:"numeric"
+});
+const jam=now.toLocaleTimeString("id-ID");
+const elTanggal=document.getElementById("tanggalDashboard");
+const elJam=document.getElementById("jamDashboard");
+if(elTanggal)elTanggal.innerHTML=tgl;
+if(elJam)elJam.innerHTML=jam;
+}
+
+setInterval(()=>{
+updateClock();
+updateDashboardTime();
+},1000);
+
+document.addEventListener("DOMContentLoaded",()=>{
+updateClock();
+const user=auth.currentUser;
+if(user){
+const loginName=document.getElementById("loginName");
+if(loginName)loginName.innerHTML=user.email;
+}
+});
+
 };
