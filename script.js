@@ -751,7 +751,7 @@ function fillMonthYear() {
         "May",
         "June",
         "July",
-        "Augustus",
+        "August",
         "September",
         "October",
         "November",
@@ -778,28 +778,50 @@ ${i}
     bulan.value = new Date().getMonth() + 1;
     tahun.value = tahunSekarang;
 }
+
 window.loadAttendance = async () => {
     const tbody = document.getElementById("attendanceTable");
+    if(!tbody) return;
     tbody.innerHTML = "";
-    const bulan = parseInt(document.getElementById("filterMonth").value);
-    const tahun = parseInt(document.getElementById("filterYear").value);
+    const bulan = parseInt(
+        document.getElementById("filterMonth").value
+    );
+
+    const tahun = parseInt(
+        document.getElementById("filterYear").value
+    );
     const q = query(
         collection(db, "attendance"),
         where("bulan", "==", bulan),
         where("tahun", "==", tahun)
     );
-
     const snap = await getDocs(q);
+    let attendanceData = [];
     snap.forEach(doc => {
-        const d = doc.data();
+        attendanceData.push(doc.data());
+
+    });
+    // URUTKAN DARI TANGGAL TERLAMA
+    attendanceData.sort((a,b)=>{
+        return new Date(a.tanggal) - new Date(b.tanggal);
+
+    });
+    attendanceData.forEach(d => {
+        const tanggal = new Date(d.tanggal)
+        .toLocaleDateString("id-ID",{
+            day:"2-digit",
+            month:"2-digit",
+            year:"numeric"
+        });
         tbody.innerHTML += `
 <tr>
-<td>${d.tanggal}</td>
+<td>${tanggal}</td>
 <td>${d.kodeKaryawan}</td>
 <td>${d.namaKaryawan}</td>
 <td>${d.jabatan}</td>
 <td>${d.status}</td>
 </tr>
+
 `;
     });
 }
@@ -852,7 +874,7 @@ async function loadAttendanceFilter() {
         "May",
         "June",
         "July",
-        "Augustus",
+        "August",
         "September",
         "October",
         "November",
@@ -896,6 +918,7 @@ ${i}
     // tampilkan langsung
     loadAttendanceReport();
 }
+
 async function loadAttendanceReport() {
     const tbody = document.getElementById(
         "attendanceReportTable"
@@ -906,7 +929,6 @@ async function loadAttendanceReport() {
     const bulan = parseInt(
         document.getElementById("attendanceMonth").value
     );
-
     const tahun = parseInt(
         document.getElementById("attendanceYear").value
     );
@@ -918,19 +940,33 @@ async function loadAttendanceReport() {
     const snap = await getDocs(q);
     if (snap.empty) {
         tbody.innerHTML = `
-<tr>
-<td colspan="5" style="text-align:center">
-Belum ada data attendance
-</td>
-</tr>
-`;
+        <tr>
+        <td colspan="5" style="text-align:center">
+        Belum ada data attendance
+        </td>
+        </tr>
+        `;
+
         return;
     }
+    let attendanceData = [];
     snap.forEach(doc => {
-        const d = doc.data();
+        attendanceData.push(doc.data());
+    });
+    // SORT TANGGAL TERLAMA KE TERBARU
+    attendanceData.sort((a,b)=>{
+        return new Date(a.tanggal) - new Date(b.tanggal);
+    });
+    attendanceData.forEach(d=>{
+        const tanggal = new Date(d.tanggal)
+        .toLocaleDateString("id-ID",{
+            day:"2-digit",
+            month:"2-digit",
+            year:"numeric"
+        });
         tbody.innerHTML += `
 <tr>
-<td>${d.tanggal}</td>
+<td>${tanggal}</td>
 <td>${d.kodeKaryawan}</td>
 <td>${d.namaKaryawan}</td>
 <td>${d.jabatan}</td>
@@ -939,7 +975,6 @@ Belum ada data attendance
 `;
     });
 }
-
 
 /* DATA SALARY */
 window.showSalary = () => {
