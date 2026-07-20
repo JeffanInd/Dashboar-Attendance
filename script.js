@@ -563,6 +563,16 @@ async function getEmployeeCount() {
     return snap.size;
 }
 
+/* DATA SALARY */
+window.showDataEmployee = () => {
+    document.getElementById("content").innerHTML = `
+    <div class="card">
+        <h2>Data Employee</h2>
+        <p>Daftar gaji.</p>
+    </div>
+    `;
+}
+
 /* ATTENDANCE */
 window.showInputAttendance = async () => {
     const content = document.getElementById("content");
