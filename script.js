@@ -367,7 +367,7 @@ function updateEmployeeCode() {
     const hari = pecah[2];
 
     document.getElementById("kode").value =
-        `KARY${tahun}${bulan}${hari}${urut}`;
+        `JFN${tahun}${bulan}${hari}${urut}`;
 }
 
 /* SAVE DATA */
