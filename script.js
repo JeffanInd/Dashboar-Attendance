@@ -317,8 +317,8 @@ window.showAddEmployee = () => {
 <th>Contact</th>
 <th>Bank Account</th>
 <th>Bank Name</th>
-<th>Action</th>
 <th>Start Work Date</th>
+<th>Action</th>
 </tr>
 </thead>
 <tbody id="employeeTable"></tbody>
@@ -361,7 +361,7 @@ window.saveEmployee = async () => {
             "pendidikan",
             "hp",
             "rekening",
-            "bank"
+            "bank",
             "tanggalMulaiKerja"
         ];
 
@@ -384,7 +384,7 @@ window.saveEmployee = async () => {
             pendidikanTerakhir: document.getElementById("pendidikan").value,
             noHp: document.getElementById("hp").value,
             nomorRekening: document.getElementById("rekening").value,
-            bank: document.getElementById("bank").value
+            bank: document.getElementById("bank").value,
             tanggalMulaiKerja: document.getElementById("tanggalMulaiKerja").value
         };
 
@@ -442,11 +442,13 @@ async function loadEmployees() {
 <td>${d.nomorRekening || ""}</td>
 <td>${d.bank || ""}</td>
 <td>${d.tanggalMulaiKerja || ""}</td>
+
 <td>
 <button class="edit"
 onclick="editEmployee('${item.id}')">
 ✏️ Edit
 </button>
+
 <button class="delete"
 onclick="deleteEmployee('${item.id}')">
 🗑 Delete
@@ -454,6 +456,7 @@ onclick="deleteEmployee('${item.id}')">
 </td>
 </tr>
 `;
+            
         });
     } catch (error) {
         console.error(error);
@@ -518,7 +521,7 @@ window.clearForm = () => {
         "alamat",
         "pendidikan",
         "hp",
-        "rekening"
+        "rekening",
         "tanggalMulaiKerja"
     ];
     ids.forEach(id => {
@@ -615,6 +618,9 @@ Cari
     attendanceTemp = [];
     loadEmployeeSelect();
     fillMonthYear();
+
+    document.getElementById("attendanceDate").value =
+    new Date().toISOString().split("T")[0];
 }
 
 async function loadEmployeeSelect() {
