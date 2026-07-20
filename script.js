@@ -771,14 +771,142 @@ tbody.innerHTML+=`
 }
 
 /* DATA ATTENDANCE */
-window.showDataAttendance=()=>{
-    document.getElementById("content").innerHTML=`
-    <div class="card">
-        <h2>Data Attendance</h2>
-        <p>Daftar absensi.</p>
-    </div>
-    `;
+window.showDataAttendance = () => {
+const content=document.getElementById("content");
+content.innerHTML=`
+<div class="card">
+<h2>Data Attendance</h2>
+<div class="attendance-filter">
+<div class="form-group">
+<label>Month</label>
+<select id="attendanceMonth"></select>
+</div>
+<div class="form-group">
+<label>Year</label>
+<select id="attendanceYear"></select>
+</div>
+</div>
+<br>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>Tanggal</th>
+<th>Kode Karyawan</th>
+<th>Nama Karyawan</th>
+<th>Jabatan</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody id="attendanceReportTable">
+</tbody>
+</table>
+</div>
+</div>
+`;
+loadAttendanceFilter();
+};
+
+async function loadAttendanceFilter(){
+const bulan=document.getElementById("attendanceMonth");
+const tahun=document.getElementById("attendanceYear");
+const namaBulan=[
+"Januari",
+"Februari",
+"Maret",
+"April",
+"Mei",
+"Juni",
+"Juli",
+"Agustus",
+"September",
+"Oktober",
+"November",
+"Desember"
+];
+
+// isi bulan
+bulan.innerHTML="";
+namaBulan.forEach((b,index)=>{
+bulan.innerHTML+=`
+<option value="${index+1}">
+${b}
+</option>
+`;
+});
+
+// isi tahun
+tahun.innerHTML="";
+const sekarang=new Date();
+const tahunSekarang=sekarang.getFullYear();
+for(let i=tahunSekarang-5;i<=tahunSekarang+10;i++){
+tahun.innerHTML+=`
+<option value="${i}">
+${i}
+</option>
+`;
 }
+// posisi live system
+bulan.value=sekarang.getMonth()+1;
+tahun.value=tahunSekarang;
+// event otomatis
+bulan.addEventListener(
+"change",
+loadAttendanceReport
+);
+
+tahun.addEventListener(
+"change",
+loadAttendanceReport
+);
+// tampilkan langsung
+loadAttendanceReport();
+}
+async function loadAttendanceReport(){
+const tbody=document.getElementById(
+"attendanceReportTable"
+);
+
+if(!tbody)return;
+tbody.innerHTML="";
+const bulan=parseInt(
+document.getElementById("attendanceMonth").value
+);
+
+const tahun=parseInt(
+document.getElementById("attendanceYear").value
+);
+const q=query(
+collection(db,"attendance"),
+where("bulan","==",bulan),
+where("tahun","==",tahun)
+);
+const snap=await getDocs(q);
+if(snap.empty){
+tbody.innerHTML=`
+<tr>
+<td colspan="5" style="text-align:center">
+Belum ada data attendance
+</td>
+</tr>
+`;
+return;
+}
+snap.forEach(doc=>{
+const d=doc.data();
+tbody.innerHTML+=`
+<tr>
+<td>${d.tanggal}</td>
+<td>${d.kodeKaryawan}</td>
+<td>${d.namaKaryawan}</td>
+<td>${d.jabatan}</td>
+<td>${d.status}</td>
+</tr>
+`;
+});
+}
+
+
 /* DATA SALARY */
 window.showSalary=()=>{
     document.getElementById("content").innerHTML=`
