@@ -357,13 +357,27 @@ display:grid;
 grid-template-columns:repeat(3,1fr);
 gap:20px
 }
-
 .stat{
 background:white;
 padding:25px;
 border-radius:18px
 }
 
+/* DATA ATTENDANCE */
+.attendance-filter{
+display:flex;
+gap:15px;
+align-items:end;
+
+}
+.attendance-filter .form-group{
+width:180px;
+}
+@media(max-width:700px){
+.attendance-filter{
+flex-direction:column;
+}
+}
 .stat h3{
 color:#2563eb
 }
