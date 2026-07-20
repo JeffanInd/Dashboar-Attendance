@@ -629,17 +629,44 @@ ${d.kodeKaryawan} - ${d.namaKaryawan}
 }
 
 window.addAttendanceRow = async () => {
+    const tanggal = document.getElementById("attendanceDate").value;
     const id = document.getElementById("employeeSelect").value;
-    const snap = await getDocs(collection(db, "employees"));
-    snap.forEach(item => {
-        if (item.id === id) {
-            const d = item.data();
+
+    // VALIDASI TANGGAL
+    if(!tanggal){
+        alert("Silahkan pilih tanggal absensi terlebih dahulu!");
+        document.getElementById("attendanceDate").focus();
+        return;
+    }
+
+    // VALIDASI KARYAWAN
+    if(!id){
+        alert("Silahkan pilih karyawan terlebih dahulu!");
+        document.getElementById("employeeSelect").focus();
+        return;
+    }
+
+    const snap = await getDocs(
+        collection(db,"employees")
+    );
+
+    snap.forEach(item=>{
+        if(item.id===id){
+            const d=item.data();
+            // CEK DUPLIKAT KARYAWAN DI TABEL SEMENTARA
+            const sudahAda = attendanceTemp.some(
+                emp=>emp.kode===d.kodeKaryawan
+            );
+            if(sudahAda){
+                alert("Karyawan ini sudah ditambahkan!");
+                return;
+            }
             attendanceTemp.push({
-                tanggal: document.getElementById("attendanceDate").value,
-                kode: d.kodeKaryawan,
-                nama: d.namaKaryawan,
-                jabatan: d.jabatan,
-                status: "Hadir"
+                tanggal:tanggal,
+                kode:d.kodeKaryawan,
+                nama:d.namaKaryawan,
+                jabatan:d.jabatan,
+                status:"Hadir"
             });
         }
     });
@@ -676,33 +703,42 @@ window.removeAttendance = (i) => {
     attendanceTemp.splice(i, 1);
     renderAttendanceTemp();
 }
-window.submitAttendance = async () => {
-    if (attendanceTemp.length == 0) {
-        alert("Belum ada data.");
-        return;
-    }
-    for (const d of attendanceTemp) {
-        const t = new Date(d.tanggal);
-        await addDoc(
-            collection(db, "attendance"),
-            {
-                tanggal: d.tanggal,
-                bulan: t.getMonth() + 1,
-                tahun: t.getFullYear(),
-                kodeKaryawan: d.kode,
-                namaKaryawan: d.nama,
-                jabatan: d.jabatan,
-                status: d.status
-            }
-        );
-    }
-    alert("Attendance berhasil disimpan.");
-    attendanceTemp = [];
-    renderAttendanceTemp();
-    loadAttendance();
-}
-function fillMonthYear() {
 
+window.submitAttendance = async()=>{
+if(attendanceTemp.length==0){
+alert("Belum ada data attendance.");
+return;
+}
+
+for(const d of attendanceTemp){
+if(!d.tanggal){
+alert(
+"Data attendance ditemukan tanpa tanggal. Silahkan periksa kembali."
+);
+
+return;
+}
+const t=new Date(d.tanggal);
+await addDoc(
+collection(db,"attendance"),
+{
+tanggal:d.tanggal,
+bulan:t.getMonth()+1,
+tahun:t.getFullYear(),
+kodeKaryawan:d.kode,
+namaKaryawan:d.nama,
+jabatan:d.jabatan,
+status:d.status
+}
+);
+}
+alert("Attendance berhasil disimpan.");
+attendanceTemp=[];
+renderAttendanceTemp();
+loadAttendance();
+}
+
+function fillMonthYear() {
     const bulan = document.getElementById("filterMonth");
     const tahun = document.getElementById("filterYear");
 
