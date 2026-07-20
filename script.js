@@ -108,10 +108,9 @@ location.reload();
 };
 
 /* SIDEBAR SUBMENU */
-window.toggleMenu=(menuId)=>{
+function toggleMenu(menuId){
     const menus=document.querySelectorAll(".submenu");
     const buttons=document.querySelectorAll(".menu-btn");
-
     menus.forEach(menu=>{
         if(menu.id!==menuId){
             menu.style.display="none";
@@ -119,25 +118,27 @@ window.toggleMenu=(menuId)=>{
     });
 
     buttons.forEach(btn=>{
-        if(btn.getAttribute("onclick")!==`toggleMenu('${menuId}')`){
-            btn.classList.remove("active");
-        }
+        btn.classList.remove("active");
     });
 
     const menu=document.getElementById(menuId);
+
+    if(!menu)return;
+
     const btn=document.querySelector(
         `[onclick="toggleMenu('${menuId}')"]`
     );
 
     if(menu.style.display==="block"){
         menu.style.display="none";
-        btn.classList.remove("active");
+        if(btn)btn.classList.remove("active");
     }else{
         menu.style.display="block";
-        btn.classList.add("active");
+        if(btn)btn.classList.add("active");
     }
-};
+}
 
+window.toggleMenu = toggleMenu;
 /* DASHBOARD */
 window.loadDashboard=()=>{
 const content=document.getElementById("content");
