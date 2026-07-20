@@ -107,13 +107,41 @@ await signOut(auth);
 location.reload();
 };
 
+/* SIDEBAR SUBMENU */
+window.toggleMenu=(menuId)=>{
+    const menus=document.querySelectorAll(".submenu");
+    const buttons=document.querySelectorAll(".menu-btn");
+
+    menus.forEach(menu=>{
+        if(menu.id!==menuId){
+            menu.style.display="none";
+        }
+    });
+
+    buttons.forEach(btn=>{
+        if(btn.getAttribute("onclick")!==`toggleMenu('${menuId}')`){
+            btn.classList.remove("active");
+        }
+    });
+
+    const menu=document.getElementById(menuId);
+    const btn=document.querySelector(
+        `[onclick="toggleMenu('${menuId}')"]`
+    );
+
+    if(menu.style.display==="block"){
+        menu.style.display="none";
+        btn.classList.remove("active");
+    }else{
+        menu.style.display="block";
+        btn.classList.add("active");
+    }
+};
 
 /* DASHBOARD */
 window.loadDashboard=()=>{
-
 const content=document.getElementById("content");
 if(!content)return;
-
 content.innerHTML=`
 
 <div class="dashboard-kpi">
@@ -188,8 +216,9 @@ content.innerHTML=`
 createDashboardChart();
 
 };
+
 /* DATA KARYAWAN */
-window.showUtilities=()=>{
+window.showAddEmployee=()=>{
 const content=document.getElementById("content");
 if(!content)return;
 content.innerHTML=`
@@ -501,60 +530,79 @@ collection(db,"employees")
 
 return snap.size;
 }
+
 /* ATTENDANCE */
-window.showAttendance=()=>{
-document.getElementById("content").innerHTML=`
-<div class="card">
-<h2>Attendance</h2>
-<p>Menu absensi karyawan akan dikembangkan.</p>
-<div class="stat-container">
-<div class="stat">
-<h3>0</h3>
-<p>Hadir</p>
-</div>
-<div class="stat">
-<h3>0</h3>
-<p>Izin</p>
-</div>
-<div class="stat">
-<h3>0</h3>
-<p>Sakit</p>
-</div>
-</div>
-</div>
-`;
+window.showInputAttendance=()=>{
+    document.getElementById("content").innerHTML=`
+    <div class="card">
+        <h2>Input Attendance</h2>
+        <p>Form input absensi.</p>
+    </div>
+    `;
+}
 
-};
+/* DATA ATTENDANCE */
+window.showDataAttendance=()=>{
+    document.getElementById("content").innerHTML=`
+    <div class="card">
+        <h2>Data Attendance</h2>
+        <p>Daftar absensi.</p>
+    </div>
+    `;
+}
+/* DATA SALARY */
+window.showSalary=()=>{
+    document.getElementById("content").innerHTML=`
+    <div class="card">
+        <h2>Data Salary</h2>
+        <p>Daftar gaji.</p>
+    </div>
+    `;
+}
+
 /* KOPERASI */
-window.showKoperasi=()=>{
-const content=document.getElementById("content");
-
-if(!content)return;
-content.innerHTML=`
-
-<div class="card">
-<h2>Koperasi</h2>
-<p>Menu koperasi akan dikembangkan.</p>
-<div class="stat-container">
-
-<div class="stat">
-<h3>Rp 0</h3>
-<p>Total Simpanan</p>
-</div>
-
-<div class="stat">
-<h3>Rp 0</h3>
-<p>Total Pinjaman</p>
-</div>
-
-<div class="stat">
-<h3>0</h3>
-<p>Anggota Aktif</p>
-</div>
-</div>
-</div>
-`;
-};
+window.showAddAnggota=()=>{
+    document.getElementById("content").innerHTML=`
+    <div class="card">
+        <h2>Add Anggota</h2>
+    </div>
+    `;
+}
+window.showInputSimpanan=()=>{
+    document.getElementById("content").innerHTML=`
+    <div class="card">
+        <h2>Input Simpanan</h2>
+    </div>
+    `;
+}
+window.showInputPinjaman=()=>{
+    document.getElementById("content").innerHTML=`
+    <div class="card">
+        <h2>Input Pinjaman</h2>
+    </div>
+    `;
+}
+window.showDataSimpanan=()=>{
+    document.getElementById("content").innerHTML=`
+    <div class="card">
+        <h2>Data Simpanan</h2>
+    </div>
+    `;
+}
+window.showDataPinjaman=()=>{
+    document.getElementById("content").innerHTML=`
+    <div class="card">
+        <h2>Data Pinjaman</h2>
+    </div>
+    `;
+}
+window.showNeraca=()=>{
+    document.getElementById("content").innerHTML=`
+    <div class="card">
+        <h2>Neraca Koperasi</h2>
+    </div>
+    `;
+}
 
 /* UPDATE DASHBOARD TIME */
 function updateDashboardTime(){
@@ -565,7 +613,6 @@ day:"2-digit",
 month:"long",
 year:"numeric"
 });
-
 
 const jam=now.toLocaleTimeString("id-ID");
 const tanggal=document.getElementById("tanggalDashboard");
