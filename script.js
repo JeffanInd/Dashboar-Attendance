@@ -1,23 +1,23 @@
-import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import{getAuth,signInWithEmailAndPassword,signOut,onAuthStateChanged}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import{getFirestore,collection,getDocs,addDoc,doc,deleteDoc,updateDoc,orderBy,query,where}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, collection, getDocs, addDoc, doc, deleteDoc, updateDoc, orderBy, query, where } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-const firebaseConfig={
-apiKey:"AIzaSyB6IOPUC-6JdFGhDdLCxfupc1dye92ACr0",
-authDomain:"dashboard-attendance-c6b7d.firebaseapp.com",
-projectId:"dashboard-attendance-c6b7d",
-storageBucket:"dashboard-attendance-c6b7d.firebasestorage.app",
-messagingSenderId:"1017774629688",
-appId:"1:1017774629688:web:dd662f017b2cf0200f57cd",
-measurementId:"G-KCJQ5CKYJ3"
+const firebaseConfig = {
+    apiKey: "AIzaSyB6IOPUC-6JdFGhDdLCxfupc1dye92ACr0",
+    authDomain: "dashboard-attendance-c6b7d.firebaseapp.com",
+    projectId: "dashboard-attendance-c6b7d",
+    storageBucket: "dashboard-attendance-c6b7d.firebasestorage.app",
+    messagingSenderId: "1017774629688",
+    appId: "1:1017774629688:web:dd662f017b2cf0200f57cd",
+    measurementId: "G-KCJQ5CKYJ3"
 };
 
-const app=initializeApp(firebaseConfig);
-const auth=getAuth(app);
-const db=getFirestore(app);
-let editId=null;
-let chartInstances=[];
-let attendanceTemp=[];
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+let editId = null;
+let chartInstances = [];
+let attendanceTemp = [];
 
 /* CLOCK */
 function updateClock() {
@@ -50,52 +50,52 @@ updateClock();
 setInterval(updateClock, 1000);
 
 /* LOGIN */
-window.login=async()=>{
-try{
-const email=document.getElementById("email").value.trim();
-const password=document.getElementById("password").value.trim();
+window.login = async () => {
+    try {
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value.trim();
 
-const result=await signInWithEmailAndPassword(auth,email,password);
+        const result = await signInWithEmailAndPassword(auth, email, password);
 
-document.getElementById("loginPage").style.display="none";
-document.getElementById("dashboard").style.display="flex";
+        document.getElementById("loginPage").style.display = "none";
+        document.getElementById("dashboard").style.display = "flex";
 
-const name=document.getElementById("loginName");
-if(name)name.innerHTML=result.user.email;
+        const name = document.getElementById("loginName");
+        if (name) name.innerHTML = result.user.email;
 
-loadDashboard();
+        loadDashboard();
 
-}catch(error){
-const info=document.getElementById("loginInfo");
-if(info)info.innerHTML=error.message;
-console.error(error);
-}
+    } catch (error) {
+        const info = document.getElementById("loginInfo");
+        if (info) info.innerHTML = error.message;
+        console.error(error);
+    }
 };
 
 /* AUTH */
-onAuthStateChanged(auth,user=>{
-if(user){
+onAuthStateChanged(auth, user => {
+    if (user) {
 
-const login=document.getElementById("loginPage");
-const dash=document.getElementById("dashboard");
-const name=document.getElementById("loginName");
+        const login = document.getElementById("loginPage");
+        const dash = document.getElementById("dashboard");
+        const name = document.getElementById("loginName");
 
-if(login)login.style.display="none";
-if(dash)dash.style.display="flex";
-if(name)name.innerHTML=user.email;
+        if (login) login.style.display = "none";
+        if (dash) dash.style.display = "flex";
+        if (name) name.innerHTML = user.email;
 
-loadDashboard();
+        loadDashboard();
 
-}
+    }
 });
 
 const togglePassword = document.getElementById("togglePassword");
 const password = document.getElementById("password");
-togglePassword.addEventListener("click", function(){
-    if(password.type === "password"){
+togglePassword.addEventListener("click", function () {
+    if (password.type === "password") {
         password.type = "text";
         togglePassword.textContent = "🙈";
-    }else{
+    } else {
         password.type = "password";
         togglePassword.textContent = "👁";
     }
@@ -103,48 +103,48 @@ togglePassword.addEventListener("click", function(){
 });
 
 /* LOGOUT */
-window.logout=async()=>{
-await signOut(auth);
-location.reload();
+window.logout = async () => {
+    await signOut(auth);
+    location.reload();
 };
 
 /* SIDEBAR SUBMENU */
-function toggleMenu(menuId){
-    const menus=document.querySelectorAll(".submenu");
-    const buttons=document.querySelectorAll(".menu-btn");
-    menus.forEach(menu=>{
-        if(menu.id!==menuId){
-            menu.style.display="none";
+function toggleMenu(menuId) {
+    const menus = document.querySelectorAll(".submenu");
+    const buttons = document.querySelectorAll(".menu-btn");
+    menus.forEach(menu => {
+        if (menu.id !== menuId) {
+            menu.style.display = "none";
         }
     });
 
-    buttons.forEach(btn=>{
+    buttons.forEach(btn => {
         btn.classList.remove("active");
     });
 
-    const menu=document.getElementById(menuId);
+    const menu = document.getElementById(menuId);
 
-    if(!menu)return;
+    if (!menu) return;
 
-    const btn=document.querySelector(
+    const btn = document.querySelector(
         `[onclick="toggleMenu('${menuId}')"]`
     );
 
-    if(menu.style.display==="block"){
-        menu.style.display="none";
-        if(btn)btn.classList.remove("active");
-    }else{
-        menu.style.display="block";
-        if(btn)btn.classList.add("active");
+    if (menu.style.display === "block") {
+        menu.style.display = "none";
+        if (btn) btn.classList.remove("active");
+    } else {
+        menu.style.display = "block";
+        if (btn) btn.classList.add("active");
     }
 }
 
 window.toggleMenu = toggleMenu;
 /* DASHBOARD */
-window.loadDashboard=()=>{
-const content=document.getElementById("content");
-if(!content)return;
-content.innerHTML=`
+window.loadDashboard = () => {
+    const content = document.getElementById("content");
+    if (!content) return;
+    content.innerHTML = `
 
 <div class="dashboard-kpi">
 <div class="kpi-container">
@@ -215,17 +215,17 @@ content.innerHTML=`
 </div>
 `;
 
-createDashboardChart();
+    createDashboardChart();
 
 };
 
 /* DATA KARYAWAN */
-window.showAddEmployee=()=>{
-const content=document.getElementById("content");
-if(!content)return;
-content.innerHTML=`
+window.showAddEmployee = () => {
+    const content = document.getElementById("content");
+    if (!content) return;
+    content.innerHTML = `
 <div class="card">
-<h2>Data Karyawan</h2>
+<h2>Employee Data</h2>
 <div class="employee-form-grid">
 
 <div class="form-group">
@@ -277,7 +277,7 @@ content.innerHTML=`
 </div>
 
 <div class="form-group">
-<label>Bank</label>
+<label>Bank Name</label>
 <select id="bank">
 <option value="BCA">BCA</option>
 <option value="Mandiri">Mandiri</option>
@@ -291,21 +291,19 @@ content.innerHTML=`
 </div>
 
 <div style="margin-top:20px;display:flex;gap:10px">
-<button onclick="saveEmployee()">
-💾 Simpan Data
-</button>
+<button onclick="saveEmployee()">💾 Save Data</button>
 <button onclick="clearForm()">🧹 Reset</button>
 </div>
 </div>
 
 <div class="card">
-<h2>Daftar Karyawan</h2>
+<h2>Employee List</h2>
 <div class="table-container">
 <table>
 <thead>
 <tr>
-<th>Kode</th>
-<th>Name</th>
+<th>ID Attendance</th>
+<th>Employee Name</th>
 <th>Gender</th>
 <th>Jobs</th>
 <th>Birthday</th>
@@ -313,7 +311,7 @@ content.innerHTML=`
 <th>Education</th>
 <th>Contact</th>
 <th>Bank Account</th>
-<th>Bank</th>
+<th>Bank Name</th>
 <th>Action</th>
 </tr>
 </thead>
@@ -323,118 +321,118 @@ content.innerHTML=`
 </div>
 
 `;
-generateCode();
-loadEmployees();
+    generateCode();
+    loadEmployees();
 };
 /* GENERATE KODE */
-async function generateCode(){
-try{
-const snap=await getDocs(
-collection(db,"employees")
-);
-const nomor=snap.size+1;
-const kode=
-"KARY"+String(nomor).padStart(3,"0");
-const el=document.getElementById("kode");
-if(el){
-el.value=kode;
+async function generateCode() {
+    try {
+        const snap = await getDocs(
+            collection(db, "employees")
+        );
+        const nomor = snap.size + 1;
+        const kode =
+            "KARY" + String(nomor).padStart(3, "0");
+        const el = document.getElementById("kode");
+        if (el) {
+            el.value = kode;
 
-}
-}catch(error){
-console.error(error);
-}
+        }
+    } catch (error) {
+        console.error(error);
+    }
 }
 
 /* SAVE DATA */
-window.saveEmployee=async()=>{
-try{
-const fields=[
-"nama",
-"gender",
-"jabatan",
-"tanggalLahir",
-"alamat",
-"pendidikan",
-"hp",
-"rekening",
-"bank"
-];
+window.saveEmployee = async () => {
+    try {
+        const fields = [
+            "nama",
+            "gender",
+            "jabatan",
+            "tanggalLahir",
+            "alamat",
+            "pendidikan",
+            "hp",
+            "rekening",
+            "bank"
+        ];
 
-for(const id of fields){
-const el=document.getElementById(id);
-if(!el||String(el.value).trim()===""){
-alert("Silahkan isi semua data karyawan terlebih dahulu!");
-if(el)el.focus();
-return;
-}
-}
+        for (const id of fields) {
+            const el = document.getElementById(id);
+            if (!el || String(el.value).trim() === "") {
+                alert("Silahkan isi semua data karyawan terlebih dahulu!");
+                if (el) el.focus();
+                return;
+            }
+        }
 
-const data={
-kodeKaryawan:document.getElementById("kode").value,
-namaKaryawan:document.getElementById("nama").value,
-jenisKelamin:document.getElementById("gender").value,
-jabatan:document.getElementById("jabatan").value,
-tanggalLahir:document.getElementById("tanggalLahir").value,
-alamat:document.getElementById("alamat").value,
-pendidikanTerakhir:document.getElementById("pendidikan").value,
-noHp:document.getElementById("hp").value,
-nomorRekening:document.getElementById("rekening").value,
-bank:document.getElementById("bank").value
-};
+        const data = {
+            kodeKaryawan: document.getElementById("kode").value,
+            namaKaryawan: document.getElementById("nama").value,
+            jenisKelamin: document.getElementById("gender").value,
+            jabatan: document.getElementById("jabatan").value,
+            tanggalLahir: document.getElementById("tanggalLahir").value,
+            alamat: document.getElementById("alamat").value,
+            pendidikanTerakhir: document.getElementById("pendidikan").value,
+            noHp: document.getElementById("hp").value,
+            nomorRekening: document.getElementById("rekening").value,
+            bank: document.getElementById("bank").value
+        };
 
-if(editId){
-await updateDoc(
-doc(db,"employees",editId),
-data
-);
-editId=null;
-}else{
-await addDoc(
-collection(db,"employees"),
-data
-);
-}
+        if (editId) {
+            await updateDoc(
+                doc(db, "employees", editId),
+                data
+            );
+            editId = null;
+        } else {
+            await addDoc(
+                collection(db, "employees"),
+                data
+            );
+        }
 
-alert("Data berhasil disimpan");
-clearForm();
-generateCode();
-loadEmployees();
+        alert("Data berhasil disimpan");
+        clearForm();
+        generateCode();
+        loadEmployees();
 
-}catch(error){
-console.error(error);
-alert(error.message);
-}
+    } catch (error) {
+        console.error(error);
+        alert(error.message);
+    }
 };
 
 /* LOAD DATA */
-async function loadEmployees(){
-const tbody=
-document.getElementById("employeeTable");
-    
-if(!tbody)return;
-tbody.innerHTML="";
+async function loadEmployees() {
+    const tbody =
+        document.getElementById("employeeTable");
 
-try{
-const q=query(
-collection(db,"employees"),
-orderBy("kodeKaryawan")
-);
+    if (!tbody) return;
+    tbody.innerHTML = "";
 
-const snap=await getDocs(q);
-snap.forEach(item=>{
-const d=item.data();
-tbody.innerHTML+=`
+    try {
+        const q = query(
+            collection(db, "employees"),
+            orderBy("kodeKaryawan")
+        );
+
+        const snap = await getDocs(q);
+        snap.forEach(item => {
+            const d = item.data();
+            tbody.innerHTML += `
 <tr>
-<td>${d.kodeKaryawan||""}</td>
-<td>${d.namaKaryawan||""}</td>
-<td>${d.jenisKelamin||""}</td>
-<td>${d.jabatan||""}</td>
-<td>${d.tanggalLahir||""}</td>
-<td>${d.alamat||""}</td>
-<td>${d.pendidikanTerakhir||""}</td>
-<td>${d.noHp||""}</td>
-<td>${d.nomorRekening||""}</td>
-<td>${d.bank||""}</td>
+<td>${d.kodeKaryawan || ""}</td>
+<td>${d.namaKaryawan || ""}</td>
+<td>${d.jenisKelamin || ""}</td>
+<td>${d.jabatan || ""}</td>
+<td>${d.tanggalLahir || ""}</td>
+<td>${d.alamat || ""}</td>
+<td>${d.pendidikanTerakhir || ""}</td>
+<td>${d.noHp || ""}</td>
+<td>${d.nomorRekening || ""}</td>
+<td>${d.bank || ""}</td>
 <td>
 <button class="edit"
 onclick="editEmployee('${item.id}')">
@@ -447,97 +445,97 @@ onclick="deleteEmployee('${item.id}')">
 </td>
 </tr>
 `;
-});
-}catch(error){
-console.error(error);
-}
+        });
+    } catch (error) {
+        console.error(error);
+    }
 }
 /* EDIT */
-window.editEmployee=async(id)=>{
-try{
-editId=id;
-const snap=await getDocs(
-collection(db,"employees")
-);
+window.editEmployee = async (id) => {
+    try {
+        editId = id;
+        const snap = await getDocs(
+            collection(db, "employees")
+        );
 
-snap.forEach(item=>{
-if(item.id===id){
-const d=item.data();
-document.getElementById("kode").value=d.kodeKaryawan||"";
-document.getElementById("nama").value=d.namaKaryawan||"";
-document.getElementById("gender").value=d.jenisKelamin||"";
-document.getElementById("jabatan").value=d.jabatan||"";
-document.getElementById("tanggalLahir").value=d.tanggalLahir||"";
-document.getElementById("alamat").value=d.alamat||"";
-document.getElementById("pendidikan").value=d.pendidikanTerakhir||"";
-document.getElementById("hp").value=d.noHp||"";
-document.getElementById("rekening").value=d.nomorRekening||"";
-document.getElementById("bank").value=d.bank||"";
-}
-});
-window.scrollTo({
-top:0,
-behavior:"smooth"
-});
-}catch(error){
-console.error(error);
-}
+        snap.forEach(item => {
+            if (item.id === id) {
+                const d = item.data();
+                document.getElementById("kode").value = d.kodeKaryawan || "";
+                document.getElementById("nama").value = d.namaKaryawan || "";
+                document.getElementById("gender").value = d.jenisKelamin || "";
+                document.getElementById("jabatan").value = d.jabatan || "";
+                document.getElementById("tanggalLahir").value = d.tanggalLahir || "";
+                document.getElementById("alamat").value = d.alamat || "";
+                document.getElementById("pendidikan").value = d.pendidikanTerakhir || "";
+                document.getElementById("hp").value = d.noHp || "";
+                document.getElementById("rekening").value = d.nomorRekening || "";
+                document.getElementById("bank").value = d.bank || "";
+            }
+        });
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+    } catch (error) {
+        console.error(error);
+    }
 };
 
 /* DELETE */
-window.deleteEmployee=async(id)=>{
-if(confirm("Hapus data karyawan?")){
-try{
-await deleteDoc(
-doc(db,"employees",id)
-);
+window.deleteEmployee = async (id) => {
+    if (confirm("Hapus data karyawan?")) {
+        try {
+            await deleteDoc(
+                doc(db, "employees", id)
+            );
 
-loadEmployees();
-generateCode();
-    
-}catch(error){
-console.error(error);
-}
-}
+            loadEmployees();
+            generateCode();
+
+        } catch (error) {
+            console.error(error);
+        }
+    }
 };
 /* RESET FORM */
-window.clearForm=()=>{
-const ids=[
-"nama",
-"gender",
-"jabatan",
-"tanggalLahir",
-"alamat",
-"pendidikan",
-"hp",
-"rekening"
-];
-ids.forEach(id=>{
-const el=document.getElementById(id);
-if(el){
-el.value="";
-}
-});
-const bank=document.getElementById("bank");
-if(bank){
-bank.selectedIndex=0;
-}
-editId=null;
+window.clearForm = () => {
+    const ids = [
+        "nama",
+        "gender",
+        "jabatan",
+        "tanggalLahir",
+        "alamat",
+        "pendidikan",
+        "hp",
+        "rekening"
+    ];
+    ids.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.value = "";
+        }
+    });
+    const bank = document.getElementById("bank");
+    if (bank) {
+        bank.selectedIndex = 0;
+    }
+    editId = null;
 };
 
 /* HITUNG KARYAWAN */
-async function getEmployeeCount(){
-const snap=await getDocs(
-collection(db,"employees")
-);
+async function getEmployeeCount() {
+    const snap = await getDocs(
+        collection(db, "employees")
+    );
 
-return snap.size;
+    return snap.size;
 }
 
 /* ATTENDANCE */
-window.showInputAttendance=async()=>{
-const content=document.getElementById("content");
-content.innerHTML=`
+window.showInputAttendance = async () => {
+    const content = document.getElementById("content");
+    content.innerHTML = `
 <div class="card">
 <h2>Input Attendance</h2>
 <div class="attendance-form-grid">
@@ -548,7 +546,7 @@ content.innerHTML=`
 </div>
 
 <div class="form-group">
-<label>Nama Karyawan</label>
+<label>Employee Name</label>
 <select id="employeeSelect">
 <option value="">-- Select Attendance --</option>
 </select>
@@ -564,9 +562,9 @@ content.innerHTML=`
 <table>
 <thead>
 <tr>
-<th>Kode</th>
-<th>Nama</th>
-<th>Jabatan</th>
+<th>ID Employee</th>
+<th>Employee Name</th>
+<th>Jobs</th>
 <th>Status</th>
 <th>Hapus</th>
 </tr>
@@ -592,10 +590,10 @@ Cari
 <table>
 <thead>
 <tr>
-<th>Tanggal</th>
-<th>Kode</th>
-<th>Nama</th>
-<th>Jabatan</th>
+<th>Date Attendance</th>
+<th>ID Employee</th>
+<th>Employee Name</th>
+<th>Jobs</th>
 <th>Status</th>
 </tr>
 </thead>
@@ -603,162 +601,162 @@ Cari
 </table>
 </div>
 `;
-attendanceTemp=[];
-loadEmployeeSelect();
-fillMonthYear();
+    attendanceTemp = [];
+    loadEmployeeSelect();
+    fillMonthYear();
 }
 
-async function loadEmployeeSelect(){
-const select=document.getElementById("employeeSelect");
-if(!select)return;
-select.innerHTML=`
+async function loadEmployeeSelect() {
+    const select = document.getElementById("employeeSelect");
+    if (!select) return;
+    select.innerHTML = `
 <option value="">
--- Pilih Karyawan --
+-- Select Employee --
 </option>
 `;
-const snap=await getDocs(
-collection(db,"employees")
-);
+    const snap = await getDocs(
+        collection(db, "employees")
+    );
 
-snap.forEach(doc=>{
-const d=doc.data();
-select.innerHTML+=`
+    snap.forEach(doc => {
+        const d = doc.data();
+        select.innerHTML += `
 <option value="${doc.id}">
 ${d.kodeKaryawan} - ${d.namaKaryawan}
 </option>
 `;
-});
+    });
 }
 
-window.addAttendanceRow=async()=>{
-const id=document.getElementById("employeeSelect").value;
-const snap=await getDocs(collection(db,"employees"));
-snap.forEach(item=>{
-if(item.id===id){
-const d=item.data();
-attendanceTemp.push({
-tanggal:document.getElementById("attendanceDate").value,
-kode:d.kodeKaryawan,
-nama:d.namaKaryawan,
-jabatan:d.jabatan,
-status:"Hadir"
-});
-}
-});
-renderAttendanceTemp();
+window.addAttendanceRow = async () => {
+    const id = document.getElementById("employeeSelect").value;
+    const snap = await getDocs(collection(db, "employees"));
+    snap.forEach(item => {
+        if (item.id === id) {
+            const d = item.data();
+            attendanceTemp.push({
+                tanggal: document.getElementById("attendanceDate").value,
+                kode: d.kodeKaryawan,
+                nama: d.namaKaryawan,
+                jabatan: d.jabatan,
+                status: "Hadir"
+            });
+        }
+    });
+    renderAttendanceTemp();
 }
 
-function renderAttendanceTemp(){
-const tbody=document.getElementById("attendanceTempTable");
-tbody.innerHTML="";
-attendanceTemp.forEach((d,index)=>{
-tbody.innerHTML+=`
+function renderAttendanceTemp() {
+    const tbody = document.getElementById("attendanceTempTable");
+    tbody.innerHTML = "";
+    attendanceTemp.forEach((d, index) => {
+        tbody.innerHTML += `
 <tr>
 <td>${d.kode}</td>
 <td>${d.nama}</td>
 <td>${d.jabatan}</td>
 <td>
 <select onchange="attendanceTemp[${index}].status=this.value">
-<option ${d.status=="Hadir"?"selected":""}>Hadir</option>
-<option ${d.status=="Tidak Hadir"?"selected":""}>Tidak Hadir</option>
-<option ${d.status=="Izin"?"selected":""}>Izin</option>
-<option ${d.status=="Cuti"?"selected":""}>Cuti</option>
+<option ${d.status == "Hadir" ? "selected" : ""}>Hadir</option>
+<option ${d.status == "Tidak Hadir" ? "selected" : ""}>Tidak Hadir</option>
+<option ${d.status == "Izin" ? "selected" : ""}>Izin</option>
+<option ${d.status == "Cuti" ? "selected" : ""}>Cuti</option>
 </select>
 </td>
 <td>
 <button onclick="removeAttendance(${index})">
-Hapus
+Delete
 </button>
 </td>
 </tr>
 `;
-});
+    });
 }
-window.removeAttendance=(i)=>{
-attendanceTemp.splice(i,1);
-renderAttendanceTemp();
+window.removeAttendance = (i) => {
+    attendanceTemp.splice(i, 1);
+    renderAttendanceTemp();
 }
-window.submitAttendance=async()=>{
-if(attendanceTemp.length==0){
-alert("Belum ada data.");
-return;
+window.submitAttendance = async () => {
+    if (attendanceTemp.length == 0) {
+        alert("Belum ada data.");
+        return;
+    }
+    for (const d of attendanceTemp) {
+        const t = new Date(d.tanggal);
+        await addDoc(
+            collection(db, "attendance"),
+            {
+                tanggal: d.tanggal,
+                bulan: t.getMonth() + 1,
+                tahun: t.getFullYear(),
+                kodeKaryawan: d.kode,
+                namaKaryawan: d.nama,
+                jabatan: d.jabatan,
+                status: d.status
+            }
+        );
+    }
+    alert("Attendance berhasil disimpan.");
+    attendanceTemp = [];
+    renderAttendanceTemp();
+    loadAttendance();
 }
-for(const d of attendanceTemp){
-const t=new Date(d.tanggal);
-await addDoc(
-collection(db,"attendance"),
-{
-tanggal:d.tanggal,
-bulan:t.getMonth()+1,
-tahun:t.getFullYear(),
-kodeKaryawan:d.kode,
-namaKaryawan:d.nama,
-jabatan:d.jabatan,
-status:d.status
-}
-);
-}
-alert("Attendance berhasil disimpan.");
-attendanceTemp=[];
-renderAttendanceTemp();
-loadAttendance();
-}
-function fillMonthYear(){
+function fillMonthYear() {
 
-const bulan=document.getElementById("filterMonth");
-const tahun=document.getElementById("filterYear");
+    const bulan = document.getElementById("filterMonth");
+    const tahun = document.getElementById("filterYear");
 
-bulan.innerHTML="";
-const namaBulan=[
-"Januari",
-"Februari",
-"Maret",
-"April",
-"Mei",
-"Juni",
-"Juli",
-"Agustus",
-"September",
-"Oktober",
-"November",
-"Desember"
-];
+    bulan.innerHTML = "";
+    const namaBulan = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "Augustus",
+        "September",
+        "October",
+        "November",
+        "December"
+    ];
 
-namaBulan.forEach((nama,index)=>{
-bulan.innerHTML+=`
-<option value="${index+1}">
+    namaBulan.forEach((nama, index) => {
+        bulan.innerHTML += `
+<option value="${index + 1}">
 ${nama}
 </option>
 `;
-});
+    });
 
-const tahunSekarang=new Date().getFullYear();
-tahun.innerHTML="";
-for(let i=tahunSekarang-5;i<=tahunSekarang+10;i++){
-tahun.innerHTML+=`
+    const tahunSekarang = new Date().getFullYear();
+    tahun.innerHTML = "";
+    for (let i = tahunSekarang - 5; i <= tahunSekarang + 10; i++) {
+        tahun.innerHTML += `
 <option value="${i}">
 ${i}
 </option>
 `;
+    }
+    bulan.value = new Date().getMonth() + 1;
+    tahun.value = tahunSekarang;
 }
-bulan.value=new Date().getMonth()+1;
-tahun.value=tahunSekarang;
-}
-window.loadAttendance=async()=>{
-const tbody=document.getElementById("attendanceTable");
-tbody.innerHTML="";
-const bulan=parseInt(document.getElementById("filterMonth").value);
-const tahun=parseInt(document.getElementById("filterYear").value);
-const q=query(
-collection(db,"attendance"),
-where("bulan","==",bulan),
-where("tahun","==",tahun)
-);
+window.loadAttendance = async () => {
+    const tbody = document.getElementById("attendanceTable");
+    tbody.innerHTML = "";
+    const bulan = parseInt(document.getElementById("filterMonth").value);
+    const tahun = parseInt(document.getElementById("filterYear").value);
+    const q = query(
+        collection(db, "attendance"),
+        where("bulan", "==", bulan),
+        where("tahun", "==", tahun)
+    );
 
-const snap=await getDocs(q);
-snap.forEach(doc=>{
-const d=doc.data();
-tbody.innerHTML+=`
+    const snap = await getDocs(q);
+    snap.forEach(doc => {
+        const d = doc.data();
+        tbody.innerHTML += `
 <tr>
 <td>${d.tanggal}</td>
 <td>${d.kodeKaryawan}</td>
@@ -767,13 +765,13 @@ tbody.innerHTML+=`
 <td>${d.status}</td>
 </tr>
 `;
-});
+    });
 }
 
 /* DATA ATTENDANCE */
 window.showDataAttendance = () => {
-const content=document.getElementById("content");
-content.innerHTML=`
+    const content = document.getElementById("content");
+    content.innerHTML = `
 <div class="card">
 <h2>Data Attendance</h2>
 <div class="attendance-filter">
@@ -791,10 +789,10 @@ content.innerHTML=`
 <table>
 <thead>
 <tr>
-<th>Tanggal</th>
-<th>Kode Karyawan</th>
-<th>Nama Karyawan</th>
-<th>Jabatan</th>
+<th>Date Attendance</th>
+<th>ID Employee</th>
+<th>Employee Name</th>
+<th>Jobs</th>
 <th>Status</th>
 </tr>
 </thead>
@@ -804,97 +802,97 @@ content.innerHTML=`
 </div>
 </div>
 `;
-loadAttendanceFilter();
+    loadAttendanceFilter();
 };
 
-async function loadAttendanceFilter(){
-const bulan=document.getElementById("attendanceMonth");
-const tahun=document.getElementById("attendanceYear");
-const namaBulan=[
-"Januari",
-"Februari",
-"Maret",
-"April",
-"Mei",
-"Juni",
-"Juli",
-"Agustus",
-"September",
-"Oktober",
-"November",
-"Desember"
-];
+async function loadAttendanceFilter() {
+    const bulan = document.getElementById("attendanceMonth");
+    const tahun = document.getElementById("attendanceYear");
+    const namaBulan = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "Augustus",
+        "September",
+        "October",
+        "November",
+        "December"
+    ];
 
-// isi bulan
-bulan.innerHTML="";
-namaBulan.forEach((b,index)=>{
-bulan.innerHTML+=`
-<option value="${index+1}">
+    // isi bulan
+    bulan.innerHTML = "";
+    namaBulan.forEach((b, index) => {
+        bulan.innerHTML += `
+<option value="${index + 1}">
 ${b}
 </option>
 `;
-});
+    });
 
-// isi tahun
-tahun.innerHTML="";
-const sekarang=new Date();
-const tahunSekarang=sekarang.getFullYear();
-for(let i=tahunSekarang-5;i<=tahunSekarang+10;i++){
-tahun.innerHTML+=`
+    // isi tahun
+    tahun.innerHTML = "";
+    const sekarang = new Date();
+    const tahunSekarang = sekarang.getFullYear();
+    for (let i = tahunSekarang - 5; i <= tahunSekarang + 10; i++) {
+        tahun.innerHTML += `
 <option value="${i}">
 ${i}
 </option>
 `;
+    }
+    // posisi live system
+    bulan.value = sekarang.getMonth() + 1;
+    tahun.value = tahunSekarang;
+    // event otomatis
+    bulan.addEventListener(
+        "change",
+        loadAttendanceReport
+    );
+
+    tahun.addEventListener(
+        "change",
+        loadAttendanceReport
+    );
+    // tampilkan langsung
+    loadAttendanceReport();
 }
-// posisi live system
-bulan.value=sekarang.getMonth()+1;
-tahun.value=tahunSekarang;
-// event otomatis
-bulan.addEventListener(
-"change",
-loadAttendanceReport
-);
+async function loadAttendanceReport() {
+    const tbody = document.getElementById(
+        "attendanceReportTable"
+    );
 
-tahun.addEventListener(
-"change",
-loadAttendanceReport
-);
-// tampilkan langsung
-loadAttendanceReport();
-}
-async function loadAttendanceReport(){
-const tbody=document.getElementById(
-"attendanceReportTable"
-);
+    if (!tbody) return;
+    tbody.innerHTML = "";
+    const bulan = parseInt(
+        document.getElementById("attendanceMonth").value
+    );
 
-if(!tbody)return;
-tbody.innerHTML="";
-const bulan=parseInt(
-document.getElementById("attendanceMonth").value
-);
-
-const tahun=parseInt(
-document.getElementById("attendanceYear").value
-);
-const q=query(
-collection(db,"attendance"),
-where("bulan","==",bulan),
-where("tahun","==",tahun)
-);
-const snap=await getDocs(q);
-if(snap.empty){
-tbody.innerHTML=`
+    const tahun = parseInt(
+        document.getElementById("attendanceYear").value
+    );
+    const q = query(
+        collection(db, "attendance"),
+        where("bulan", "==", bulan),
+        where("tahun", "==", tahun)
+    );
+    const snap = await getDocs(q);
+    if (snap.empty) {
+        tbody.innerHTML = `
 <tr>
 <td colspan="5" style="text-align:center">
 Belum ada data attendance
 </td>
 </tr>
 `;
-return;
-}
-snap.forEach(doc=>{
-const d=doc.data();
-tbody.innerHTML+=`
+        return;
+    }
+    snap.forEach(doc => {
+        const d = doc.data();
+        tbody.innerHTML += `
 <tr>
 <td>${d.tanggal}</td>
 <td>${d.kodeKaryawan}</td>
@@ -903,13 +901,13 @@ tbody.innerHTML+=`
 <td>${d.status}</td>
 </tr>
 `;
-});
+    });
 }
 
 
 /* DATA SALARY */
-window.showSalary=()=>{
-    document.getElementById("content").innerHTML=`
+window.showSalary = () => {
+    document.getElementById("content").innerHTML = `
     <div class="card">
         <h2>Data Salary</h2>
         <p>Daftar gaji.</p>
@@ -918,43 +916,43 @@ window.showSalary=()=>{
 }
 
 /* KOPERASI */
-window.showAddAnggota=()=>{
-    document.getElementById("content").innerHTML=`
+window.showAddAnggota = () => {
+    document.getElementById("content").innerHTML = `
     <div class="card">
         <h2>Add Anggota</h2>
     </div>
     `;
 }
-window.showInputSimpanan=()=>{
-    document.getElementById("content").innerHTML=`
+window.showInputSimpanan = () => {
+    document.getElementById("content").innerHTML = `
     <div class="card">
         <h2>Input Simpanan</h2>
     </div>
     `;
 }
-window.showInputPinjaman=()=>{
-    document.getElementById("content").innerHTML=`
+window.showInputPinjaman = () => {
+    document.getElementById("content").innerHTML = `
     <div class="card">
         <h2>Input Pinjaman</h2>
     </div>
     `;
 }
-window.showDataSimpanan=()=>{
-    document.getElementById("content").innerHTML=`
+window.showDataSimpanan = () => {
+    document.getElementById("content").innerHTML = `
     <div class="card">
         <h2>Data Simpanan</h2>
     </div>
     `;
 }
-window.showDataPinjaman=()=>{
-    document.getElementById("content").innerHTML=`
+window.showDataPinjaman = () => {
+    document.getElementById("content").innerHTML = `
     <div class="card">
         <h2>Data Pinjaman</h2>
     </div>
     `;
 }
-window.showNeraca=()=>{
-    document.getElementById("content").innerHTML=`
+window.showNeraca = () => {
+    document.getElementById("content").innerHTML = `
     <div class="card">
         <h2>Neraca Koperasi</h2>
     </div>
@@ -962,248 +960,247 @@ window.showNeraca=()=>{
 }
 
 /* UPDATE DASHBOARD TIME */
-function updateDashboardTime(){
-const now=new Date();
-const tgl=now.toLocaleDateString("id-ID",{
-weekday:"long",
-day:"2-digit",
-month:"long",
-year:"numeric"
-});
+function updateDashboardTime() {
+    const now = new Date();
+    const tgl = now.toLocaleDateString("id-ID", {
+        weekday: "long",
+        day: "2-digit",
+        month: "long",
+        year: "numeric"
+    });
 
-const jam=now.toLocaleTimeString("id-ID");
-const tanggal=document.getElementById("tanggalDashboard");
-const waktu=document.getElementById("jamDashboard");
-if(tanggal)tanggal.innerHTML=tgl;
-if(waktu)waktu.innerHTML=jam;
+    const jam = now.toLocaleTimeString("id-ID");
+    const tanggal = document.getElementById("tanggalDashboard");
+    const waktu = document.getElementById("jamDashboard");
+    if (tanggal) tanggal.innerHTML = tgl;
+    if (waktu) waktu.innerHTML = jam;
 
 }
 
-setInterval(updateDashboardTime,1000);
-document.addEventListener("DOMContentLoaded",()=>{
-updateClock();
-updateDashboardTime();
-    
-const user=auth.currentUser;
-const name=document.getElementById("loginName");
-if(user&&name){
-name.innerHTML=user.email;
-}
+setInterval(updateDashboardTime, 1000);
+document.addEventListener("DOMContentLoaded", () => {
+    updateClock();
+    updateDashboardTime();
+
+    const user = auth.currentUser;
+    const name = document.getElementById("loginName");
+    if (user && name) {
+        name.innerHTML = user.email;
+    }
 
 });
 
 /* CHART */
-function createDashboardChart(){
-if(typeof Chart==="undefined"){
-console.error("Chart.js belum dimuat");
-return;
+function createDashboardChart() {
+    if (typeof Chart === "undefined") {
+        console.error("Chart.js belum dimuat");
+        return;
 
-}
-/* HAPUS CHART LAMA */
-chartInstances.forEach(chart=>{
-try{
-chart.destroy();
-}catch(e){}
+    }
+    /* HAPUS CHART LAMA */
+    chartInstances.forEach(chart => {
+        try {
+            chart.destroy();
+        } catch (e) { }
 
-});
+    });
 
-chartInstances=[];
+    chartInstances = [];
 
-function makeChart(id,type,data){
-const canvas=document.getElementById(id);
-if(!canvas)return;
-const chart=new Chart(canvas,{
-type:type,
-data:data
-});
+    function makeChart(id, type, data) {
+        const canvas = document.getElementById(id);
+        if (!canvas) return;
+        const chart = new Chart(canvas, {
+            type: type,
+            data: data
+        });
 
-chartInstances.push(chart);
-}
+        chartInstances.push(chart);
+    }
 
-/* GENDER */
-makeChart(
-"genderChart",
-"doughnut",
-{
+    /* GENDER */
+    makeChart(
+        "genderChart",
+        "doughnut",
+        {
 
-labels:[
-"Male",
-"Female"
-],
+            labels: [
+                "Male",
+                "Female"
+            ],
 
-datasets:[{
-data:[
-150,
-100
-],
+            datasets: [{
+                data: [
+                    150,
+                    100
+                ],
 
-backgroundColor:[
-"#2563eb",
-"#ec4899"
-]
-}]
-}
-);
+                backgroundColor: [
+                    "#2563eb",
+                    "#ec4899"
+                ]
+            }]
+        }
+    );
 
-/* ATTENDANCE */
-makeChart(
-"attendanceChart",
-"line",
-{
+    /* ATTENDANCE */
+    makeChart(
+        "attendanceChart",
+        "line",
+        {
 
-labels:[
-"1",
-"5",
-"10",
-"15",
-"20",
-"25",
-"30"
-],
+            labels: [
+                "1",
+                "5",
+                "10",
+                "15",
+                "20",
+                "25",
+                "30"
+            ],
 
-datasets:[{
+            datasets: [{
 
-label:"Attendance",
+                label: "Attendance",
 
-data:[
-230,
-245,
-240,
-250,
-248,
-242,
-250
-],
+                data: [
+                    230,
+                    245,
+                    240,
+                    250,
+                    248,
+                    242,
+                    250
+                ],
 
-borderColor:"#16a34a",
-backgroundColor:"rgba(22,163,74,.2)",
-fill:true,
-tension:.4
-}]
-}
-);
-/* DEPARTMENT */
-makeChart(
-"departmentChart",
-"bar",
-{
-labels:[
-"IT",
-"HR",
-"Finance",
-"Production",
-"Marketing"
-],
+                borderColor: "#16a34a",
+                backgroundColor: "rgba(22,163,74,.2)",
+                fill: true,
+                tension: .4
+            }]
+        }
+    );
+    /* DEPARTMENT */
+    makeChart(
+        "departmentChart",
+        "bar",
+        {
+            labels: [
+                "IT",
+                "HR",
+                "Finance",
+                "Production",
+                "Marketing"
+            ],
 
-datasets:[{
-label:"Employee",
-data:[
-35,
-20,
-25,
-80,
-15
-],
+            datasets: [{
+                label: "Employee",
+                data: [
+                    35,
+                    20,
+                    25,
+                    80,
+                    15
+                ],
 
-backgroundColor:"#2563eb"
-}]
-}
-);
+                backgroundColor: "#2563eb"
+            }]
+        }
+    );
 
-/* STATUS */
-makeChart(
-"statusChart",
-"pie",
-{
+    /* STATUS */
+    makeChart(
+        "statusChart",
+        "pie",
+        {
 
-labels:[
-"Hadir",
-"Izin",
-"Sakit",
-"Alpha"
-],
+            labels: [
+                "Hadir",
+                "Izin",
+                "Sakit",
+                "Alpha"
+            ],
 
-datasets:[{
+            datasets: [{
 
-data:[
-220,
-10,
-15,
-5
-],
+                data: [
+                    220,
+                    10,
+                    15,
+                    5
+                ],
 
-backgroundColor:[
-"#16a34a",
-"#eab308",
-"#2563eb",
-"#dc2626"
-]
-}]
-}
-);
-    
-/* PERFORMANCE */
-makeChart(
-"performanceChart",
-"radar",
-{
+                backgroundColor: [
+                    "#16a34a",
+                    "#eab308",
+                    "#2563eb",
+                    "#dc2626"
+                ]
+            }]
+        }
+    );
 
-labels:[
-"IT",
-"HR",
-"Finance",
-"Production",
-"Marketing"
-],
+    /* PERFORMANCE */
+    makeChart(
+        "performanceChart",
+        "radar",
+        {
 
-datasets:[{
-label:"Performance",
-data:[
-90,
-80,
-75,
-95,
-70
-],
+            labels: [
+                "IT",
+                "HR",
+                "Finance",
+                "Production",
+                "Marketing"
+            ],
 
-backgroundColor:"rgba(37,99,235,.2)",
-borderColor:"#2563eb"
-}]
-}
-);
+            datasets: [{
+                label: "Performance",
+                data: [
+                    90,
+                    80,
+                    75,
+                    95,
+                    70
+                ],
 
-/* AGE */
-makeChart(
-"ageChart",
-"polarArea",
-{
+                backgroundColor: "rgba(37,99,235,.2)",
+                borderColor: "#2563eb"
+            }]
+        }
+    );
 
-labels:[
-"18-25",
-"26-35",
-"36-45",
-"46+"
-],
+    /* AGE */
+    makeChart(
+        "ageChart",
+        "polarArea",
+        {
 
-datasets:[{
+            labels: [
+                "18-25",
+                "26-35",
+                "36-45",
+                "46+"
+            ],
 
-data:[
-80,
-100,
-50,
-20
-],
+            datasets: [{
 
-backgroundColor:[
-"#2563eb",
-"#16a34a",
-"#eab308",
-"#dc2626"
-]
-}]
-}
-);
+                data: [
+                    80,
+                    100,
+                    50,
+                    20
+                ],
 
+                backgroundColor: [
+                    "#2563eb",
+                    "#16a34a",
+                    "#eab308",
+                    "#dc2626"
+                ]
+            }]
+        }
+    );
 }
 
 /* END */
