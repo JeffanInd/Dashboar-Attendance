@@ -687,23 +687,45 @@ renderAttendanceTemp();
 loadAttendance();
 }
 function fillMonthYear(){
+
 const bulan=document.getElementById("filterMonth");
 const tahun=document.getElementById("filterYear");
-bulan.innerHTML="";
-for(let i=1;i<=12;i++){
-bulan.innerHTML+=`
-<option value="${i}">${i}</option>
-`;
-}
-const now=new Date().getFullYear();
-for(let i=now-2;i<=now+2;i++){
-tahun.innerHTML+=`
-<option value="${i}">${i}</option>
 
+bulan.innerHTML="";
+const namaBulan=[
+"Januari",
+"Februari",
+"Maret",
+"April",
+"Mei",
+"Juni",
+"Juli",
+"Agustus",
+"September",
+"Oktober",
+"November",
+"Desember"
+];
+
+namaBulan.forEach((nama,index)=>{
+bulan.innerHTML+=`
+<option value="${index+1}">
+${nama}
+</option>
+`;
+});
+
+const tahunSekarang=new Date().getFullYear();
+tahun.innerHTML="";
+ffor(let i=tahunSekarang-5;i<=tahunSekarang+10;i++){
+tahun.innerHTML+=`
+<option value="${i}">
+${i}
+</option>
 `;
 }
 bulan.value=new Date().getMonth()+1;
-tahun.value=now;
+tahun.value=tahunSekarang;
 }
 window.loadAttendance=async()=>{
 const tbody=document.getElementById("attendanceTable");
