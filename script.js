@@ -556,7 +556,7 @@ content.innerHTML=`
 
 <div class="form-group button-align">
 <label>&nbsp;</label>
-<button onclick="addAttendanceRow()">➕ Add</button>
+<button onclick="addAttendanceRow()">📋✓ Add</button>
 </div>
 </div>
 
