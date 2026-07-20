@@ -226,7 +226,7 @@ if(!content)return;
 content.innerHTML=`
 <div class="card">
 <h2>Data Karyawan</h2>
-<div class="form-grid">
+<div class="employee-form-grid">
 
 <div class="form-group">
 <label>ID Attendance</label>
