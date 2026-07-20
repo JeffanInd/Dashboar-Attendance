@@ -230,8 +230,8 @@ window.showAddEmployee = () => {
 <div class="employee-form-grid">
 
 <div class="form-group">
-<label>ID Attendance</label>
-<input id="kode" placeholder="ID Attendance" readonly>
+<label>ID Employee</label>
+<input id="kode" placeholder="ID Employee" readonly>
 </div>
 
 <div class="form-group">
@@ -307,7 +307,7 @@ window.showAddEmployee = () => {
 <table>
 <thead>
 <tr>
-<th>ID Attendance</th>
+<th>ID Employee</th>
 <th>Employee Name</th>
 <th>Gender</th>
 <th>Jobs</th>
@@ -402,6 +402,7 @@ window.saveEmployee = async () => {
             nomorRekening: document.getElementById("rekening").value,
             bank: document.getElementById("bank").value,
             tanggalMulaiKerja: document.getElementById("tanggalMulaiKerja").value
+            status:"Active"
         };
 
         if (editId) {
@@ -563,16 +564,80 @@ async function getEmployeeCount() {
     return snap.size;
 }
 
-/* DATA SALARY */
+/* DATA EMPLOYEE */
 window.showDataEmployee = () => {
-    document.getElementById("content").innerHTML = `
+    const content = document.getElementById("content");
+    content.innerHTML = `
     <div class="card">
         <h2>Data Employee</h2>
-        <p>Daftar gaji.</p>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID Attendance</th>
+                        <th>Employee Name</th>
+                        <th>Gender</th>
+                        <th>Jobs</th>
+                        <th>Start Work Date</th>
+                        <th>Contact</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="dataEmployeeTable"></tbody>
+            </table>
+        </div>
     </div>
     `;
+
+    loadDataEmployee();
 }
 
+async function loadDataEmployee() {
+    const tbody = document.getElementById("dataEmployeeTable");
+    tbody.innerHTML = "";
+    const q = query(
+        collection(db, "employees"),
+        orderBy("kodeKaryawan")
+    );
+
+    const snap = await getDocs(q);
+    snap.forEach(docSnap => {
+        const d = docSnap.data();
+        const status = d.status || "Active";
+        tbody.innerHTML += `
+        <tr>
+        <td>${d.kodeKaryawan || ""}</td>
+        <td>${d.namaKaryawan || ""}</td>
+        <td>${d.jenisKelamin || ""}</td>
+        <td>${d.jabatan || ""}</td>
+        <td>${d.tanggalMulaiKerja || ""}</td>
+        <td>${d.noHp || ""}</td>
+        <td>
+            <button
+            class="${status=="Active"?"edit":"delete"}"
+            onclick="changeEmployeeStatus('${docSnap.id}','${status}')">
+            ${status}
+            </button>
+        </td>
+        </tr>
+        `;
+
+    });
+}
+window.changeEmployeeStatus = async(id,status)=>{
+    const statusBaru =
+        status=="Active"
+        ? "Non Active"
+        : "Active";
+    await updateDoc(
+        doc(db,"employees",id),
+        {
+            status:statusBaru
+        }
+    );
+    loadDataEmployee();
+}
+    
 /* ATTENDANCE */
 window.showInputAttendance = async () => {
     const content = document.getElementById("content");
