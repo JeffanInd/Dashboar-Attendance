@@ -88,10 +88,17 @@ font-size:14px
 }
 
 /* FORM KARYAWAN */
-.form-grid{
+.employee-form-grid{
 display:grid;
 grid-template-columns:repeat(2,1fr);
 gap:6px;
+}
+/* FORM ATTENDANCE */
+.attendance-form-grid{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:10px;
+align-items:end;
 }
 
 .form-group{
@@ -124,6 +131,7 @@ resize:vertical;
 grid-template-columns:1fr;
 }
 }
+
 
 /* DASHBOARD */
 button{ 
