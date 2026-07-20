@@ -540,18 +540,25 @@ content.innerHTML=`
 <div class="card">
 <h2>Input Attendance</h2>
 <div class="form-grid">
+
 <div class="form-group">
-<label>Tanggal</label>
+<label>Date of attendance</label>
 <input type="date" id="attendanceDate">
 </div>
+
 <div class="form-group">
 <label>Nama Karyawan</label>
-<select id="employeeSelect"></select>
+<select id="employeeSelect">
+<option value="">-- Select Attendance --</option>
+</select>
+</div>
+
+<div class="form-group button-align">
+<label>&nbsp;</label>
+<button onclick="addAttendanceRow()">➕ Add</button>
 </div>
 </div>
-<button onclick="addAttendanceRow()">
-Tambah
-</button>
+
 <br><br>
 <table>
 <thead>
