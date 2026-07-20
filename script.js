@@ -329,24 +329,35 @@ window.showAddEmployee = () => {
 `;
     generateCode();
     loadEmployees();
+    document
+.getElementById("tanggalMulaiKerja")
+.addEventListener("change", updateEmployeeCode);
 };
+
 /* GENERATE KODE */
 async function generateCode() {
     try {
-        const snap = await getDocs(
-            collection(db, "employees")
-        );
-        const nomor = snap.size + 1;
-        const kode =
-            "KARY" + String(nomor).padStart(3, "0");
-        const el = document.getElementById("kode");
-        if (el) {
-            el.value = kode;
+        const snap = await getDocs(collection(db, "employees"));
+        const nomor = String(snap.size + 1).padStart(3, "0");
+        document.getElementById("kode").dataset.urut = nomor;
+        document.getElementById("kode").value = "";
 
-        }
     } catch (error) {
         console.error(error);
     }
+}
+
+function updateEmployeeCode() {
+    const tanggal = document.getElementById("tanggalMulaiKerja").value;       
+    if (!tanggal) return;
+    const urut = document.getElementById("kode").dataset.urut || "001";
+    const pecah = tanggal.split("-");
+    const tahun = pecah[0].slice(-2);
+    const bulan = pecah[1];
+    const hari = pecah[2];
+
+    document.getElementById("kode").value =
+        `KARY${tahun}${bulan}${hari}${urut}`;
 }
 
 /* SAVE DATA */
@@ -364,7 +375,7 @@ window.saveEmployee = async () => {
             "bank",
             "tanggalMulaiKerja"
         ];
-
+        // Validasi field
         for (const id of fields) {
             const el = document.getElementById(id);
             if (!el || String(el.value).trim() === "") {
@@ -372,6 +383,11 @@ window.saveEmployee = async () => {
                 if (el) el.focus();
                 return;
             }
+        }
+
+        if(document.getElementById("kode").value==""){
+            alert("Silahkan pilih Start Work Date terlebih dahulu.");
+            return;
         }
 
         const data = {
@@ -474,6 +490,7 @@ window.editEmployee = async (id) => {
             if (item.id === id) {
                 const d = item.data();
                 document.getElementById("kode").value = d.kodeKaryawan || "";
+                document.getElementById("kode").readOnly = true;
                 document.getElementById("nama").value = d.namaKaryawan || "";
                 document.getElementById("gender").value = d.jenisKelamin || "";
                 document.getElementById("jabatan").value = d.jabatan || "";
