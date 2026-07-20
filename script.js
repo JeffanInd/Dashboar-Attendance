@@ -303,6 +303,16 @@ window.showAddEmployee = () => {
 
 <div class="card">
 <h2>Employee List</h2>
+<div style="display:flex;gap:10px;margin-bottom:15px;">
+<input 
+id="searchEmployee"
+placeholder="Search ID Employee / Employee Name"
+style="flex:1;padding:10px;">
+
+<button onclick="searchEmployee()">
+🔍 Search
+</button>
+</div>
 <div class="table-container">
 <table>
 <thead>
@@ -325,14 +335,14 @@ window.showAddEmployee = () => {
 </table>
 </div>
 </div>
-
 `;
+    
     generateCode();
-    loadEmployees();
     document
 .getElementById("tanggalMulaiKerja")
 .addEventListener("change", updateEmployeeCode);
 };
+
 
 /* GENERATE KODE */
 async function generateCode() {
@@ -401,7 +411,7 @@ window.saveEmployee = async () => {
             noHp: document.getElementById("hp").value,
             nomorRekening: document.getElementById("rekening").value,
             bank: document.getElementById("bank").value,
-            tanggalMulaiKerja: document.getElementById("tanggalMulaiKerja").value
+            tanggalMulaiKerja: document.getElementById("tanggalMulaiKerja").value,
             status:"Active"
         };
 
@@ -479,6 +489,60 @@ onclick="deleteEmployee('${item.id}')">
         console.error(error);
     }
 }
+
+window.searchEmployee = async () => {
+    const keyword = document
+    .getElementById("searchEmployee")
+    .value
+    .toLowerCase();
+    const tbody = document.getElementById("employeeTable");
+    tbody.innerHTML = "";
+    if(keyword==""){
+        return;
+    }
+    const snap = await getDocs(
+        collection(db,"employees")
+    );
+    snap.forEach(item=>{
+        const d = item.data();
+        const kode = (d.kodeKaryawan || "").toLowerCase();
+        const nama = (d.namaKaryawan || "").toLowerCase();
+        if(
+            kode.includes(keyword) ||
+            nama.includes(keyword)
+        ){
+
+            tbody.innerHTML += `
+
+<tr>
+<td>${d.kodeKaryawan || ""}</td>
+<td>${d.namaKaryawan || ""}</td>
+<td>${d.jenisKelamin || ""}</td>
+<td>${d.jabatan || ""}</td>
+<td>${d.tanggalLahir || ""}</td>
+<td>${d.alamat || ""}</td>
+<td>${d.pendidikanTerakhir || ""}</td>
+<td>${d.noHp || ""}</td>
+<td>${d.nomorRekening || ""}</td>
+<td>${d.bank || ""}</td>
+<td>${d.tanggalMulaiKerja || ""}</td>
+<td>
+<button class="edit"
+onclick="editEmployee('${item.id}')">
+✏️ Edit
+</button>
+<button class="delete"
+onclick="deleteEmployee('${item.id}')">
+🗑 Delete
+</button>
+</td>
+</tr>
+`;
+
+        }
+    });
+};
+
 /* EDIT */
 window.editEmployee = async (id) => {
     try {
