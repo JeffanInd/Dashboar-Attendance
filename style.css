@@ -93,6 +93,7 @@ display:grid;
 grid-template-columns:repeat(2,1fr);
 gap:6px;
 }
+
 /* FORM ATTENDANCE */
 .attendance-form-grid{
 display:grid;
@@ -127,7 +128,9 @@ resize:vertical;
 }
 
 @media(max-width:700px){
-.form-grid{
+.form-grid,
+.employee-form-grid,
+.attendance-form-grid{
 grid-template-columns:1fr;
 }
 }
@@ -185,7 +188,6 @@ background:#2563eb
 /* ===========================
    SUB MENU SIDEBAR
 =========================== */
-
 .menu-btn{
 display:flex;
 justify-content:space-between;
@@ -318,10 +320,14 @@ border-radius:18px;
 box-shadow:0 8px 25px rgba(0,0,0,.05);
 margin-bottom:25px
 }
-/* TABLE */
 
+/* TABLE */
 .table-container{
 overflow:auto
+}
+
+.table-container table{
+min-width:1200px;
 }
 
 table{
@@ -344,6 +350,11 @@ table tr:hover{
 background:#f8fafc
 }
 
+.edit,
+.delete{
+padding:8px 12px;
+font-size:13px;
+}
 .edit{ 
   background:#16a34a 
 } 
@@ -373,6 +384,7 @@ align-items:end;
 .attendance-filter .form-group{
 width:180px;
 }
+
 @media(max-width:700px){
 .attendance-filter{
 flex-direction:column;
@@ -437,9 +449,7 @@ color:#9333ea
 color:#dc2626
 }
 
-
 /* CHART */
-
 .chart-grid{
 display:grid;
 grid-template-columns:repeat(3,minmax(250px,1fr));
@@ -468,16 +478,13 @@ flex:none
 }
 
 /* FIX CHART TIDAK KELUAR PADDING */
-
 .chart-box canvas{
 width:100%!important;
 height:240px!important;
 max-height:240px
 }
 
-
 /* HOVER */
-
 .kpi-card,
 .chart-box{
 transition:transform .3s ease,box-shadow .3s ease;
@@ -512,9 +519,7 @@ transform:scale(.98)
 
 
 /* RESPONSIVE */
-
 @media(max-width:1200px){
-
 .kpi-container{
 grid-template-columns:repeat(3,1fr)
 }
@@ -522,12 +527,9 @@ grid-template-columns:repeat(3,1fr)
 .chart-grid{
 grid-template-columns:repeat(2,1fr)
 }
-
 }
 
-
 @media(max-width:768px){
-
 #dashboard{
 flex-direction:column
 }
@@ -562,6 +564,8 @@ padding:15px
 }
 
 .form-grid,
+.employee-form-grid,
+.attendance-form-grid,
 .stat-container,
 .kpi-container,
 .chart-grid{
