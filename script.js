@@ -344,6 +344,7 @@ el.value=kode;
 console.error(error);
 }
 }
+
 /* SAVE DATA */
 window.saveEmployee=async()=>{
 try{
@@ -606,15 +607,24 @@ attendanceTemp=[];
 loadEmployeeSelect();
 fillMonthYear();
 }
+
 async function loadEmployeeSelect(){
 const select=document.getElementById("employeeSelect");
-select.innerHTML="";
-const snap=await getDocs(collection(db,"employees"));
+if(!select)return;
+select.innerHTML=`
+<option value="">
+-- Pilih Karyawan --
+</option>
+`;
+const snap=await getDocs(
+collection(db,"employees")
+);
+
 snap.forEach(doc=>{
 const d=doc.data();
 select.innerHTML+=`
 <option value="${doc.id}">
-${d.namaKaryawan}
+${d.kodeKaryawan} - ${d.namaKaryawan}
 </option>
 `;
 });
@@ -724,7 +734,7 @@ ${nama}
 
 const tahunSekarang=new Date().getFullYear();
 tahun.innerHTML="";
-ffor(let i=tahunSekarang-5;i<=tahunSekarang+10;i++){
+for(let i=tahunSekarang-5;i<=tahunSekarang+10;i++){
 tahun.innerHTML+=`
 <option value="${i}">
 ${i}
