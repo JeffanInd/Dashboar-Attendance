@@ -540,7 +540,7 @@ const content=document.getElementById("content");
 content.innerHTML=`
 <div class="card">
 <h2>Input Attendance</h2>
-<div class="form-grid">
+<div class="attendance-form-grid">
 
 <div class="form-group">
 <label>Date of attendance</label>
