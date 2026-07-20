@@ -174,16 +174,66 @@ text-align:left
 .sidebar button:hover{
 background:#2563eb
 }
+/* ===========================
+   SUB MENU SIDEBAR
+=========================== */
 
+.menu-btn{
+display:flex;
+justify-content:space-between;
+align-items:center;
+width:100%;
+}
+
+.menu-btn span{
+display:flex;
+align-items:center;
+gap:10px;
+}
+
+.menu-btn .fa-chevron-down{
+font-size:12px;
+transition:.3s;
+}
+
+/* submenu disembunyikan */
+.submenu{
+display:none;
+margin:-8px 0 10px 0;
+padding-left:15px;
+}
+
+/* tombol submenu */
+.submenu button{
+background:#172554;
+font-size:14px;
+padding:12px 14px;
+margin-bottom:6px;
+border-left:3px solid #2563eb;
+}
+
+/* hover submenu */
+.submenu button:hover{
+background:#2563eb;
+}
+
+/* icon submenu */
+.submenu button i{
+width:18px;
+margin-right:8px;
+}
+
+/* panah berputar */
+.menu-btn.active .fa-chevron-down{
+transform:rotate(180deg);
+}
 .main{
 margin-left:250px;
 width:calc(100% - 250px);
 height:100vh
 }
 
-
 /* HEADER */
-
 header{
 position:fixed;
 left:250px;
