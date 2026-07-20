@@ -25,25 +25,78 @@
 </div>
 <div id="dashboard" style="display:none;">
 <div class="sidebar">
-<h2>COMPANY</h2>
-<button onclick="loadDashboard()">
-<i class="fa-solid fa-chart-line"></i> Dashboard
-</button>
-<button onclick="showUtilities()">
-<i class="fa-solid fa-screwdriver-wrench"></i> Utilities
-</button>
-<button onclick="showAttendance()">
-<i class="fa-solid fa-user-check"></i> Attendance
-</button>
-<button onclick="showKoperasi()">
-<i class="fa-solid fa-building-columns"></i> Koperasi
-</button>
-<button onclick="logout()">
-<i class="fa-solid fa-right-from-bracket"></i> Logout
-</button>
+    <h2>COMPANY</h2>
+    <!-- Dashboard -->
+    <button onclick="loadDashboard()">
+        <i class="fa-solid fa-chart-line"></i> Dashboard
+    </button>
+    <!-- Utilities -->
+    <button class="menu-btn" onclick="toggleMenu('utilitiesMenu')">
+        <span>
+            <i class="fa-solid fa-screwdriver-wrench"></i>
+            Utilities
+        </span>
+        <i class="fa-solid fa-chevron-down"></i>
+    </button>
+    <div class="submenu" id="utilitiesMenu">
+        <button onclick="showAddEmployee()">
+            <i class="fa-solid fa-user-plus"></i> Add Employee
+        </button>
+    </div>
+    <!-- Attendance -->
+    <button class="menu-btn" onclick="toggleMenu('attendanceMenu')">
+        <span>
+            <i class="fa-solid fa-user-check"></i>
+            Attendance
+        </span>
+        <i class="fa-solid fa-chevron-down"></i>
+    </button>
+    <div class="submenu" id="attendanceMenu">
+        <button onclick="showInputAttendance()">
+            <i class="fa-solid fa-pen"></i> Input Attendance
+        </button>
+        <button onclick="showDataAttendance()">
+            <i class="fa-solid fa-table"></i> Data Attendance
+        </button>
+
+        <button onclick="showSalary()">
+            <i class="fa-solid fa-money-bill"></i> Data Salary
+        </button>
+    </div>
+    <!-- Koperasi -->
+    <button class="menu-btn" onclick="toggleMenu('koperasiMenu')">
+        <span>
+            <i class="fa-solid fa-building-columns"></i>
+            Koperasi
+        </span>
+        <i class="fa-solid fa-chevron-down"></i>
+    </button>
+    <div class="submenu" id="koperasiMenu">
+        <button onclick="showAddAnggota()">
+            <i class="fa-solid fa-user-plus"></i> Add Anggota
+        </button>
+        <button onclick="showInputSimpanan()">
+            <i class="fa-solid fa-piggy-bank"></i> Input Simpanan
+        </button>
+        <button onclick="showInputPinjaman()">
+            <i class="fa-solid fa-hand-holding-dollar"></i> Input Pinjaman
+        </button>
+        <button onclick="showDataSimpanan()">
+            <i class="fa-solid fa-database"></i> Data Simpanan
+        </button>
+        <button onclick="showDataPinjaman()">
+            <i class="fa-solid fa-file-invoice-dollar"></i> Data Pinjaman
+        </button>
+        <button onclick="showNeraca()">
+            <i class="fa-solid fa-scale-balanced"></i> Neraca
+        </button>
+    </div>
+    <!-- Logout -->
+    <button onclick="logout()">
+        <i class="fa-solid fa-right-from-bracket"></i> Logout
+    </button>
 </div>
-<div class="main">
-<header>
+<div class="main"><header>
 <div class="company">
 <h2>PT. NAMA PERUSAHAAN</h2>
 <span>Sistem Informasi Dashboard Perusahaan</span>
