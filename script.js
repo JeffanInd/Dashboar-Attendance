@@ -1,6 +1,6 @@
 import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import{getAuth,signInWithEmailAndPassword,signOut,onAuthStateChanged}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import{getFirestore,collection,getDocs,addDoc,doc,deleteDoc,updateDoc,orderBy,query}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import{getFirestore,collection,getDocs,addDoc,doc,deleteDoc,updateDoc,orderBy,query,where}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig={
 apiKey:"AIzaSyB6IOPUC-6JdFGhDdLCxfupc1dye92ACr0",
@@ -17,6 +17,7 @@ const auth=getAuth(app);
 const db=getFirestore(app);
 let editId=null;
 let chartInstances=[];
+let attendanceTemp=[];
 
 /* CLOCK */
 function updateClock() {
@@ -533,13 +534,201 @@ return snap.size;
 }
 
 /* ATTENDANCE */
-window.showInputAttendance=()=>{
-    document.getElementById("content").innerHTML=`
-    <div class="card">
-        <h2>Input Attendance</h2>
-        <p>Form input absensi.</p>
-    </div>
-    `;
+window.showInputAttendance=async()=>{
+const content=document.getElementById("content");
+content.innerHTML=`
+<div class="card">
+<h2>Input Attendance</h2>
+<div class="form-grid">
+<div class="form-group">
+<label>Tanggal</label>
+<input type="date" id="attendanceDate">
+</div>
+<div class="form-group">
+<label>Nama Karyawan</label>
+<select id="employeeSelect"></select>
+</div>
+</div>
+<button onclick="addAttendanceRow()">
+Tambah
+</button>
+<br><br>
+<table>
+<thead>
+<tr>
+<th>Kode</th>
+<th>Nama</th>
+<th>Jabatan</th>
+<th>Status</th>
+<th>Hapus</th>
+</tr>
+</thead>
+<tbody id="attendanceTempTable"></tbody>
+</table>
+<br>
+<button onclick="submitAttendance()">
+Submit Attendance
+</button>
+</div>
+<hr>
+<div class="card">
+<h2>Data Attendance</h2>
+<div style="display:flex;gap:10px">
+<select id="filterMonth"></select>
+<select id="filterYear"></select>
+<button onclick="loadAttendance()">
+Cari
+</button>
+</div>
+<br>
+<table>
+<thead>
+<tr>
+<th>Tanggal</th>
+<th>Kode</th>
+<th>Nama</th>
+<th>Jabatan</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody id="attendanceTable"></tbody>
+</table>
+</div>
+`;
+attendanceTemp=[];
+loadEmployeeSelect();
+fillMonthYear();
+}
+async function loadEmployeeSelect(){
+const select=document.getElementById("employeeSelect");
+select.innerHTML="";
+const snap=await getDocs(collection(db,"employees"));
+snap.forEach(doc=>{
+const d=doc.data();
+select.innerHTML+=`
+<option value="${doc.id}">
+${d.namaKaryawan}
+</option>
+`;
+});
+}
+
+window.addAttendanceRow=async()=>{
+const id=document.getElementById("employeeSelect").value;
+const snap=await getDocs(collection(db,"employees"));
+snap.forEach(item=>{
+if(item.id===id){
+const d=item.data();
+attendanceTemp.push({
+tanggal:document.getElementById("attendanceDate").value,
+kode:d.kodeKaryawan,
+nama:d.namaKaryawan,
+jabatan:d.jabatan,
+status:"Hadir"
+});
+}
+});
+renderAttendanceTemp();
+}
+
+function renderAttendanceTemp(){
+const tbody=document.getElementById("attendanceTempTable");
+tbody.innerHTML="";
+attendanceTemp.forEach((d,index)=>{
+tbody.innerHTML+=`
+<tr>
+<td>${d.kode}</td>
+<td>${d.nama}</td>
+<td>${d.jabatan}</td>
+<td>
+<select onchange="attendanceTemp[${index}].status=this.value">
+<option ${d.status=="Hadir"?"selected":""}>Hadir</option>
+<option ${d.status=="Tidak Hadir"?"selected":""}>Tidak Hadir</option>
+<option ${d.status=="Izin"?"selected":""}>Izin</option>
+<option ${d.status=="Cuti"?"selected":""}>Cuti</option>
+</select>
+</td>
+<td>
+<button onclick="removeAttendance(${index})">
+Hapus
+</button>
+</td>
+</tr>
+`;
+});
+}
+window.removeAttendance=(i)=>{
+attendanceTemp.splice(i,1);
+renderAttendanceTemp();
+}
+window.submitAttendance=async()=>{
+if(attendanceTemp.length==0){
+alert("Belum ada data.");
+return;
+}
+for(const d of attendanceTemp){
+const t=new Date(d.tanggal);
+await addDoc(
+collection(db,"attendance"),
+{
+tanggal:d.tanggal,
+bulan:t.getMonth()+1,
+tahun:t.getFullYear(),
+kodeKaryawan:d.kode,
+namaKaryawan:d.nama,
+jabatan:d.jabatan,
+status:d.status
+}
+);
+}
+alert("Attendance berhasil disimpan.");
+attendanceTemp=[];
+renderAttendanceTemp();
+loadAttendance();
+}
+function fillMonthYear(){
+const bulan=document.getElementById("filterMonth");
+const tahun=document.getElementById("filterYear");
+bulan.innerHTML="";
+for(let i=1;i<=12;i++){
+bulan.innerHTML+=`
+<option value="${i}">${i}</option>
+`;
+}
+const now=new Date().getFullYear();
+for(let i=now-2;i<=now+2;i++){
+tahun.innerHTML+=`
+<option value="${i}">${i}</option>
+
+`;
+}
+bulan.value=new Date().getMonth()+1;
+tahun.value=now;
+}
+window.loadAttendance=async()=>{
+const tbody=document.getElementById("attendanceTable");
+tbody.innerHTML="";
+const bulan=parseInt(document.getElementById("filterMonth").value);
+const tahun=parseInt(document.getElementById("filterYear").value);
+const q=query(
+collection(db,"attendance"),
+where("bulan","==",bulan),
+where("tahun","==",tahun)
+);
+
+const snap=await getDocs(q);
+snap.forEach(doc=>{
+const d=doc.data();
+tbody.innerHTML+=`
+<tr>
+<td>${d.tanggal}</td>
+<td>${d.kodeKaryawan}</td>
+<td>${d.namaKaryawan}</td>
+<td>${d.jabatan}</td>
+<td>${d.status}</td>
+</tr>
+`;
+});
 }
 
 /* DATA ATTENDANCE */
