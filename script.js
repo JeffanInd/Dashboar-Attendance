@@ -140,6 +140,7 @@ function toggleMenu(menuId) {
 }
 
 window.toggleMenu = toggleMenu;
+
 /* DASHBOARD */
 window.loadDashboard = () => {
     const content = document.getElementById("content");
@@ -288,6 +289,10 @@ window.showAddEmployee = () => {
 <option value="Lainnya">Lainnya</option>
 </select>
 </div>
+<div class="form-group">
+<label>Start Work Date</label>
+<input id="tanggalMulaiKerja" type="date">
+</div>
 </div>
 
 <div style="margin-top:20px;display:flex;gap:10px">
@@ -313,6 +318,7 @@ window.showAddEmployee = () => {
 <th>Bank Account</th>
 <th>Bank Name</th>
 <th>Action</th>
+<th>Start Work Date</th>
 </tr>
 </thead>
 <tbody id="employeeTable"></tbody>
@@ -356,6 +362,7 @@ window.saveEmployee = async () => {
             "hp",
             "rekening",
             "bank"
+            "tanggalMulaiKerja"
         ];
 
         for (const id of fields) {
@@ -378,6 +385,7 @@ window.saveEmployee = async () => {
             noHp: document.getElementById("hp").value,
             nomorRekening: document.getElementById("rekening").value,
             bank: document.getElementById("bank").value
+            tanggalMulaiKerja: document.getElementById("tanggalMulaiKerja").value
         };
 
         if (editId) {
@@ -433,6 +441,7 @@ async function loadEmployees() {
 <td>${d.noHp || ""}</td>
 <td>${d.nomorRekening || ""}</td>
 <td>${d.bank || ""}</td>
+<td>${d.tanggalMulaiKerja || ""}</td>
 <td>
 <button class="edit"
 onclick="editEmployee('${item.id}')">
@@ -471,6 +480,7 @@ window.editEmployee = async (id) => {
                 document.getElementById("hp").value = d.noHp || "";
                 document.getElementById("rekening").value = d.nomorRekening || "";
                 document.getElementById("bank").value = d.bank || "";
+                document.getElementById("tanggalMulaiKerja").value = d.tanggalMulaiKerja || "";
             }
         });
         window.scrollTo({
@@ -509,6 +519,7 @@ window.clearForm = () => {
         "pendidikan",
         "hp",
         "rekening"
+        "tanggalMulaiKerja"
     ];
     ids.forEach(id => {
         const el = document.getElementById(id);
@@ -786,7 +797,6 @@ window.loadAttendance = async () => {
     const bulan = parseInt(
         document.getElementById("filterMonth").value
     );
-
     const tahun = parseInt(
         document.getElementById("filterYear").value
     );
@@ -801,18 +811,15 @@ window.loadAttendance = async () => {
         attendanceData.push(doc.data());
 
     });
-    // URUTKAN DARI TANGGAL TERLAMA
+    // SORT TANGGAL TERLAMA KE TERBARU
     attendanceData.sort((a,b)=>{
-        return new Date(a.tanggal) - new Date(b.tanggal);
-
+        return a.tanggal.localeCompare(b.tanggal);
     });
     attendanceData.forEach(d => {
-        const tanggal = new Date(d.tanggal)
-        .toLocaleDateString("id-ID",{
-            day:"2-digit",
-            month:"2-digit",
-            year:"numeric"
-        });
+        // FORMAT YYYY-MM-DD menjadi DD/MM/YYYY
+        const bagianTanggal = d.tanggal.split("-");
+        const tanggal = 
+        `${bagianTanggal[2]}/${bagianTanggal[1]}/${bagianTanggal[0]}`;
         tbody.innerHTML += `
 <tr>
 <td>${tanggal}</td>
@@ -821,10 +828,9 @@ window.loadAttendance = async () => {
 <td>${d.jabatan}</td>
 <td>${d.status}</td>
 </tr>
-
 `;
     });
-}
+};
 
 /* DATA ATTENDANCE */
 window.showDataAttendance = () => {
@@ -923,7 +929,6 @@ async function loadAttendanceReport() {
     const tbody = document.getElementById(
         "attendanceReportTable"
     );
-
     if (!tbody) return;
     tbody.innerHTML = "";
     const bulan = parseInt(
@@ -946,24 +951,22 @@ async function loadAttendanceReport() {
         </td>
         </tr>
         `;
-
         return;
     }
     let attendanceData = [];
     snap.forEach(doc => {
         attendanceData.push(doc.data());
     });
+
     // SORT TANGGAL TERLAMA KE TERBARU
     attendanceData.sort((a,b)=>{
-        return new Date(a.tanggal) - new Date(b.tanggal);
+        return a.tanggal.localeCompare(b.tanggal);
     });
     attendanceData.forEach(d=>{
-        const tanggal = new Date(d.tanggal)
-        .toLocaleDateString("id-ID",{
-            day:"2-digit",
-            month:"2-digit",
-            year:"numeric"
-        });
+        // FORMAT YYYY-MM-DD menjadi DD/MM/YYYY
+        const pecahTanggal = d.tanggal.split("-");
+        const tanggal =
+        `${pecahTanggal[2]}/${pecahTanggal[1]}/${pecahTanggal[0]}`;
         tbody.innerHTML += `
 <tr>
 <td>${tanggal}</td>
@@ -975,7 +978,6 @@ async function loadAttendanceReport() {
 `;
     });
 }
-
 /* DATA SALARY */
 window.showSalary = () => {
     document.getElementById("content").innerHTML = `
