@@ -230,6 +230,11 @@ window.showAddEmployee = () => {
 <div class="employee-form-grid">
 
 <div class="form-group">
+<label>Start Work Date</label>
+<input id="tanggalMulaiKerja" type="date">
+</div>
+
+<div class="form-group">
 <label>ID Employee</label>
 <input id="kode" placeholder="ID Employee" readonly>
 </div>
@@ -288,10 +293,6 @@ window.showAddEmployee = () => {
 <option value="Danamon">Danamon</option>
 <option value="Lainnya">Lainnya</option>
 </select>
-</div>
-<div class="form-group">
-<label>Start Work Date</label>
-<input id="tanggalMulaiKerja" type="date">
 </div>
 </div>
 
