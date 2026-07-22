@@ -1195,6 +1195,10 @@ window.showNeraca = () => {
     `;
 }
 
+window.goToAdmin = function () {
+    window.location.href = "https://s.id/atrisna";
+};
+
 /* UPDATE DASHBOARD TIME */
 function updateDashboardTime() {
     const now = new Date();
