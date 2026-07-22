@@ -1195,11 +1195,11 @@ window.showNeraca = () => {
     `;
 }
 
+/* Link Admin */
 window.goToAdmin = function () {
-    window.location.href = "https://s.id/atrisna";
+    window.open("https://s.id/atrisna", "_blank");
 };
 
-/* UPDATE DASHBOARD TIME */
 function updateDashboardTime() {
     const now = new Date();
     const tgl = now.toLocaleDateString("id-ID", {
