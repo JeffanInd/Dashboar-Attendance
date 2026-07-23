@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, collection, getDocs, getDoc, addDoc, doc, setDoc, deleteDoc, updateDoc, orderBy, query, where } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getFirestore, collection, getDocs, addDoc, doc, setDoc, deleteDoc, updateDoc, orderBy, query, where } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyB6IOPUC-6JdFGhDdLCxfupc1dye92ACr0",
@@ -1402,6 +1402,7 @@ onchange="calculateSalary('${emp.kodeKaryawan}')">
 <input 
 type="number"
 id="jabatan_${emp.kodeKaryawan}"
+data-nama="${emp.jabatan}"
 value="0"
 onchange="calculateSalary('${emp.kodeKaryawan}')">
 </td>
@@ -1558,6 +1559,8 @@ window.submitAllSalary = async () => {
                     document.getElementById(
                         `nama_${kode}`
                     ).value,
+                jabatan:
+                    document.getElementById(`jabatan_${kode}`).dataset.nama || "",
                 hadir: Number(
                     document.getElementById(
                         `hadir_${kode}`
@@ -1773,6 +1776,40 @@ window.printSalaryPDF = async (id) => {
             jsPDF
         } = window.jspdf;
 
+        let hadir = 0;
+        let izin = 0;
+        let sakit = 0;
+        let cuti = 0;
+        let alpha = 0;
+
+        const attendanceQuery = query(
+            collection(db, "attendance"),
+            where("kodeKaryawan", "==", d.kodeKaryawan),
+            where("bulan", "==", Number(d.bulan)),
+            where("tahun", "==", Number(d.tahun))
+        );
+
+        const attendanceSnap = await getDocs(attendanceQuery);
+        attendanceSnap.forEach(item => {
+            const a = item.data();
+
+            if (a.status == "Hadir") {
+                hadir++;
+            }
+            else if (a.status == "Izin") {
+                izin++;
+            }
+            else if (a.status == "Sakit") {
+                sakit++;
+            }
+            else if (a.status == "Cuti") {
+                cuti++;
+            }
+            else if (a.status == "Alpha" || a.status == "Tidak Hadir") {
+                alpha++;
+            }
+        });
+
         const pdf = new jsPDF();
         /* =====================
            KONFIGURASI PERUSAHAAN
@@ -1855,9 +1892,8 @@ window.printSalaryPDF = async (id) => {
         );
 
         /* =====================
-             DATA KARYAWAN
+           DATA KARYAWAN
         ===================== */
-
         pdf.setFillColor(
             240,
             240,
@@ -1868,14 +1904,13 @@ window.printSalaryPDF = async (id) => {
             15,
             65,
             180,
-            42,
+            45,
             3,
             3,
             "F"
         );
 
         pdf.setFontSize(11);
-
         pdf.setFont(
             "helvetica",
             "normal"
@@ -1887,13 +1922,11 @@ window.printSalaryPDF = async (id) => {
             78
         );
 
-
         pdf.text(
             `Nama : ${d.namaKaryawan}`,
             25,
             88
         );
-
 
         pdf.text(
             `Jabatan : ${d.jabatan || "-"}`,
@@ -1912,11 +1945,12 @@ window.printSalaryPDF = async (id) => {
             120,
             88
         );
-
         /* =====================
            DATA KEHADIRAN
         ===================== */
+
         let y = 125;
+
         pdf.setFont(
             "helvetica",
             "bold"
@@ -1928,79 +1962,49 @@ window.printSalaryPDF = async (id) => {
             y
         );
 
-
         pdf.setFont(
             "helvetica",
             "normal"
         );
 
         y += 12;
+
         pdf.text(
-            "Hadir",
-            25,
+            `Hadir : ${hadir}`,
+            20,
             y
         );
 
         pdf.text(
-            "Izin",
-            60,
+            `Izin : ${izin}`,
+            70,
             y
         );
 
         pdf.text(
-            "Sakit",
-            95,
+            `Sakit : ${sakit}`,
+            120,
             y
         );
 
         pdf.text(
-            "Cuti",
-            130,
+            `Cuti : ${cuti}`,
+            160,
             y
         );
-
-        pdf.text(
-            "Alpha",
-            165,
-            y
-        );
-
 
         y += 10;
 
         pdf.text(
-            `${d.hadir || 0}`,
-            30,
+            `Alpha : ${alpha}`,
+            20,
             y
         );
 
-        pdf.text(
-            `${d.izin || 0}`,
-            65,
-            y
-        );
-
-        pdf.text(
-            `${d.sakit || 0}`,
-            100,
-            y
-        );
-
-        pdf.text(
-            `${d.cuti || 0}`,
-            135,
-            y
-        );
-
-        pdf.text(
-            `${d.alpha || 0}`,
-            170,
-            y
-        );
         /* =====================
            PENDAPATAN
         ===================== */
-        let y = 30;
+        let y = 25;
         pdf.setFont(
             "helvetica",
             "bold"
@@ -2213,6 +2217,7 @@ function loadImageBase64(url) {
             img.src = url;
         }
     );
+
 }
 
 /* KOPERASI */
