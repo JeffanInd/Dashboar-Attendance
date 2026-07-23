@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, collection, getDocs, addDoc, doc, deleteDoc, updateDoc, orderBy, query, where } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getFirestore, collection, getDocs, addDoc, doc, setDoc, deleteDoc, updateDoc, orderBy, query, where } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyB6IOPUC-6JdFGhDdLCxfupc1dye92ACr0",
@@ -1170,23 +1170,19 @@ const salaryConfig = {
 window.showSalary = () => {
     const bulanSekarang = new Date().getMonth() + 1;
     const tahunSekarang = new Date().getFullYear();
-    document.getElementById("content").innerHTML = `
 
+    document.getElementById("content").innerHTML = `
 <div class="card">
 <h2>Generate Salary</h2>
-
 <div class="attendance-form-grid">
-
 <div class="form-group">
 <label>Month</label>
 <select id="salaryMonth"></select>
 </div>
-
 <div class="form-group">
 <label>Year</label>
 <select id="salaryYear"></select>
 </div>
-
 <div class="form-group button-align">
 <label>&nbsp;</label>
 <button onclick="generateSalary()">
@@ -1195,7 +1191,6 @@ Generate Salary
 </div>
 </div>
 <br>
-
 <div class="table-container">
 <table>
 <thead>
@@ -1206,35 +1201,34 @@ Generate Salary
 <th>Present</th>
 <th>Permit</th>
 <th>Leave</th>
-<th>Absent</th>
+<th>Alpha</th>
 <th>Basic Salary</th>
 <th>Position Allowance</th>
 <th>Other Allowance</th>
 <th>Attendance Deduction</th>
 <th>Cooperative Deduction</th>
 <th>Total Salary</th>
-<th>Action</th>
 </tr>
 </thead>
 <tbody id="salaryTable"></tbody>
 </table>
 </div>
+<br>
+<button onclick="submitAllSalary()">
+Submit Salary
+</button>
 </div>
-
 <div class="card">
 <h2>Salary History</h2>
 <div class="attendance-form-grid">
-
 <div class="form-group">
 <label>Month</label>
 <select id="salaryHistoryMonth"></select>
 </div>
-
 <div class="form-group">
 <label>Year</label>
 <select id="salaryHistoryYear"></select>
 </div>
-
 <div class="form-group button-align">
 <label>&nbsp;</label>
 <button onclick="loadSalaryHistory()">
@@ -1243,27 +1237,24 @@ Search
 </div>
 </div>
 <br>
+<div class="table-container">
 <table>
 <thead>
 <tr>
-<th>ID</th>
+<th>ID Employee</th>
 <th>Name</th>
 <th>Jobs</th>
 <th>Month</th>
 <th>Year</th>
-<th>Total</th>
+<th>Total Salary</th>
 <th>Status</th>
-<th>PDF</th>
+<th>Action</th>
 </tr>
 </thead>
-
 <tbody id="salaryHistoryTable"></tbody>
-
 </table>
-
-
 </div>
-
+</div>
 `;
 
     fillSalaryMonthYear(
@@ -1281,57 +1272,58 @@ Search
     );
 };
 
+
 function fillSalaryMonthYear(monthId, yearId, monthNow, yearNow) {
+
     const month = document.getElementById(monthId);
     const year = document.getElementById(yearId);
+
     const namaBulan = [
-        "January", "February", "March", "April",
-        "May", "June", "July", "August",
-        "September", "October", "November", "December"
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
     ];
 
     month.innerHTML = "";
+
     namaBulan.forEach((m, i) => {
         month.innerHTML += `
 <option value="${i + 1}" ${monthNow == i + 1 ? "selected" : ""}>
 ${m}
-</option>
-`;
-
+</option>`;
     });
 
     year.innerHTML = "";
+
     for (let y = yearNow - 3; y <= yearNow + 2; y++) {
         year.innerHTML += `
 <option value="${y}" ${yearNow == y ? "selected" : ""}>
 ${y}
-</option>
-`;
-
+</option>`;
     }
-
 }
-
 window.generateSalary = async () => {
-    const bulan = Number(
-        document.getElementById("salaryMonth").value
-    );
-    const tahun = Number(
-        document.getElementById("salaryYear").value
-    );
+    const bulan = Number(document.getElementById("salaryMonth").value);
+    const tahun = Number(document.getElementById("salaryYear").value);
     const tbody = document.getElementById("salaryTable");
+
     tbody.innerHTML = `
 <tr>
-<td colspan="14">
+<td colspan="13">
 Loading...
 </td>
-</tr>
-`;
-
+</tr>`;
 
     try {
-
-
         const employeeSnap = await getDocs(
             collection(db, "employees")
         );
@@ -1342,23 +1334,22 @@ Loading...
 
         let attendance = [];
 
-
         attendanceSnap.forEach(doc => {
             const d = doc.data();
+
             if (
                 Number(d.bulan) == bulan &&
                 Number(d.tahun) == tahun
             ) {
-
                 attendance.push(d);
-
             }
-
         });
 
         let html = "";
+
         employeeSnap.forEach(doc => {
             const emp = doc.data();
+
             let hadir = 0;
             let izin = 0;
             let cuti = 0;
@@ -1367,24 +1358,29 @@ Loading...
             attendance.forEach(att => {
                 if (att.kodeKaryawan == emp.kodeKaryawan) {
 
-                    if (att.status == "Hadir")
+                    if (att.status == "Hadir") {
                         hadir++;
-
-                    else if (att.status == "Izin")
+                    }
+                    else if (att.status == "Izin") {
                         izin++;
-
-                    else if (att.status == "Cuti")
+                    }
+                    else if (att.status == "Cuti") {
                         cuti++;
-
-                    else if (att.status == "Tidak Hadir")
+                    }
+                    else if (
+                        att.status == "Alpha" ||
+                        att.status == "Tidak Hadir"
+                    ) {
                         alpha++;
+                    }
                 }
             });
 
             const potongan =
                 alpha * salaryConfig.potonganAlpha;
-            html += `
 
+
+            html += `
 <tr>
 <td>${emp.kodeKaryawan}</td>
 <td>${emp.namaKaryawan}</td>
@@ -1393,6 +1389,7 @@ Loading...
 <td>${izin}</td>
 <td>${cuti}</td>
 <td>${alpha}</td>
+
 <td>
 <input 
 type="number"
@@ -1418,7 +1415,7 @@ onchange="calculateSalary('${emp.kodeKaryawan}')">
 </td>
 
 <td>
-<input 
+<input
 readonly
 type="number"
 id="potongan_${emp.kodeKaryawan}"
@@ -1434,68 +1431,84 @@ value="0">
 </td>
 
 <td>
-
 <span id="total_${emp.kodeKaryawan}">
 0
 </span>
 </td>
-<td>
 
-<input type="hidden"
+<input 
+type="hidden"
 id="bulan_${emp.kodeKaryawan}"
 value="${bulan}">
 
-<input type="hidden"
+<input 
+type="hidden"
 id="tahun_${emp.kodeKaryawan}"
 value="${tahun}">
 
-<input type="hidden"
+<input 
+type="hidden"
 id="nama_${emp.kodeKaryawan}"
 value="${emp.namaKaryawan}">
 
-<input type="hidden"
+<input 
+type="hidden"
 id="hadir_${emp.kodeKaryawan}"
 value="${hadir}">
 
-<input type="hidden"
+<input 
+type="hidden"
 id="izin_${emp.kodeKaryawan}"
 value="${izin}">
 
-<input type="hidden"
+<input 
+type="hidden"
 id="cuti_${emp.kodeKaryawan}"
 value="${cuti}">
 
-<input type="hidden"
+<input 
+type="hidden"
 id="alpha_${emp.kodeKaryawan}"
 value="${alpha}">
-<button onclick="submitSalary('${emp.kodeKaryawan}')">
-Submit
-</button>
-</td>
+
 </tr>
-
 `;
-
         });
+
         tbody.innerHTML = html;
+
     }
     catch (error) {
         console.error(error);
         alert(error.message);
     }
 };
-
 window.calculateSalary = (kode) => {
     const basic =
-        Number(document.getElementById(`basic_${kode}`).value) || 0;
+        Number(
+            document.getElementById(`basic_${kode}`).value
+        ) || 0;
+
     const jabatan =
-        Number(document.getElementById(`jabatan_${kode}`).value) || 0;
+        Number(
+            document.getElementById(`jabatan_${kode}`).value
+        ) || 0;
+
     const lain =
-        Number(document.getElementById(`lain_${kode}`).value) || 0;
+        Number(
+            document.getElementById(`lain_${kode}`).value
+        ) || 0;
+
     const potongan =
-        Number(document.getElementById(`potongan_${kode}`).value) || 0;
+        Number(
+            document.getElementById(`potongan_${kode}`).value
+        ) || 0;
+
     const koperasi =
-        Number(document.getElementById(`koperasi_${kode}`).value) || 0;
+        Number(
+            document.getElementById(`koperasi_${kode}`).value
+        ) || 0;
+
     const total =
         basic +
         jabatan +
@@ -1506,80 +1519,340 @@ window.calculateSalary = (kode) => {
         total.toLocaleString("id-ID");
 };
 
-window.submitSalary = async (kode) => {
+window.submitAllSalary = async () => {
     try {
-        const data = {
-            bulan: Number(
-                document.getElementById(`bulan_${kode}`).value
-            ),
-
-            tahun: Number(
-                document.getElementById(`tahun_${kode}`).value
-            ),
-
-            kodeKaryawan: kode,
-            namaKaryawan:
-                document.getElementById(`nama_${kode}`).value,
-
-            hadir: Number(
-                document.getElementById(`hadir_${kode}`).value
-            ),
-
-            izin: Number(
-                document.getElementById(`izin_${kode}`).value
-            ),
-
-            cuti: Number(
-                document.getElementById(`cuti_${kode}`).value
-            ),
-
-            alpha: Number(
-                document.getElementById(`alpha_${kode}`).value
-            ),
-
-            gajiPokok: Number(
-                document.getElementById(`basic_${kode}`).value
-            ) || 0,
-
-            tunjanganJabatan: Number(
-                document.getElementById(`jabatan_${kode}`).value
-            ) || 0,
-
-            tunjanganLainnya: Number(
-                document.getElementById(`lain_${kode}`).value
-            ) || 0,
-
-            potonganKehadiran: Number(
-                document.getElementById(`potongan_${kode}`).value
-            ) || 0,
-
-            potonganKoperasi: Number(
-                document.getElementById(`koperasi_${kode}`).value
-            ) || 0,
-
-            totalGaji: Number(
-                document.getElementById(`total_${kode}`).innerText.replace(/\./g, "")
-            ) || 0,
-
-            status: "Paid",
-            tanggal:
-                new Date()
-
-        };
-        await addDoc(
-            collection(db, "salary"),
-            data
+        const rows = document.querySelectorAll(
+            "#salaryTable tr"
         );
-        alert("Salary berhasil disimpan");
+        if (rows.length == 0) {
+            alert(
+                "Generate salary terlebih dahulu"
+            );
+            return;
+        }
+        for (const row of rows) {
+            const input = row.querySelector(
+                "input[id^='basic_']"
+            );
+            if (!input) {
+                continue;
+            }
+            const kode =
+                input.id.replace(
+                    "basic_",
+                    ""
+                );
+            const data = {
+                bulan: Number(
+                    document.getElementById(
+                        `bulan_${kode}`
+                    ).value
+                ),
+                tahun: Number(
+                    document.getElementById(
+                        `tahun_${kode}`
+                    ).value
+                ),
+                kodeKaryawan: kode,
+                namaKaryawan:
+                    document.getElementById(
+                        `nama_${kode}`
+                    ).value,
+                hadir: Number(
+                    document.getElementById(
+                        `hadir_${kode}`
+                    ).value
+                ),
+                izin: Number(
+                    document.getElementById(
+                        `izin_${kode}`
+                    ).value
+                ),
+                cuti: Number(
+                    document.getElementById(
+                        `cuti_${kode}`
+                    ).value
+                ),
+                alpha: Number(
+                    document.getElementById(
+                        `alpha_${kode}`
+                    ).value
+                ),
+                gajiPokok: Number(
+                    document.getElementById(
+                        `basic_${kode}`
+                    ).value
+                ) || 0,
+                tunjanganJabatan: Number(
+                    document.getElementById(
+                        `jabatan_${kode}`
+                    ).value
+                ) || 0,
+                tunjanganLainnya: Number(
+                    document.getElementById(
+                        `lain_${kode}`
+                    ).value
+                ) || 0,
+                potonganKehadiran: Number(
+                    document.getElementById(
+                        `potongan_${kode}`
+                    ).value
+                ) || 0,
+                potonganKoperasi: Number(
+                    document.getElementById(
+                        `koperasi_${kode}`
+                    ).value
+                ) || 0,
+                totalGaji: Number(
+                    document.getElementById(
+                        `total_${kode}`
+                    ).innerText
+                        .replace(/\./g, "")
+                ) || 0,
+                status: "Paid",
+                tanggal: new Date()
 
-        event.target.disabled = true;
-        event.target.innerHTML = "Saved";
+            };
+
+            const idSalary =
+                `${data.tahun}-${data.bulan}-${data.kodeKaryawan}`;
+            await setDoc(
+                doc(
+                    db,
+                    "salary",
+                    idSalary
+                ),
+                data
+            );
+        }
+        alert(
+            "Semua salary berhasil disimpan"
+        );
     }
     catch (error) {
         console.error(error);
         alert(error.message);
     }
 };
+
+window.loadSalaryHistory = async () => {
+    const bulan = Number(
+        document.getElementById(
+            "salaryHistoryMonth"
+        ).value
+    );
+    const tahun = Number(
+        document.getElementById(
+            "salaryHistoryYear"
+        ).value
+    );
+
+    const tbody =
+        document.getElementById(
+            "salaryHistoryTable"
+        );
+    tbody.innerHTML = `
+<tr>
+<td colspan="8">
+Loading...
+</td>
+</tr>`;
+    try {
+
+        const q = query(
+            collection(db, "salary"),
+            where(
+                "bulan",
+                "==",
+                bulan
+            ),
+            where(
+                "tahun",
+                "==",
+                tahun
+            )
+        );
+
+        const snap = await getDocs(q);
+        tbody.innerHTML = "";
+        if (snap.empty) {
+            tbody.innerHTML = `
+<tr>
+<td colspan="8">
+Belum ada data salary
+</td>
+</tr>`;
+
+            return;
+        }
+
+        snap.forEach(doc => {
+            const d = doc.data();
+            tbody.innerHTML += `
+<tr>
+<td>
+${d.kodeKaryawan}
+</td>
+<td>
+${d.namaKaryawan}
+</td>
+<td>
+${d.jabatan || "-"}
+</td>
+<td>
+${d.bulan}
+</td>
+<td>
+${d.tahun}
+</td>
+<td>
+${Number(
+                d.totalGaji
+            ).toLocaleString("id-ID")}
+</td>
+<td>
+${d.status}
+</td>
+<td>
+<button onclick="printSalaryPDF('${doc.id}')">
+Print PDF
+</button>
+</td>
+</tr>
+`;
+
+        });
+    }
+    catch (error) {
+        console.error(error);
+        alert(error.message);
+    }
+};
+
+window.printSalaryPDF = (id) => {
+    const ref =
+        doc(
+            db,
+            "salary",
+            id
+        );
+
+
+    getDoc(ref)
+        .then(snapshot => {
+            if (!snapshot.exists()) {
+
+                alert(
+                    "Data salary tidak ditemukan"
+                );
+
+                return;
+            }
+
+            const d = snapshot.data();
+            const {
+                jsPDF
+            } = window.jspdf;
+
+            const pdf =
+                new jsPDF();
+            pdf.setFontSize(16);
+            pdf.text(
+                "SLIP GAJI KARYAWAN",
+                20,
+                20
+            );
+
+            pdf.setFontSize(11);
+            pdf.text(
+                `Nama : ${d.namaKaryawan}`,
+                20,
+                40
+            );
+
+            pdf.text(
+                `ID : ${d.kodeKaryawan}`,
+                20,
+                50
+            );
+
+            pdf.text(
+                `Periode : ${d.bulan}/${d.tahun}`,
+                20,
+                60
+            );
+
+            pdf.line(
+                20,
+                65,
+                190,
+                65
+            );
+
+            pdf.text(
+                "PENDAPATAN",
+                20,
+                80
+            );
+
+            pdf.text(
+                `Gaji Pokok : ${formatRupiah(d.gajiPokok)}`,
+                25,
+                90
+            );
+
+            pdf.text(
+                `Tunjangan Jabatan : ${formatRupiah(d.tunjanganJabatan)}`,
+                25,
+                100
+            );
+
+            pdf.text(
+                `Tunjangan Lain : ${formatRupiah(d.tunjanganLainnya)}`,
+                25,
+                110
+            );
+
+            pdf.text(
+                "POTONGAN",
+                20,
+                130
+            );
+            pdf.text(
+                `Potongan Kehadiran : ${formatRupiah(d.potonganKehadiran)}`,
+                25,
+                140
+            );
+            pdf.text(
+                `Potongan Koperasi : ${formatRupiah(d.potonganKoperasi)}`,
+                25,
+                150
+            );
+            pdf.line(
+                20,
+                160,
+                190,
+                160
+            );
+            pdf.setFontSize(14);
+            pdf.text(
+                `TOTAL GAJI : ${formatRupiah(d.totalGaji)}`,
+                20,
+                180
+            );
+            pdf.save(
+                `Slip_${d.kodeKaryawan}_${d.bulan}_${d.tahun}.pdf`
+            );
+        });
+};
+
+function formatRupiah(value) {
+    return "Rp " +
+        Number(value)
+            .toLocaleString(
+                "id-ID"
+            );
+}
 
 /* KOPERASI */
 window.showAddAnggota = () => {
