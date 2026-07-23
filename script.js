@@ -1946,61 +1946,135 @@ window.printSalaryPDF = async (id) => {
             88
         );
         /* =====================
-           DATA KEHADIRAN
+           DATA KEHADIRAN TABLE
         ===================== */
-
-        let y = 125;
-
+        
+        y = 125;
+        
         pdf.setFont(
             "helvetica",
             "bold"
         );
-
+        
         pdf.text(
             "DATA KEHADIRAN",
             20,
             y
         );
-
+        
+        y += 8;
+        /* HEADER TABEL */
+        pdf.setFillColor(
+            230,
+            230,
+            230
+        );
+        pdf.rect(
+            20,
+            y,
+            170,
+            10,
+            "F"
+        );
+        pdf.setFontSize(10);
+        pdf.text(
+            "Hadir",
+            30,
+            y + 7
+        );
+        
+        pdf.text(
+            "Izin",
+            65,
+            y + 7
+        );
+        
+        pdf.text(
+            "Sakit",
+            95,
+            y + 7
+        );
+        
+        pdf.text(
+            "Cuti",
+            125,
+            y + 7
+        );
+        
+        pdf.text(
+            "Alpha",
+            160,
+            y + 7
+        );
+        
+        /* NILAI */
+        y += 10;
+        pdf.rect(
+            20,
+            y,
+            170,
+            10
+        );
+        
         pdf.setFont(
             "helvetica",
             "normal"
         );
-
-        y += 12;
-
+        
         pdf.text(
-            `Hadir : ${hadir}`,
-            20,
-            y
+            String(hadir),
+            35,
+            y + 7
         );
-
+        
         pdf.text(
-            `Izin : ${izin}`,
+            String(izin),
             70,
-            y
+            y + 7
         );
-
         pdf.text(
-            `Sakit : ${sakit}`,
-            120,
-            y
+            String(sakit),
+            100,
+            y + 7
         );
-
         pdf.text(
-            `Cuti : ${cuti}`,
-            160,
-            y
+            String(cuti),
+            130,
+            y + 7
         );
-
-        y += 10;
-
         pdf.text(
-            `Alpha : ${alpha}`,
-            20,
-            y
+            String(alpha),
+            165,
+            y + 7
         );
-
+        /* GARIS PEMBATAS KOLOM */
+        pdf.line(
+            55,
+            y,
+            55,
+            y + 10
+        );
+        
+        pdf.line(
+            85,
+            y,
+            85,
+            y + 10
+        );
+        
+        pdf.line(
+            115,
+            y,
+            115,
+            y + 10
+        );
+        
+        pdf.line(
+            150,
+            y,
+            150,
+            y + 10
+        );
         /* =====================
            PENDAPATAN
         ===================== */
