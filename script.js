@@ -1754,129 +1754,371 @@ Print PDF
     }
 };
 
-window.printSalaryPDF = (id) => {
-    const ref =
-        doc(
+window.printSalaryPDF = async (id) => {
+    try {
+        const ref = doc(
             db,
             "salary",
             id
         );
 
+        const snapshot = await getDoc(ref);
+        if (!snapshot.exists()) {
+            alert("Data salary tidak ditemukan");
+            return;
+        }
 
-    getDoc(ref)
-        .then(snapshot => {
-            if (!snapshot.exists()) {
+        const d = snapshot.data();
+        const {
+            jsPDF
+        } = window.jspdf;
 
-                alert(
-                    "Data salary tidak ditemukan"
+        const pdf = new jsPDF();
+        /* =====================
+           KONFIGURASI PERUSAHAAN
+        ===================== */
+        const namaPerusahaan = "PT. NAMA PERUSAHAAN";
+        const alamatPerusahaan = "Jl. Contoh Alamat Perusahaan No. 123, Indonesia";
+        const logoURL = "https://link-gambar-logo-perusahaan.com/logo.png";
+
+        /* =====================
+           LOAD LOGO
+        ===================== */
+        try {
+            const logo =
+                await loadImageBase64(
+                    logoURL
                 );
 
-                return;
+            pdf.addImage(
+                logo,
+                "PNG",
+                15,
+                10,
+                25,
+                25
+            );
+
+        }
+        catch (e) {
+            console.log(
+                "Logo gagal dimuat"
+            );
+        }
+
+        /* =====================
+           HEADER
+        ===================== */
+        pdf.setFont(
+            "helvetica",
+            "bold"
+        );
+        pdf.setFontSize(16);
+        pdf.text(
+            namaPerusahaan,
+            45,
+            18
+        );
+
+        pdf.setFont(
+            "helvetica",
+            "normal"
+        );
+
+        pdf.setFontSize(10);
+        pdf.text(
+            alamatPerusahaan,
+            45,
+            26
+        );
+
+        pdf.line(
+            15,
+            40,
+            195,
+            40
+        );
+
+        pdf.setFontSize(15);
+        pdf.setFont(
+            "helvetica",
+            "bold"
+        );
+
+        pdf.text(
+            "SLIP GAJI KARYAWAN",
+            105,
+            55,
+            {
+                align: "center"
             }
+        );
 
-            const d = snapshot.data();
-            const {
-                jsPDF
-            } = window.jspdf;
+        /* =====================
+           DATA KARYAWAN
+        ===================== */
+        pdf.setFillColor(
+            240,
+            240,
+            240
+        );
 
-            const pdf =
-                new jsPDF();
-            pdf.setFontSize(16);
-            pdf.text(
-                "SLIP GAJI KARYAWAN",
-                20,
-                20
-            );
+        pdf.roundedRect(
+            15,
+            65,
+            180,
+            35,
+            3,
+            3,
+            "F"
+        );
 
-            pdf.setFontSize(11);
-            pdf.text(
-                `Nama : ${d.namaKaryawan}`,
-                20,
-                40
-            );
+        pdf.setFontSize(11);
+        pdf.setFont(
+            "helvetica",
+            "normal"
+        );
 
-            pdf.text(
-                `ID : ${d.kodeKaryawan}`,
-                20,
-                50
-            );
+        pdf.text(
+            `ID Karyawan : ${d.kodeKaryawan}`,
+            25,
+            78
+        );
 
-            pdf.text(
-                `Periode : ${d.bulan}/${d.tahun}`,
-                20,
-                60
-            );
+        pdf.text(
+            `Nama : ${d.namaKaryawan}`,
+            25,
+            88
+        );
 
-            pdf.line(
-                20,
-                65,
-                190,
-                65
-            );
+        pdf.text(
+            `Periode : ${getNamaBulan(d.bulan)} ${d.tahun}`,
+            120,
+            78
+        );
 
-            pdf.text(
-                "PENDAPATAN",
-                20,
-                80
-            );
+        pdf.text(
+            `Status : ${d.status}`,
+            120,
+            88
+        );
 
-            pdf.text(
-                `Gaji Pokok : ${formatRupiah(d.gajiPokok)}`,
-                25,
-                90
-            );
+        /* =====================
+           PENDAPATAN
+        ===================== */
+        let y = 120;
+        pdf.setFont(
+            "helvetica",
+            "bold"
+        );
+        pdf.text(
+            "PENDAPATAN",
+            20,
+            y
+        );
 
-            pdf.text(
-                `Tunjangan Jabatan : ${formatRupiah(d.tunjanganJabatan)}`,
-                25,
-                100
-            );
+        pdf.setFont(
+            "helvetica",
+            "normal"
+        );
 
-            pdf.text(
-                `Tunjangan Lain : ${formatRupiah(d.tunjanganLainnya)}`,
-                25,
-                110
-            );
+        y += 12;
+        pdf.text(
+            "Gaji Pokok",
+            25,
+            y
+        );
 
-            pdf.text(
-                "POTONGAN",
-                20,
-                130
-            );
-            pdf.text(
-                `Potongan Kehadiran : ${formatRupiah(d.potonganKehadiran)}`,
-                25,
-                140
-            );
-            pdf.text(
-                `Potongan Koperasi : ${formatRupiah(d.potonganKoperasi)}`,
-                25,
-                150
-            );
-            pdf.line(
-                20,
-                160,
-                190,
-                160
-            );
-            pdf.setFontSize(14);
-            pdf.text(
-                `TOTAL GAJI : ${formatRupiah(d.totalGaji)}`,
-                20,
-                180
-            );
-            pdf.save(
-                `Slip_${d.kodeKaryawan}_${d.bulan}_${d.tahun}.pdf`
-            );
-        });
+        pdf.text(
+            formatRupiah(d.gajiPokok),
+            150,
+            y
+        );
+
+        y += 10;
+        pdf.text(
+            "Tunjangan Jabatan",
+            25,
+            y
+        );
+
+        pdf.text(
+            formatRupiah(d.tunjanganJabatan),
+            150,
+            y
+        );
+        y += 10;
+        pdf.text(
+            "Tunjangan Lain",
+            25,
+            y
+        );
+
+        pdf.text(
+            formatRupiah(d.tunjanganLainnya),
+            150,
+            y
+        );
+        /* =====================
+           POTONGAN
+        ===================== */
+        y += 20;
+        pdf.setFont("helvetica", "bold");
+        pdf.text("POTONGAN", 20, y);
+        pdf.setFont("helvetica", "normal");
+
+        y += 12;
+        pdf.text(
+            "Potongan Kehadiran",
+            25,
+            y
+        );
+
+        pdf.text(
+            formatRupiah(d.potonganKehadiran),
+            150,
+            y
+        );
+
+        y += 10;
+        pdf.text(
+            "Potongan Koperasi",
+            25,
+            y
+        );
+
+        pdf.text(
+            formatRupiah(d.potonganKoperasi),
+            150,
+            y
+        );
+        /* =====================
+           TOTAL
+        ===================== */
+        y += 25;
+        pdf.setFillColor(
+            30,
+            100,
+            220
+        );
+
+        pdf.roundedRect(
+            15,
+            y - 12,
+            180,
+            25,
+            3,
+            3,
+            "F"
+        );
+
+        pdf.setTextColor(
+            255,
+            255,
+            255
+        );
+
+        pdf.setFontSize(14);
+        pdf.text(
+            "TOTAL GAJI",
+            25,
+            y + 4
+        );
+
+        pdf.text(
+            formatRupiah(d.totalGaji),
+            150,
+            y + 4
+        );
+
+        pdf.setTextColor(
+            0,
+            0,
+            0
+        );
+
+        pdf.setFontSize(9);
+        pdf.text(
+            `Dicetak : ${new Date().toLocaleDateString("id-ID")}`,
+            15,
+            285
+        );
+
+        const namaBulan =
+            getNamaBulan(d.bulan);
+        pdf.save(
+            `Slip Salary ${d.kodeKaryawan} ${d.namaKaryawan} ${namaBulan} ${d.tahun}.pdf`
+        );
+
+
+    }
+    catch (error) {
+        console.error(error);
+        alert(
+            error.message
+        );
+    }
+
 };
 
 function formatRupiah(value) {
     return "Rp " +
-        Number(value)
+        Number(value || 0)
             .toLocaleString(
                 "id-ID"
             );
+
+}
+
+function getNamaBulan(bulan) {
+    const bulanArray = [
+        "",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+    ];
+    return bulanArray[bulan] || "";
+}
+
+function loadImageBase64(url) {
+    return new Promise(
+        (resolve, reject) => {
+            const img =
+                new Image();
+            img.crossOrigin =
+                "Anonymous";
+            img.onload = () => {
+                const canvas = document.createElement("canvas");
+                canvas.width = img.width;
+                canvas.height = img.height;
+                const ctx = canvas.getContext("2d");
+                ctx.drawImage(
+                    img,
+                    0,
+                    0
+                );
+
+                resolve(
+                    canvas.toDataURL(
+                        "image/png"
+                    )
+                );
+
+            };
+
+            img.onerror = reject;
+            img.src = url;
+        }
+    );
 }
 
 /* KOPERASI */
