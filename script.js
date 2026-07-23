@@ -1948,9 +1948,7 @@ window.printSalaryPDF = async (id) => {
         /* =====================
            DATA KEHADIRAN TABLE
         ===================== */
-        
-        y = 125;
-        
+       let y = 125;
         pdf.setFont(
             "helvetica",
             "bold"
