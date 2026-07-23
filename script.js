@@ -1855,8 +1855,9 @@ window.printSalaryPDF = async (id) => {
         );
 
         /* =====================
-           DATA KARYAWAN
+             DATA KARYAWAN
         ===================== */
+
         pdf.setFillColor(
             240,
             240,
@@ -1867,13 +1868,14 @@ window.printSalaryPDF = async (id) => {
             15,
             65,
             180,
-            35,
+            42,
             3,
             3,
             "F"
         );
 
         pdf.setFontSize(11);
+
         pdf.setFont(
             "helvetica",
             "normal"
@@ -1885,10 +1887,18 @@ window.printSalaryPDF = async (id) => {
             78
         );
 
+
         pdf.text(
             `Nama : ${d.namaKaryawan}`,
             25,
             88
+        );
+
+
+        pdf.text(
+            `Jabatan : ${d.jabatan || "-"}`,
+            25,
+            98
         );
 
         pdf.text(
@@ -1904,9 +1914,93 @@ window.printSalaryPDF = async (id) => {
         );
 
         /* =====================
+           DATA KEHADIRAN
+        ===================== */
+        let y = 125;
+        pdf.setFont(
+            "helvetica",
+            "bold"
+        );
+
+        pdf.text(
+            "DATA KEHADIRAN",
+            20,
+            y
+        );
+
+
+        pdf.setFont(
+            "helvetica",
+            "normal"
+        );
+
+        y += 12;
+        pdf.text(
+            "Hadir",
+            25,
+            y
+        );
+
+        pdf.text(
+            "Izin",
+            60,
+            y
+        );
+
+        pdf.text(
+            "Sakit",
+            95,
+            y
+        );
+
+        pdf.text(
+            "Cuti",
+            130,
+            y
+        );
+
+        pdf.text(
+            "Alpha",
+            165,
+            y
+        );
+
+
+        y += 10;
+
+        pdf.text(
+            `${d.hadir || 0}`,
+            30,
+            y
+        );
+
+        pdf.text(
+            `${d.izin || 0}`,
+            65,
+            y
+        );
+
+        pdf.text(
+            `${d.sakit || 0}`,
+            100,
+            y
+        );
+
+        pdf.text(
+            `${d.cuti || 0}`,
+            135,
+            y
+        );
+
+        pdf.text(
+            `${d.alpha || 0}`,
+            170,
+            y
+        );
+        /* =====================
            PENDAPATAN
         ===================== */
-        let y = 120;
+        let y = 30;
         pdf.setFont(
             "helvetica",
             "bold"
