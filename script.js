@@ -1628,6 +1628,7 @@ window.submitAllSalary = async () => {
         alert(
             "Semua salary berhasil disimpan"
         );
+        document.getElementById("salaryTable").innerHTML = "";
     }
     catch (error) {
         console.error(error);
