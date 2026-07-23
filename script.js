@@ -2004,7 +2004,7 @@ window.printSalaryPDF = async (id) => {
         /* =====================
            PENDAPATAN
         ===================== */
-        let y = 25;
+        y += 25;
         pdf.setFont(
             "helvetica",
             "bold"
