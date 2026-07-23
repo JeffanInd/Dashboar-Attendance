@@ -337,11 +337,11 @@ style="flex:1;padding:10px;">
 </div>
 </div>
 `;
-    
+
     generateCode();
     document
-.getElementById("tanggalMulaiKerja")
-.addEventListener("change", updateEmployeeCode);
+        .getElementById("tanggalMulaiKerja")
+        .addEventListener("change", updateEmployeeCode);
 };
 
 
@@ -359,7 +359,7 @@ async function generateCode() {
 }
 
 function updateEmployeeCode() {
-    const tanggal = document.getElementById("tanggalMulaiKerja").value;       
+    const tanggal = document.getElementById("tanggalMulaiKerja").value;
     if (!tanggal) return;
     const urut = document.getElementById("kode").dataset.urut || "001";
     const pecah = tanggal.split("-");
@@ -396,7 +396,7 @@ window.saveEmployee = async () => {
             }
         }
 
-        if(document.getElementById("kode").value==""){
+        if (document.getElementById("kode").value == "") {
             alert("Silahkan pilih Start Work Date terlebih dahulu.");
             return;
         }
@@ -413,7 +413,7 @@ window.saveEmployee = async () => {
             nomorRekening: document.getElementById("rekening").value,
             bank: document.getElementById("bank").value,
             tanggalMulaiKerja: document.getElementById("tanggalMulaiKerja").value,
-            status:"Active"
+            status: "Active"
         };
 
         if (editId) {
@@ -484,7 +484,7 @@ onclick="deleteEmployee('${item.id}')">
 </td>
 </tr>
 `;
-            
+
         });
     } catch (error) {
         console.error(error);
@@ -493,25 +493,25 @@ onclick="deleteEmployee('${item.id}')">
 
 window.searchEmployee = async () => {
     const keyword = document
-    .getElementById("searchEmployee")
-    .value
-    .toLowerCase();
+        .getElementById("searchEmployee")
+        .value
+        .toLowerCase();
     const tbody = document.getElementById("employeeTable");
     tbody.innerHTML = "";
-    if(keyword==""){
+    if (keyword == "") {
         return;
     }
     const snap = await getDocs(
-        collection(db,"employees")
+        collection(db, "employees")
     );
-    snap.forEach(item=>{
+    snap.forEach(item => {
         const d = item.data();
         const kode = (d.kodeKaryawan || "").toLowerCase();
         const nama = (d.namaKaryawan || "").toLowerCase();
-        if(
+        if (
             kode.includes(keyword) ||
             nama.includes(keyword)
-        ){
+        ) {
 
             tbody.innerHTML += `
 
@@ -679,7 +679,7 @@ async function loadDataEmployee() {
         <td>${d.noHp || ""}</td>
         <td>
             <button
-            class="${status=="Active"?"edit":"delete"}"
+            class="${status == "Active" ? "edit" : "delete"}"
             onclick="changeEmployeeStatus('${docSnap.id}','${status}')">
             ${status}
             </button>
@@ -689,20 +689,20 @@ async function loadDataEmployee() {
 
     });
 }
-window.changeEmployeeStatus = async(id,status)=>{
+window.changeEmployeeStatus = async (id, status) => {
     const statusBaru =
-        status=="Active"
-        ? "Non Active"
-        : "Active";
+        status == "Active"
+            ? "Non Active"
+            : "Active";
     await updateDoc(
-        doc(db,"employees",id),
+        doc(db, "employees", id),
         {
-            status:statusBaru
+            status: statusBaru
         }
     );
     loadDataEmployee();
 }
-    
+
 /* ATTENDANCE */
 window.showInputAttendance = async () => {
     const content = document.getElementById("content");
@@ -777,7 +777,7 @@ Cari
     fillMonthYear();
 
     document.getElementById("attendanceDate").value =
-    new Date().toISOString().split("T")[0];
+        new Date().toISOString().split("T")[0];
 }
 
 async function loadEmployeeSelect() {
@@ -807,40 +807,40 @@ window.addAttendanceRow = async () => {
     const id = document.getElementById("employeeSelect").value;
 
     // VALIDASI TANGGAL
-    if(!tanggal){
+    if (!tanggal) {
         alert("Silahkan pilih tanggal absensi terlebih dahulu!");
         document.getElementById("attendanceDate").focus();
         return;
     }
 
     // VALIDASI KARYAWAN
-    if(!id){
+    if (!id) {
         alert("Silahkan pilih karyawan terlebih dahulu!");
         document.getElementById("employeeSelect").focus();
         return;
     }
 
     const snap = await getDocs(
-        collection(db,"employees")
+        collection(db, "employees")
     );
 
-    snap.forEach(item=>{
-        if(item.id===id){
-            const d=item.data();
+    snap.forEach(item => {
+        if (item.id === id) {
+            const d = item.data();
             // CEK DUPLIKAT KARYAWAN DI TABEL SEMENTARA
             const sudahAda = attendanceTemp.some(
-                emp=>emp.kode===d.kodeKaryawan
+                emp => emp.kode === d.kodeKaryawan
             );
-            if(sudahAda){
+            if (sudahAda) {
                 alert("Karyawan ini sudah ditambahkan!");
                 return;
             }
             attendanceTemp.push({
-                tanggal:tanggal,
-                kode:d.kodeKaryawan,
-                nama:d.namaKaryawan,
-                jabatan:d.jabatan,
-                status:"Hadir"
+                tanggal: tanggal,
+                kode: d.kodeKaryawan,
+                nama: d.namaKaryawan,
+                jabatan: d.jabatan,
+                status: "Hadir"
             });
         }
     });
@@ -859,7 +859,7 @@ function renderAttendanceTemp() {
 <td>
 <select onchange="attendanceTemp[${index}].status=this.value">
 <option ${d.status == "Hadir" ? "selected" : ""}>Hadir</option>
-<option ${d.status == "Tidak Hadir" ? "selected" : ""}>Tidak Hadir</option>
+<option ${d.status == "Alpha" ? "selected" : ""}>Alpha</option>
 <option ${d.status == "Izin" ? "selected" : ""}>Izin</option>
 <option ${d.status == "Cuti" ? "selected" : ""}>Cuti</option>
 </select>
@@ -878,38 +878,38 @@ window.removeAttendance = (i) => {
     renderAttendanceTemp();
 }
 
-window.submitAttendance = async()=>{
-if(attendanceTemp.length==0){
-alert("Belum ada data attendance.");
-return;
-}
+window.submitAttendance = async () => {
+    if (attendanceTemp.length == 0) {
+        alert("Belum ada data attendance.");
+        return;
+    }
 
-for(const d of attendanceTemp){
-if(!d.tanggal){
-alert(
-"Data attendance ditemukan tanpa tanggal. Silahkan periksa kembali."
-);
+    for (const d of attendanceTemp) {
+        if (!d.tanggal) {
+            alert(
+                "Data attendance ditemukan tanpa tanggal. Silahkan periksa kembali."
+            );
 
-return;
-}
-const t=new Date(d.tanggal);
-await addDoc(
-collection(db,"attendance"),
-{
-tanggal:d.tanggal,
-bulan:t.getMonth()+1,
-tahun:t.getFullYear(),
-kodeKaryawan:d.kode,
-namaKaryawan:d.nama,
-jabatan:d.jabatan,
-status:d.status
-}
-);
-}
-alert("Attendance berhasil disimpan.");
-attendanceTemp=[];
-renderAttendanceTemp();
-loadAttendance();
+            return;
+        }
+        const t = new Date(d.tanggal);
+        await addDoc(
+            collection(db, "attendance"),
+            {
+                tanggal: d.tanggal,
+                bulan: t.getMonth() + 1,
+                tahun: t.getFullYear(),
+                kodeKaryawan: d.kode,
+                namaKaryawan: d.nama,
+                jabatan: d.jabatan,
+                status: d.status
+            }
+        );
+    }
+    alert("Attendance berhasil disimpan.");
+    attendanceTemp = [];
+    renderAttendanceTemp();
+    loadAttendance();
 }
 
 function fillMonthYear() {
@@ -955,7 +955,7 @@ ${i}
 
 window.loadAttendance = async () => {
     const tbody = document.getElementById("attendanceTable");
-    if(!tbody) return;
+    if (!tbody) return;
     tbody.innerHTML = "";
     const bulan = parseInt(
         document.getElementById("filterMonth").value
@@ -975,14 +975,14 @@ window.loadAttendance = async () => {
 
     });
     // SORT TANGGAL TERLAMA KE TERBARU
-    attendanceData.sort((a,b)=>{
+    attendanceData.sort((a, b) => {
         return a.tanggal.localeCompare(b.tanggal);
     });
     attendanceData.forEach(d => {
         // FORMAT YYYY-MM-DD menjadi DD/MM/YYYY
         const bagianTanggal = d.tanggal.split("-");
-        const tanggal = 
-        `${bagianTanggal[2]}/${bagianTanggal[1]}/${bagianTanggal[0]}`;
+        const tanggal =
+            `${bagianTanggal[2]}/${bagianTanggal[1]}/${bagianTanggal[0]}`;
         tbody.innerHTML += `
 <tr>
 <td>${tanggal}</td>
@@ -1122,14 +1122,14 @@ async function loadAttendanceReport() {
     });
 
     // SORT TANGGAL TERLAMA KE TERBARU
-    attendanceData.sort((a,b)=>{
+    attendanceData.sort((a, b) => {
         return a.tanggal.localeCompare(b.tanggal);
     });
-    attendanceData.forEach(d=>{
+    attendanceData.forEach(d => {
         // FORMAT YYYY-MM-DD menjadi DD/MM/YYYY
         const pecahTanggal = d.tanggal.split("-");
         const tanggal =
-        `${pecahTanggal[2]}/${pecahTanggal[1]}/${pecahTanggal[0]}`;
+            `${pecahTanggal[2]}/${pecahTanggal[1]}/${pecahTanggal[0]}`;
         tbody.innerHTML += `
 <tr>
 <td>${tanggal}</td>
@@ -1141,15 +1141,365 @@ async function loadAttendanceReport() {
 `;
     });
 }
+
 /* DATA SALARY */
+
+const salaryConfig = {
+    potonganAlpha: 10000
+};
+
 window.showSalary = () => {
+
+    const bulanSekarang = new Date().getMonth() + 1;
+    const tahunSekarang = new Date().getFullYear();
     document.getElementById("content").innerHTML = `
-    <div class="card">
-        <h2>Data Salary</h2>
-        <p>Daftar gaji.</p>
-    </div>
-    `;
+
+<div class="card">
+<h2>Generate Salary</h2>
+
+<div class="attendance-form-grid">
+
+<div class="form-group">
+<label>Month</label>
+<select id="salaryMonth"></select>
+</div>
+
+<div class="form-group">
+<label>Year</label>
+<select id="salaryYear"></select>
+</div>
+
+<div class="form-group button-align">
+<label>&nbsp;</label>
+<button onclick="generateSalary()">
+Generate Salary
+</button>
+</div>
+
+</div>
+
+<br>
+
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>ID Employee</th>
+<th>Name</th>
+<th>Jobs</th>
+<th>Present</th>
+<th>Permit</th>
+<th>Leave</th>
+<th>Absent</th>
+<th>Basic Salary</th>
+<th>Position Allowance</th>
+<th>Other Allowance</th>
+<th>Attendance Deduction</th>
+<th>Cooperative Deduction</th>
+<th>Total Salary</th>
+<th>Action</th>
+</tr>
+</thead>
+
+<tbody id="salaryTable"></tbody>
+
+</table>
+</div>
+
+</div>
+
+
+<div class="card">
+<h2>Salary History</h2>
+<div class="attendance-form-grid">
+
+<div class="form-group">
+<label>Month</label>
+<select id="salaryHistoryMonth"></select>
+</div>
+
+<div class="form-group">
+<label>Year</label>
+<select id="salaryHistoryYear"></select>
+</div>
+
+<div class="form-group button-align">
+<label>&nbsp;</label>
+<button onclick="loadSalaryHistory()">
+Search
+</button>
+</div>
+
+</div>
+
+<br>
+
+<table>
+
+<thead>
+<tr>
+<th>ID</th>
+<th>Name</th>
+<th>Jobs</th>
+<th>Month</th>
+<th>Year</th>
+<th>Total</th>
+<th>Status</th>
+<th>PDF</th>
+</tr>
+</thead>
+
+<tbody id="salaryHistoryTable"></tbody>
+
+</table>
+
+
+</div>
+
+`;
+
+
+    fillSalaryMonthYear(
+        "salaryMonth",
+        "salaryYear",
+        bulanSekarang,
+        tahunSekarang
+    );
+
+
+    fillSalaryMonthYear(
+        "salaryHistoryMonth",
+        "salaryHistoryYear",
+        bulanSekarang,
+        tahunSekarang
+    );
+
+
+};
+
+
+
+function fillSalaryMonthYear(monthId, yearId, monthNow, yearNow) {
+
+    const month = document.getElementById(monthId);
+    const year = document.getElementById(yearId);
+
+    const namaBulan = [
+        "January", "February", "March", "April",
+        "May", "June", "July", "August",
+        "September", "October", "November", "December"
+    ];
+
+
+    month.innerHTML = "";
+
+    namaBulan.forEach((m, i) => {
+
+        month.innerHTML += `
+<option value="${i + 1}" ${monthNow == i + 1 ? "selected" : ""}>
+${m}
+</option>
+`;
+
+    });
+
+
+    year.innerHTML = "";
+
+    for (let y = yearNow - 3; y <= yearNow + 2; y++) {
+
+        year.innerHTML += `
+<option value="${y}" ${yearNow == y ? "selected" : ""}>
+${y}
+</option>
+`;
+
+    }
+
 }
+
+window.generateSalary = async () => {
+    const bulan = Number(
+        document.getElementById("salaryMonth").value
+    );
+
+    const tahun = Number(
+        document.getElementById("salaryYear").value
+    );
+
+
+    const tbody = document.getElementById("salaryTable");
+
+    tbody.innerHTML = `
+<tr>
+<td colspan="14">
+Loading...
+</td>
+</tr>
+`;
+
+
+    try {
+
+
+        const employeeSnap = await getDocs(
+            collection(db, "employees")
+        );
+
+        const attendanceSnap = await getDocs(
+            collection(db, "attendance")
+        );
+
+        let attendance = [];
+
+
+        attendanceSnap.forEach(doc => {
+            const d = doc.data();
+            if (
+                Number(d.bulan) == bulan &&
+                Number(d.tahun) == tahun
+            ) {
+
+                attendance.push(d);
+
+            }
+
+        });
+
+        let html = "";
+        employeeSnap.forEach(doc => {
+            const emp = doc.data();
+            let hadir = 0;
+            let izin = 0;
+            let cuti = 0;
+            let alpha = 0;
+
+            attendance.forEach(att => {
+                if (att.kodeKaryawan == emp.kodeKaryawan) {
+
+                    if (att.status == "Hadir")
+                        hadir++;
+
+                    else if (att.status == "Izin")
+                        izin++;
+
+                    else if (att.status == "Cuti")
+                        cuti++;
+
+                    else if (att.status == "Tidak Hadir")
+                        alpha++;
+                }
+            });
+
+            const potongan =
+                alpha * salaryConfig.potonganAlpha;
+            html += `
+
+<tr>
+
+<td>${emp.kodeKaryawan}</td>
+<td>${emp.namaKaryawan}</td>
+<td>${emp.jabatan}</td>
+<td>${hadir}</td>
+<td>${izin}</td>
+<td>${cuti}</td>
+<td>${alpha}</td>
+<td>
+<input 
+type="number"
+id="basic_${emp.kodeKaryawan}"
+value="0"
+onchange="calculateSalary('${emp.kodeKaryawan}')">
+</td>
+
+
+<td>
+<input 
+type="number"
+id="jabatan_${emp.kodeKaryawan}"
+value="0"
+onchange="calculateSalary('${emp.kodeKaryawan}')">
+</td>
+
+
+<td>
+<input 
+type="number"
+id="lain_${emp.kodeKaryawan}"
+value="0"
+onchange="calculateSalary('${emp.kodeKaryawan}')">
+</td>
+
+<td>
+<input 
+readonly
+type="number"
+id="potongan_${emp.kodeKaryawan}"
+value="${potongan}">
+</td>
+
+<td>
+<input
+readonly
+type="number"
+id="koperasi_${emp.kodeKaryawan}"
+value="0">
+</td>
+
+<td>
+
+<span id="total_${emp.kodeKaryawan}">
+0
+</span>
+</td>
+<td>
+
+<input type="hidden"
+id="bulan_${emp.kodeKaryawan}"
+value="${bulan}">
+
+<input type="hidden"
+id="tahun_${emp.kodeKaryawan}"
+value="${tahun}">
+
+<input type="hidden"
+id="nama_${emp.kodeKaryawan}"
+value="${emp.namaKaryawan}">
+
+<input type="hidden"
+id="hadir_${emp.kodeKaryawan}"
+value="${hadir}">
+
+<input type="hidden"
+id="izin_${emp.kodeKaryawan}"
+value="${izin}">
+
+<input type="hidden"
+id="cuti_${emp.kodeKaryawan}"
+value="${cuti}">
+
+<input type="hidden"
+id="alpha_${emp.kodeKaryawan}"
+value="${alpha}">
+<button onclick="submitSalary('${emp.kodeKaryawan}')">
+Submit
+</button>
+</td>
+</tr>
+
+`;
+
+        });
+        tbody.innerHTML = html;
+    }
+    catch (error) {
+        console.error(error);
+        alert(error.message);
+    }
+};
+
+
+
 
 /* KOPERASI */
 window.showAddAnggota = () => {
