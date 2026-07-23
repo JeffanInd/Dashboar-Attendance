@@ -812,7 +812,6 @@ window.addAttendanceRow = async () => {
         document.getElementById("attendanceDate").focus();
         return;
     }
-
     // VALIDASI KARYAWAN
     if (!id) {
         alert("Silahkan pilih karyawan terlebih dahulu!");
@@ -852,16 +851,26 @@ function renderAttendanceTemp() {
     tbody.innerHTML = "";
     attendanceTemp.forEach((d, index) => {
         tbody.innerHTML += `
+
 <tr>
 <td>${d.kode}</td>
 <td>${d.nama}</td>
 <td>${d.jabatan}</td>
 <td>
-<select onchange="attendanceTemp[${index}].status=this.value">
-<option ${d.status == "Hadir" ? "selected" : ""}>Hadir</option>
-<option ${d.status == "Alpha" ? "selected" : ""}>Alpha</option>
-<option ${d.status == "Izin" ? "selected" : ""}>Izin</option>
-<option ${d.status == "Cuti" ? "selected" : ""}>Cuti</option>
+<select 
+onchange="changeAttendanceStatus(${index},this.value)">
+<option value="Hadir" ${d.status == "Hadir" ? "selected" : ""}>
+Hadir
+</option>
+<option value="Alpha" ${d.status == "Alpha" ? "selected" : ""}>
+Alpha
+</option>
+<option value="Izin" ${d.status == "Izin" ? "selected" : ""}>
+Izin
+</option>
+<option value="Cuti" ${d.status == "Cuti" ? "selected" : ""}>
+Cuti
+</option>
 </select>
 </td>
 <td>
@@ -873,6 +882,13 @@ Delete
 `;
     });
 }
+window.changeAttendanceStatus = (index, status) => {
+    attendanceTemp[index].status = status;
+    console.log(
+        "Status berubah:",
+        attendanceTemp[index]
+    );
+};
 window.removeAttendance = (i) => {
     attendanceTemp.splice(i, 1);
     renderAttendanceTemp();
@@ -906,10 +922,14 @@ window.submitAttendance = async () => {
             }
         );
     }
+
     alert("Attendance berhasil disimpan.");
     attendanceTemp = [];
     renderAttendanceTemp();
-    loadAttendance();
+    const table = document.getElementById("attendanceTable");
+    if (table) {
+        loadAttendance();
+    }
 }
 
 function fillMonthYear() {
