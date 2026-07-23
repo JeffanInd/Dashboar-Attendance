@@ -1628,6 +1628,7 @@ window.submitAllSalary = async () => {
         alert(
             "Semua salary berhasil disimpan"
         );
+
         document.getElementById("salaryTable").innerHTML = "";
     }
     catch (error) {
@@ -1638,45 +1639,33 @@ window.submitAllSalary = async () => {
 
 window.loadSalaryHistory = async () => {
     const bulan = Number(
-        document.getElementById(
-            "salaryHistoryMonth"
-        ).value
+        document.getElementById("salaryHistoryMonth").value
     );
     const tahun = Number(
-        document.getElementById(
-            "salaryHistoryYear"
-        ).value
+        document.getElementById("salaryHistoryYear").value
     );
-
     const tbody =
-        document.getElementById(
-            "salaryHistoryTable"
-        );
+        document.getElementById("salaryHistoryTable");
+
     tbody.innerHTML = `
 <tr>
 <td colspan="8">
 Loading...
 </td>
 </tr>`;
+
     try {
 
         const q = query(
             collection(db, "salary"),
-            where(
-                "bulan",
-                "==",
-                bulan
-            ),
-            where(
-                "tahun",
-                "==",
-                tahun
-            )
+            where("bulan", "==", bulan),
+            where("tahun", "==", tahun)
         );
 
         const snap = await getDocs(q);
         tbody.innerHTML = "";
         if (snap.empty) {
+
             tbody.innerHTML = `
 <tr>
 <td colspan="8">
@@ -1685,10 +1674,45 @@ Belum ada data salary
 </tr>`;
 
             return;
+
         }
+
+        /* ambil data employee untuk jabatan */
+        const employeeSnap = await getDocs(
+            collection(db, "employees")
+        );
+
+        let employeeData = {};
+        employeeSnap.forEach(emp => {
+            const e = emp.data();
+            employeeData[e.kodeKaryawan] = e.jabatan;
+
+        });
+
+        const namaBulan = [
+            "",
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December"
+        ];
 
         snap.forEach(doc => {
             const d = doc.data();
+            const jabatan =
+                d.jabatan ||
+                employeeData[d.kodeKaryawan] ||
+                "-";
+
+
             tbody.innerHTML += `
 <tr>
 <td>
@@ -1698,21 +1722,21 @@ ${d.kodeKaryawan}
 ${d.namaKaryawan}
 </td>
 <td>
-${d.jabatan || "-"}
+${jabatan}
 </td>
 <td>
-${d.bulan}
+${namaBulan[d.bulan]}
 </td>
 <td>
 ${d.tahun}
 </td>
 <td>
 ${Number(
-                d.totalGaji
+                d.totalGaji || 0
             ).toLocaleString("id-ID")}
 </td>
 <td>
-${d.status}
+${d.status || "-"}
 </td>
 <td>
 <button onclick="printSalaryPDF('${doc.id}')">
