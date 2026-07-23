@@ -1143,13 +1143,11 @@ async function loadAttendanceReport() {
 }
 
 /* DATA SALARY */
-
 const salaryConfig = {
     potonganAlpha: 10000
 };
 
 window.showSalary = () => {
-
     const bulanSekarang = new Date().getMonth() + 1;
     const tahunSekarang = new Date().getFullYear();
     document.getElementById("content").innerHTML = `
@@ -1175,9 +1173,7 @@ window.showSalary = () => {
 Generate Salary
 </button>
 </div>
-
 </div>
-
 <br>
 
 <div class="table-container">
@@ -1200,14 +1196,10 @@ Generate Salary
 <th>Action</th>
 </tr>
 </thead>
-
 <tbody id="salaryTable"></tbody>
-
 </table>
 </div>
-
 </div>
-
 
 <div class="card">
 <h2>Salary History</h2>
@@ -1229,13 +1221,9 @@ Generate Salary
 Search
 </button>
 </div>
-
 </div>
-
 <br>
-
 <table>
-
 <thead>
 <tr>
 <th>ID</th>
@@ -1258,7 +1246,6 @@ Search
 
 `;
 
-
     fillSalaryMonthYear(
         "salaryMonth",
         "salaryYear",
@@ -1266,18 +1253,13 @@ Search
         tahunSekarang
     );
 
-
     fillSalaryMonthYear(
         "salaryHistoryMonth",
         "salaryHistoryYear",
         bulanSekarang,
         tahunSekarang
     );
-
-
 };
-
-
 
 function fillSalaryMonthYear(monthId, yearId, monthNow, yearNow) {
     const month = document.getElementById(monthId);
@@ -1287,6 +1269,7 @@ function fillSalaryMonthYear(monthId, yearId, monthNow, yearNow) {
         "May", "June", "July", "August",
         "September", "October", "November", "December"
     ];
+
     month.innerHTML = "";
     namaBulan.forEach((m, i) => {
         month.innerHTML += `
@@ -1296,6 +1279,7 @@ ${m}
 `;
 
     });
+
     year.innerHTML = "";
     for (let y = yearNow - 3; y <= yearNow + 2; y++) {
         year.innerHTML += `
@@ -1305,20 +1289,17 @@ ${y}
 `;
 
     }
+
 }
 
 window.generateSalary = async () => {
     const bulan = Number(
         document.getElementById("salaryMonth").value
     );
-
     const tahun = Number(
         document.getElementById("salaryYear").value
     );
-
-
     const tbody = document.getElementById("salaryTable");
-
     tbody.innerHTML = `
 <tr>
 <td colspan="14">
@@ -1327,7 +1308,10 @@ Loading...
 </tr>
 `;
 
+
     try {
+
+
         const employeeSnap = await getDocs(
             collection(db, "employees")
         );
@@ -1337,14 +1321,19 @@ Loading...
         );
 
         let attendance = [];
+
+
         attendanceSnap.forEach(doc => {
             const d = doc.data();
             if (
                 Number(d.bulan) == bulan &&
                 Number(d.tahun) == tahun
             ) {
+
                 attendance.push(d);
+
             }
+
         });
 
         let html = "";
@@ -1371,12 +1360,12 @@ Loading...
                         alpha++;
                 }
             });
+
             const potongan =
                 alpha * salaryConfig.potonganAlpha;
             html += `
 
 <tr>
-
 <td>${emp.kodeKaryawan}</td>
 <td>${emp.namaKaryawan}</td>
 <td>${emp.jabatan}</td>
@@ -1476,77 +1465,101 @@ Submit
     }
 };
 
-window.submitSalary = async(kode)=>{
-try{
-const data = {
-
-bulan:Number(
-document.getElementById(`bulan_${kode}`).value
-),
-tahun:Number(
-document.getElementById(`tahun_${kode}`).value
-),
-
-kodeKaryawan:kode,
-namaKaryawan:
-document.getElementById(`nama_${kode}`).value,
-
-hadir:Number(
-document.getElementById(`hadir_${kode}`).value
-),
-
-izin:Number(
-document.getElementById(`izin_${kode}`).value
-),
-
-cuti:Number(
-document.getElementById(`cuti_${kode}`).value
-),
-
-alpha:Number(
-document.getElementById(`alpha_${kode}`).value
-),
-
-gajiPokok:Number(
-document.getElementById(`basic_${kode}`).value
-)||0,
-
-tunjanganJabatan:Number(
-document.getElementById(`jabatan_${kode}`).value
-)||0,
-
-tunjanganLainnya:Number(
-document.getElementById(`lain_${kode}`).value
-)||0,
-
-potonganKehadiran:Number(
-document.getElementById(`potongan_${kode}`).value
-)||0,
-
-potonganKoperasi:Number(
-document.getElementById(`koperasi_${kode}`).value
-)||0,
-totalGaji:Number(
-document.getElementById(`total_${kode}`).innerText.replace(/\./g,"")
-)||0,
-status:"Paid",
-tanggal:
-new Date()
-
-};
-await addDoc(
-collection(db,"salary"),
-data
-);
-
-alert("Salary berhasil disimpan");
-}
-catch(error){
-console.error(error);
-alert(error.message);
-}
+window.calculateSalary = (kode) => {
+    const basic =
+        Number(document.getElementById(`basic_${kode}`).value) || 0;
+    const jabatan =
+        Number(document.getElementById(`jabatan_${kode}`).value) || 0;
+    const lain =
+        Number(document.getElementById(`lain_${kode}`).value) || 0;
+    const potongan =
+        Number(document.getElementById(`potongan_${kode}`).value) || 0;
+    const koperasi =
+        Number(document.getElementById(`koperasi_${kode}`).value) || 0;
+    const total =
+        basic +
+        jabatan +
+        lain -
+        potongan -
+        koperasi;
+    document.getElementById(`total_${kode}`).innerHTML =
+        total.toLocaleString("id-ID");
 };
 
+window.submitSalary = async (kode) => {
+    try {
+        const data = {
+            bulan: Number(
+                document.getElementById(`bulan_${kode}`).value
+            ),
+
+            tahun: Number(
+                document.getElementById(`tahun_${kode}`).value
+            ),
+
+            kodeKaryawan: kode,
+            namaKaryawan:
+                document.getElementById(`nama_${kode}`).value,
+
+            hadir: Number(
+                document.getElementById(`hadir_${kode}`).value
+            ),
+
+            izin: Number(
+                document.getElementById(`izin_${kode}`).value
+            ),
+
+            cuti: Number(
+                document.getElementById(`cuti_${kode}`).value
+            ),
+
+            alpha: Number(
+                document.getElementById(`alpha_${kode}`).value
+            ),
+
+            gajiPokok: Number(
+                document.getElementById(`basic_${kode}`).value
+            ) || 0,
+
+            tunjanganJabatan: Number(
+                document.getElementById(`jabatan_${kode}`).value
+            ) || 0,
+
+            tunjanganLainnya: Number(
+                document.getElementById(`lain_${kode}`).value
+            ) || 0,
+
+            potonganKehadiran: Number(
+                document.getElementById(`potongan_${kode}`).value
+            ) || 0,
+
+            potonganKoperasi: Number(
+                document.getElementById(`koperasi_${kode}`).value
+            ) || 0,
+
+            totalGaji: Number(
+                document.getElementById(`total_${kode}`).innerText.replace(/\./g, "")
+            ) || 0,
+
+            status: "Paid",
+            tanggal:
+                new Date()
+
+        };
+        await addDoc(
+            collection(db, "salary"),
+            data
+        );
+        alert("Salary berhasil disimpan");
+
+        event.target.disabled = true;
+        event.target.innerHTML = "Saved";
+    }
+    catch (error) {
+        console.error(error);
+        alert(error.message);
+    }
+};
 
 /* KOPERASI */
 window.showAddAnggota = () => {
