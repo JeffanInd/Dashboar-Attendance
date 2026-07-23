@@ -1280,21 +1280,15 @@ Search
 
 
 function fillSalaryMonthYear(monthId, yearId, monthNow, yearNow) {
-
     const month = document.getElementById(monthId);
     const year = document.getElementById(yearId);
-
     const namaBulan = [
         "January", "February", "March", "April",
         "May", "June", "July", "August",
         "September", "October", "November", "December"
     ];
-
-
     month.innerHTML = "";
-
     namaBulan.forEach((m, i) => {
-
         month.innerHTML += `
 <option value="${i + 1}" ${monthNow == i + 1 ? "selected" : ""}>
 ${m}
@@ -1302,12 +1296,8 @@ ${m}
 `;
 
     });
-
-
     year.innerHTML = "";
-
     for (let y = yearNow - 3; y <= yearNow + 2; y++) {
-
         year.innerHTML += `
 <option value="${y}" ${yearNow == y ? "selected" : ""}>
 ${y}
@@ -1315,7 +1305,6 @@ ${y}
 `;
 
     }
-
 }
 
 window.generateSalary = async () => {
@@ -1338,10 +1327,7 @@ Loading...
 </tr>
 `;
 
-
     try {
-
-
         const employeeSnap = await getDocs(
             collection(db, "employees")
         );
@@ -1351,19 +1337,14 @@ Loading...
         );
 
         let attendance = [];
-
-
         attendanceSnap.forEach(doc => {
             const d = doc.data();
             if (
                 Number(d.bulan) == bulan &&
                 Number(d.tahun) == tahun
             ) {
-
                 attendance.push(d);
-
             }
-
         });
 
         let html = "";
@@ -1390,7 +1371,6 @@ Loading...
                         alpha++;
                 }
             });
-
             const potongan =
                 alpha * salaryConfig.potonganAlpha;
             html += `
@@ -1412,7 +1392,6 @@ value="0"
 onchange="calculateSalary('${emp.kodeKaryawan}')">
 </td>
 
-
 <td>
 <input 
 type="number"
@@ -1420,7 +1399,6 @@ id="jabatan_${emp.kodeKaryawan}"
 value="0"
 onchange="calculateSalary('${emp.kodeKaryawan}')">
 </td>
-
 
 <td>
 <input 
@@ -1498,7 +1476,76 @@ Submit
     }
 };
 
+window.submitSalary = async(kode)=>{
+try{
+const data = {
 
+bulan:Number(
+document.getElementById(`bulan_${kode}`).value
+),
+tahun:Number(
+document.getElementById(`tahun_${kode}`).value
+),
+
+kodeKaryawan:kode,
+namaKaryawan:
+document.getElementById(`nama_${kode}`).value,
+
+hadir:Number(
+document.getElementById(`hadir_${kode}`).value
+),
+
+izin:Number(
+document.getElementById(`izin_${kode}`).value
+),
+
+cuti:Number(
+document.getElementById(`cuti_${kode}`).value
+),
+
+alpha:Number(
+document.getElementById(`alpha_${kode}`).value
+),
+
+gajiPokok:Number(
+document.getElementById(`basic_${kode}`).value
+)||0,
+
+tunjanganJabatan:Number(
+document.getElementById(`jabatan_${kode}`).value
+)||0,
+
+tunjanganLainnya:Number(
+document.getElementById(`lain_${kode}`).value
+)||0,
+
+potonganKehadiran:Number(
+document.getElementById(`potongan_${kode}`).value
+)||0,
+
+potonganKoperasi:Number(
+document.getElementById(`koperasi_${kode}`).value
+)||0,
+totalGaji:Number(
+document.getElementById(`total_${kode}`).innerText.replace(/\./g,"")
+)||0,
+status:"Paid",
+tanggal:
+new Date()
+
+};
+await addDoc(
+collection(db,"salary"),
+data
+);
+
+alert("Salary berhasil disimpan");
+}
+catch(error){
+console.error(error);
+alert(error.message);
+}
+};
 
 
 /* KOPERASI */
