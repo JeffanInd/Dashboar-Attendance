@@ -2053,10 +2053,9 @@ window.printSalaryPDF = async (id) => {
         QR CODE SLIP GAJI
         ===================== */
         const qrData =
-            `PT. NAMA PERUSAHAAN
+            `PT. JEFFAN INT.
         Nama       : ${d.namaKaryawan}
         ID         : ${d.kodeKaryawan}
-        Alamat     : ${d.alamat || "-"}
         Jabatan    : ${d.jabatan || "-"}
         Periode    : ${getNamaBulan(d.bulan)} ${d.tahun}
 
@@ -2070,7 +2069,7 @@ window.printSalaryPDF = async (id) => {
             qrImage,
             "PNG",
             155,
-            y + 7,
+            y + 10,
             30,
             30
         );
