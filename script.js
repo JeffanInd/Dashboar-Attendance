@@ -1757,6 +1757,9 @@ Print PDF
     }
 };
 
+/* =====================
+  PDF Print
+  ===================== */
 window.printSalaryPDF = async (id) => {
     try {
         const ref = doc(
@@ -1772,9 +1775,19 @@ window.printSalaryPDF = async (id) => {
         }
 
         const d = snapshot.data();
-        const {
-            jsPDF
-        } = window.jspdf;
+        const { jsPDF } = window.jspdf;
+
+        const grossSalary =
+            Number(d.gajiPokok || 0) +
+            Number(d.tunjanganJabatan || 0) +
+            Number(d.tunjanganLainnya || 0);
+
+        const totalPotongan =
+            Number(d.potonganKehadiran || 0) +
+            Number(d.potonganKoperasi || 0);
+
+        const takeHomePay =
+            grossSalary - totalPotongan;
 
         let hadir = 0;
         let izin = 0;
@@ -1822,20 +1835,8 @@ window.printSalaryPDF = async (id) => {
            LOAD LOGO
         ===================== */
         try {
-            const logo =
-                await loadImageBase64(
-                    logoURL
-                );
-
-            pdf.addImage(
-                logo,
-                "PNG",
-                15,
-                10,
-                25,
-                25
-            );
-
+            const logo = await loadImageBase64(logoURL);
+            pdf.addImage(logo, "PNG", 15, 10, 25, 25);
         }
         catch (e) {
             console.log(
@@ -1846,381 +1847,175 @@ window.printSalaryPDF = async (id) => {
         /* =====================
            HEADER
         ===================== */
-        pdf.setFont(
-            "helvetica",
-            "bold"
-        );
-        pdf.setFontSize(16);
-        pdf.text(
-            namaPerusahaan,
-            45,
-            18
-        );
-
-        pdf.setFont(
-            "helvetica",
-            "normal"
-        );
-
-        pdf.setFontSize(10);
-        pdf.text(
-            alamatPerusahaan,
-            45,
-            26
-        );
-
-        pdf.line(
-            15,
-            40,
-            195,
-            40
-        );
-
+        pdf.setFont("helvetica", "bold");
+        pdf.setFontSize(18);
+        pdf.text(namaPerusahaan, 45, 18);
+        pdf.setFont("helvetica", "normal");
+        pdf.setFontSize(9);
+        pdf.text(alamatPerusahaan, 45, 26);
+        pdf.setLineWidth(0.8);
+        pdf.line(15, 40, 195, 40);
+        pdf.setLineWidth(0.2);
         pdf.setFontSize(15);
-        pdf.setFont(
-            "helvetica",
-            "bold"
-        );
-
-        pdf.text(
-            "SLIP GAJI KARYAWAN",
-            105,
-            55,
-            {
-                align: "center"
-            }
+        pdf.setFont("helvetica", "bold");
+        pdf.text("SLIP GAJI KARYAWAN", 105, 55, {
+            align: "center"
+        }
         );
 
         /* =====================
            DATA KARYAWAN
         ===================== */
-        pdf.setFillColor(
-            240,
-            240,
-            240
-        );
-
-        pdf.roundedRect(
-            15,
-            65,
-            180,
-            45,
-            3,
-            3,
-            "F"
-        );
-
+        pdf.setFillColor(240, 240, 240);
+        pdf.line(15, 65, 195, 65);
         pdf.setFontSize(11);
-        pdf.setFont(
-            "helvetica",
-            "normal"
-        );
+        pdf.setFont("helvetica", "normal");
+        pdf.text(`ID Karyawan : ${d.kodeKaryawan}`, 25, 75);
+        pdf.text(`Nama : ${d.namaKaryawan}`, 25, 84);
+        pdf.text(`Jabatan : ${d.jabatan || "-"}`, 25, 93);
+        pdf.text(`Periode : ${getNamaBulan(d.bulan)} ${d.tahun}`, 120, 75);
+        pdf.text(`Status : ${d.status}`, 120, 84);
 
-        pdf.text(
-            `ID Karyawan : ${d.kodeKaryawan}`,
-            25,
-            78
-        );
-
-        pdf.text(
-            `Nama : ${d.namaKaryawan}`,
-            25,
-            88
-        );
-
-        pdf.text(
-            `Jabatan : ${d.jabatan || "-"}`,
-            25,
-            98
-        );
-
-        pdf.text(
-            `Periode : ${getNamaBulan(d.bulan)} ${d.tahun}`,
-            120,
-            78
-        );
-
-        pdf.text(
-            `Status : ${d.status}`,
-            120,
-            88
-        );
         /* =====================
            DATA KEHADIRAN TABLE
         ===================== */
-       let y = 125;
-        pdf.setFont(
-            "helvetica",
-            "bold"
-        );
-        
-        pdf.text(
-            "DATA KEHADIRAN",
-            20,
-            y
-        );
-        
+        let y = 125;
+        pdf.setFont("helvetica", "bold");
+        pdf.text("DATA KEHADIRAN", 20, y);
+
         y += 8;
         /* HEADER TABEL */
-        pdf.setFillColor(
-            230,
-            230,
-            230
-        );
-        pdf.rect(
-            20,
-            y,
-            170,
-            10,
-            "F"
-        );
+        pdf.setFillColor(230, 230, 230);
+        pdf.rect(20, y, 170, 10, "F");
         pdf.setFontSize(10);
-        pdf.text(
-            "Hadir",
-            30,
-            y + 7
-        );
-        
-        pdf.text(
-            "Izin",
-            65,
-            y + 7
-        );
-        
-        pdf.text(
-            "Sakit",
-            95,
-            y + 7
-        );
-        
-        pdf.text(
-            "Cuti",
-            125,
-            y + 7
-        );
-        
-        pdf.text(
-            "Alpha",
-            160,
-            y + 7
-        );
-        
+        pdf.text("Hadir", 30, y + 7);
+        pdf.text("Izin", 65, y + 7);
+        pdf.text("Sakit", 95, y + 7);
+        pdf.text("Cuti", 125, y + 7);
+        pdf.text("Alpha", 160, y + 7);
+
         /* NILAI */
         y += 10;
-        pdf.rect(
-            20,
-            y,
-            170,
-            10
-        );
-        
-        pdf.setFont(
-            "helvetica",
-            "normal"
-        );
-        
-        pdf.text(
-            String(hadir),
-            35,
-            y + 7
-        );
-        
-        pdf.text(
-            String(izin),
-            70,
-            y + 7
-        );
-        pdf.text(
-            String(sakit),
-            100,
-            y + 7
-        );
-        pdf.text(
-            String(cuti),
-            130,
-            y + 7
-        );
-        pdf.text(
-            String(alpha),
-            165,
-            y + 7
-        );
+        pdf.rect(20, y, 170, 10);
+        pdf.setFont("helvetica", "normal");
+        pdf.text(String(hadir), 35, y + 7);
+        pdf.text(String(izin), 70, y + 7);
+        pdf.text(String(sakit), 100, y + 7);
+        pdf.text(String(cuti), 130, y + 7);
+        pdf.text(String(alpha), 165, y + 7);
+
         /* GARIS PEMBATAS KOLOM */
-        pdf.line(
-            55,
-            y,
-            55,
-            y + 10
-        );
-        
-        pdf.line(
-            85,
-            y,
-            85,
-            y + 10
-        );
-        
-        pdf.line(
-            115,
-            y,
-            115,
-            y + 10
-        );
-        
-        pdf.line(
-            150,
-            y,
-            150,
-            y + 10
-        );
+        pdf.line(55, y, 55, y + 10);
+        pdf.line(85, y, 85, y + 10);
+        pdf.line(115, y, 115, y + 10);
+        pdf.line(150, y, 150, y + 10);
+
         /* =====================
-           PENDAPATAN
+        PENDAPATAN
         ===================== */
         y += 25;
-        pdf.setFont(
-            "helvetica",
-            "bold"
-        );
-        pdf.text(
-            "PENDAPATAN",
-            20,
-            y
-        );
-
-        pdf.setFont(
-            "helvetica",
-            "normal"
-        );
+        pdf.setFont("helvetica", "bold");
+        pdf.setFontSize(11);
+        pdf.text("PENDAPATAN", 20, y);
+        pdf.setFont("helvetica", "normal");
 
         y += 12;
-        pdf.text(
-            "Gaji Pokok",
-            25,
-            y
-        );
-
-        pdf.text(
-            formatRupiah(d.gajiPokok),
-            150,
-            y
-        );
+        pdf.text("Gaji Pokok", 25, y);
+        pdf.setFillColor(220, 245, 220);
+        pdf.rect(150, y - 5, 40, 8, "F");
+        pdf.text(formatRupiah(d.gajiPokok), 185, y, { align: "right" });
 
         y += 10;
-        pdf.text(
-            "Tunjangan Jabatan",
-            25,
-            y
-        );
+        pdf.text("Tunjangan Jabatan", 25, y);
+        pdf.setFillColor(220, 245, 220);
+        pdf.rect(150, y - 5, 40, 8, "F");
+        pdf.text(formatRupiah(d.tunjanganJabatan), 185, y, { align: "right" });
 
-        pdf.text(
-            formatRupiah(d.tunjanganJabatan),
-            150,
-            y
-        );
         y += 10;
-        pdf.text(
-            "Tunjangan Lain",
-            25,
-            y
-        );
+        pdf.text("Tunjangan Lainnya", 25, y);
+        pdf.setFillColor(220, 245, 220);
+        pdf.rect(150, y - 5, 40, 8, "F");
+        pdf.text(formatRupiah(d.tunjanganLainnya), 185, y, { align: "right" });
+        pdf.setFont("helvetica", "bold");
+        pdf.text("+", 182, y);
 
-        pdf.text(
-            formatRupiah(d.tunjanganLainnya),
-            150,
-            y
-        );
+        y += 8;
+        /* GARIS BIRU */
+        pdf.setDrawColor(30, 100, 220);
+        pdf.setLineWidth(0.8);
+        pdf.line(25, y, 185, y);
+
+        y += 8;
+        pdf.setFillColor(210, 240, 210);
+        pdf.rect(150, y - 6, 40, 10, "F");
+        pdf.setFont("helvetica", "bold");
+        pdf.text("Gross Salary", 25, y);
+        pdf.text(formatRupiah(grossSalary), 185, y, { align: "right" });
+
+        y += 8;
+        pdf.line(25, y, 185, y);
+        pdf.setDrawColor(0);
+        pdf.setLineWidth(0.2);
+
         /* =====================
-           POTONGAN
+        POTONGAN
         ===================== */
-        y += 20;
+        y += 18;
         pdf.setFont("helvetica", "bold");
         pdf.text("POTONGAN", 20, y);
         pdf.setFont("helvetica", "normal");
 
         y += 12;
-        pdf.text(
-            "Potongan Kehadiran",
-            25,
-            y
-        );
-
-        pdf.text(
-            formatRupiah(d.potonganKehadiran),
-            150,
-            y
-        );
+        pdf.text("Potongan Kehadiran", 25, y);
+        pdf.setFillColor(220, 245, 220);
+        pdf.rect(150, y - 5, 40, 8, "F");
+        pdf.text(formatRupiah(d.potonganKehadiran), 185, y, { align: "right" });
 
         y += 10;
-        pdf.text(
-            "Potongan Koperasi",
-            25,
-            y
-        );
+        pdf.text("Potongan Koperasi", 25, y);
+        pdf.setFillColor(220, 245, 220);
+        pdf.rect(150, y - 5, 40, 8, "F");
+        pdf.text(formatRupiah(d.potonganKoperasi), 185, y, { align: "right" });
 
-        pdf.text(
-            formatRupiah(d.potonganKoperasi),
-            150,
-            y
-        );
+        pdf.setFont("helvetica", "bold");
+        pdf.text("+", 182, y);
+
+        y += 8;
+        pdf.setDrawColor(220, 60, 60);
+        pdf.setLineWidth(0.8);
+        pdf.line(25, y, 185, y);
+
+        y += 8;
+        pdf.setFillColor(210, 240, 210);
+        pdf.rect(150, y - 6, 40, 10, "F");
+        pdf.setFont("helvetica", "bold");
+        pdf.text("Total Potongan", 25, y);
+        pdf.text(formatRupiah(totalPotongan), 185, y, { align: "right" });
+
+        y += 8;
+        pdf.line(25, y, 185, y);
+        pdf.setDrawColor(0);
+        pdf.setLineWidth(0.2);
+
         /* =====================
-           TOTAL
+        TAKE HOME PAY
         ===================== */
-        y += 25;
-        pdf.setFillColor(
-            30,
-            100,
-            220
-        );
-
-        pdf.roundedRect(
-            15,
-            y - 12,
-            180,
-            25,
-            3,
-            3,
-            "F"
-        );
-
-        pdf.setTextColor(
-            255,
-            255,
-            255
-        );
-
+        y += 20;
+        pdf.setFillColor(30, 100, 220);
+        pdf.roundedRect(15, y - 12, 180, 24, 3, 3, "F");
+        pdf.setTextColor(255, 255, 255);
+        pdf.setFont("helvetica", "bold");
         pdf.setFontSize(14);
-        pdf.text(
-            "TOTAL GAJI",
-            25,
-            y + 4
-        );
-
-        pdf.text(
-            formatRupiah(d.totalGaji),
-            150,
-            y + 4
-        );
-
-        pdf.setTextColor(
-            0,
-            0,
-            0
-        );
-
-        pdf.setFontSize(9);
-        pdf.text(
-            `Dicetak : ${new Date().toLocaleDateString("id-ID")}`,
-            15,
-            285
-        );
-
+        pdf.text("TAKE HOME PAY", 25, y + 3);
+        pdf.setFillColor(180, 230, 180);
+        pdf.rect(150, y - 5, 40, 10, "F");
+        pdf.text(formatRupiah(takeHomePay), 185, y + 3, { align: "right" });
+        pdf.setTextColor(0, 0, 0);
         const namaBulan =
             getNamaBulan(d.bulan);
         pdf.save(
             `Slip Salary ${d.kodeKaryawan} ${d.namaKaryawan} ${namaBulan} ${d.tahun}.pdf`
         );
-
-
     }
     catch (error) {
         console.error(error);
@@ -2228,7 +2023,6 @@ window.printSalaryPDF = async (id) => {
             error.message
         );
     }
-
 };
 
 function formatRupiah(value) {
@@ -2242,20 +2036,7 @@ function formatRupiah(value) {
 
 function getNamaBulan(bulan) {
     const bulanArray = [
-        "",
-        "January",
-        "February",
-        "March",
-        "April",
-        "May",
-        "June",
-        "July",
-        "August",
-        "September",
-        "October",
-        "November",
-        "December"
-    ];
+        "", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     return bulanArray[bulan] || "";
 }
 
@@ -2289,7 +2070,6 @@ function loadImageBase64(url) {
             img.src = url;
         }
     );
-
 }
 
 /* KOPERASI */
