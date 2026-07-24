@@ -1954,7 +1954,7 @@ window.printSalaryPDF = async (id) => {
         pdf.setFillColor(190, 235, 190);
         pdf.rect(140, y - 6, 50, 10, "F");
         pdf.text("Gross Salary", 25, y);
-        pdf.text("Rp", 135, y);
+        pdf.text("Rp", 142, y);
         pdf.text(formatNominal(grossSalary), 190, y, { align: "right" });
 
         y += 8;
@@ -1996,7 +1996,7 @@ window.printSalaryPDF = async (id) => {
         pdf.setFillColor(255, 210, 210);
         pdf.rect(140, y - 6, 50, 10, "F");
         pdf.text("Total Potongan", 25, y);
-        pdf.text("Rp", 135, y);
+        pdf.text("Rp", 142, y);
         pdf.text(
             formatNominal(totalPotongan),
             190,
@@ -2009,7 +2009,6 @@ window.printSalaryPDF = async (id) => {
         y += 8;
 
         pdf.line(15, y, 195, y);
-
         pdf.setDrawColor(0);
         pdf.setLineWidth(0.2);
 
@@ -2036,7 +2035,7 @@ window.printSalaryPDF = async (id) => {
         pdf.setFillColor(180, 230, 180);
         pdf.rect(140, y - 7, 50, 11, "F");
 
-        pdf.text("Rp", 135, y);
+        pdf.text("Rp", 142, y);
         pdf.text(
             formatNominal(takeHomePay),
             190,
@@ -2060,10 +2059,9 @@ window.printSalaryPDF = async (id) => {
         Gross Salary : ${formatNominal(grossSalary)}
         Potongan     : ${formatNominal(totalPotongan)}
         Take Home Pay: ${formatNominal(takeHomePay)}`;
-
+        
+        console.log(QRCode);
         const qrImage = await generateQRCode(qrData);
-        /* posisi QR kanan bawah */
-
         pdf.addImage(
             qrImage,
             "PNG",
