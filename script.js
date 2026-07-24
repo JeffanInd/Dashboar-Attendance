@@ -1844,7 +1844,7 @@ window.printSalaryPDF = async (id) => {
             );
         }
 
-        /* =====================
+         /* =====================
            HEADER
         ===================== */
         pdf.setFont("helvetica", "bold");
@@ -1854,11 +1854,12 @@ window.printSalaryPDF = async (id) => {
         pdf.setFontSize(9);
         pdf.text(alamatPerusahaan, 45, 26);
         pdf.setLineWidth(0.8);
-        pdf.line(15, 40, 195, 40);
+        pdf.line(15, 35, 195, 40);
+
         pdf.setLineWidth(0.2);
         pdf.setFontSize(15);
         pdf.setFont("helvetica", "bold");
-        pdf.text("SLIP GAJI KARYAWAN", 105, 45, {
+        pdf.text("SLIP GAJI KARYAWAN", 115, 45, {
             align: "center"
         }
         );
@@ -1867,7 +1868,7 @@ window.printSalaryPDF = async (id) => {
            DATA KARYAWAN
         ===================== */
         pdf.setFillColor(240, 240, 240);
-        pdf.line(15, 58, 195, 58);
+        pdf.line(15, 45, 195, 58);
         pdf.setFontSize(11);
         pdf.setFont("helvetica", "normal");
 
@@ -1880,7 +1881,7 @@ window.printSalaryPDF = async (id) => {
         /* =====================
            DATA KEHADIRAN TABLE
         ===================== */
-        let y = 105;
+        let y = 80;
         pdf.setFont("helvetica", "bold");
         pdf.text("DATA KEHADIRAN", 20, y);
 
