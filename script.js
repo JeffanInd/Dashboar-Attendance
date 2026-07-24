@@ -1913,58 +1913,48 @@ window.printSalaryPDF = async (id) => {
         pdf.line(115, y, 115, y + 10);
         pdf.line(150, y, 150, y + 10);
 
-        /* =====================
+       /* =====================
         PENDAPATAN
         ===================== */
         y += 20;
         pdf.setFont("helvetica", "bold");
         pdf.setFontSize(11);
         pdf.text("PENDAPATAN", 20, y);
-
         pdf.setFont("helvetica", "normal");
 
         y += 12;
-
         pdf.text("Gaji Pokok", 25, y);
         pdf.setFillColor(220, 245, 220);
-        pdf.rect(140, y - 6, 50, 10, "F");
-        pdf.text(formatRupiah(d.gajiPokok), 185, y, { align: "right" });
+        pdf.rect(160, y - 5, 30, 8, "F");
+        pdf.text(formatRupiah(d.gajiPokok), 190, y, { align: "right" });
 
         y += 10;
-
         pdf.text("Tunjangan Jabatan", 25, y);
         pdf.setFillColor(220, 245, 220);
-        pdf.rect(140, y - 6, 50, 10, "F");
-        pdf.text(formatRupiah(d.tunjanganJabatan), 185, y, { align: "right" });
+        pdf.rect(160, y - 5, 30, 8, "F");
+        pdf.text(formatRupiah(d.tunjanganJabatan), 190, y, { align: "right" });
 
         y += 10;
-
         pdf.text("Tunjangan Lainnya", 25, y);
         pdf.setFillColor(220, 245, 220);
-        pdf.rect(140, y - 6, 50, 10, "F");
-        pdf.text(formatRupiah(d.tunjanganLainnya), 185, y, { align: "right" });
-
+        pdf.rect(160, y - 5, 30, 8, "F");
+        pdf.text(formatRupiah(d.tunjanganLainnya), 190, y, { align: "right" });
         pdf.setFont("helvetica", "bold");
         pdf.text("+", 190, y);
 
         y += 8;
-
         pdf.setDrawColor(30, 150, 80);
         pdf.setLineWidth(0.8);
         pdf.line(15, y, 195, y);
 
         y += 8;
-
         pdf.setFillColor(190, 235, 190);
         pdf.rect(140, y - 6, 50, 10, "F");
-
         pdf.text("Gross Salary", 25, y);
         pdf.text(formatRupiah(grossSalary), 190, y, { align: "right" });
 
         y += 8;
-
         pdf.line(15, y, 195, y);
-
         pdf.setDrawColor(0);
         pdf.setLineWidth(0.2);
 
@@ -1972,42 +1962,34 @@ window.printSalaryPDF = async (id) => {
         POTONGAN
         ===================== */
         y += 12;
-
         pdf.setFont("helvetica", "bold");
         pdf.text("POTONGAN", 20, y);
-
         pdf.setFont("helvetica", "normal");
 
         y += 12;
-
         pdf.text("Potongan Kehadiran", 25, y);
         pdf.setFillColor(220, 245, 220);
-        pdf.rect(140, y - 6, 50, 10, "F");
-        pdf.text(formatRupiah(d.potonganKehadiran), 185, y, { align: "right" });
+        pdf.rect(160, y - 5, 30, 8, "F");
+        pdf.text(formatRupiah(d.potonganKehadiran), 190, y, { align: "right" });
 
         y += 10;
-
         pdf.text("Potongan Koperasi", 25, y);
         pdf.setFillColor(220, 245, 220);
-        pdf.rect(140, y - 6, 50, 10, "F");
-        pdf.text(formatRupiah(d.potonganKoperasi), 185, y, { align: "right" });
+        pdf.rect(160, y - 5, 30, 8, "F");
+        pdf.text(formatRupiah(d.potonganKoperasi), 190, y, { align: "right" });
 
         pdf.setFont("helvetica", "bold");
         pdf.text("+", 190, y);
 
         y += 8;
-
         pdf.setDrawColor(30, 150, 80);
         pdf.setLineWidth(0.8);
         pdf.line(15, y, 195, y);
 
         y += 8;
-
         pdf.setFillColor(190, 235, 190);
         pdf.rect(140, y - 6, 50, 10, "F");
-
         pdf.text("Total Potongan", 25, y);
-
         pdf.text(
             formatRupiah(totalPotongan),
             190,
