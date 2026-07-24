@@ -1858,7 +1858,7 @@ window.printSalaryPDF = async (id) => {
         pdf.setLineWidth(0.2);
         pdf.setFontSize(15);
         pdf.setFont("helvetica", "bold");
-        pdf.text("SLIP GAJI KARYAWAN", 105, 55, {
+        pdf.text("SLIP GAJI KARYAWAN", 105, 45, {
             align: "center"
         }
         );
@@ -1867,19 +1867,20 @@ window.printSalaryPDF = async (id) => {
            DATA KARYAWAN
         ===================== */
         pdf.setFillColor(240, 240, 240);
-        pdf.line(15, 65, 195, 65);
+        pdf.line(15, 58, 195, 58);
         pdf.setFontSize(11);
         pdf.setFont("helvetica", "normal");
-        pdf.text(`ID Karyawan : ${d.kodeKaryawan}`, 25, 75);
-        pdf.text(`Nama : ${d.namaKaryawan}`, 25, 84);
-        pdf.text(`Jabatan : ${d.jabatan || "-"}`, 25, 93);
-        pdf.text(`Periode : ${getNamaBulan(d.bulan)} ${d.tahun}`, 120, 75);
-        pdf.text(`Status : ${d.status}`, 120, 84);
+
+        pdf.text(`ID Karyawan : ${d.kodeKaryawan}`, 25, 68);
+        pdf.text(`Nama : ${d.namaKaryawan}`, 25, 77);
+        pdf.text(`Jabatan : ${d.jabatan || "-"}`, 25, 86);
+        pdf.text(`Periode : ${getNamaBulan(d.bulan)} ${d.tahun}`, 120, 68);
+        pdf.text(`Status : ${d.status}`, 120, 77);
 
         /* =====================
            DATA KEHADIRAN TABLE
         ===================== */
-        let y = 125;
+        let y = 105;
         pdf.setFont("helvetica", "bold");
         pdf.text("DATA KEHADIRAN", 20, y);
 
