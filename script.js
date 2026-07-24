@@ -2016,14 +2016,13 @@ window.printSalaryPDF = async (id) => {
         /* =====================
         TAKE HOME PAY
         ===================== */
-
-        y += 20;
+        y += 15;
 
         pdf.setDrawColor(30, 100, 220);
         pdf.setLineWidth(1);
 
-        pdf.line(15, y - 10, 195, y - 10);
-        pdf.line(15, y + 10, 195, y + 10);
+        pdf.line(15, y - 5, 195, y - 5);
+        pdf.line(15, y + 5, 195, y + 5);
 
         pdf.setFont("helvetica", "bold");
         pdf.setFontSize(14);
@@ -2036,7 +2035,7 @@ window.printSalaryPDF = async (id) => {
 
         pdf.setFillColor(180, 230, 180);
         pdf.rect(140, y - 7, 50, 11, "F");
-    
+
         pdf.text("Rp", 135, y);
         pdf.text(
             formatNominal(takeHomePay),
@@ -2045,6 +2044,33 @@ window.printSalaryPDF = async (id) => {
             {
                 align: "right"
             }
+        );
+
+        /* =====================
+        QR CODE SLIP GAJI
+        ===================== */
+        const qrData =
+            `PT. NAMA PERUSAHAAN
+        Nama       : ${d.namaKaryawan}
+        ID         : ${d.kodeKaryawan}
+        Alamat     : ${d.alamat || "-"}
+        Jabatan    : ${d.jabatan || "-"}
+        Periode    : ${getNamaBulan(d.bulan)} ${d.tahun}
+
+        Gross Salary : ${formatNominal(grossSalary)}
+        Potongan     : ${formatNominal(totalPotongan)}
+        Take Home Pay: ${formatNominal(takeHomePay)}`;
+
+        const qrImage = await generateQRCode(qrData);
+        /* posisi QR kanan bawah */
+
+        pdf.addImage(
+            qrImage,
+            "PNG",
+            155,
+            y + 15,
+            30,
+            30
         );
 
         pdf.setLineWidth(0.2);
@@ -2103,6 +2129,26 @@ function loadImageBase64(url) {
             img.src = url;
         }
     );
+}
+
+function generateQRCode(text) {
+    return new Promise((resolve, reject) => {
+        QRCode.toDataURL(
+            text,
+            {
+                width: 120,
+                margin: 1
+            },
+            function (error, url) {
+                if (error) {
+                    reject(error);
+                }
+                else {
+                    resolve(url);
+                }
+            }
+        );
+    });
 }
 
 /* KOPERASI */
