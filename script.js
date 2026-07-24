@@ -1925,20 +1925,20 @@ window.printSalaryPDF = async (id) => {
         y += 12;
         pdf.text("Gaji Pokok", 25, y);
         pdf.setFillColor(220, 245, 220);
-        pdf.rect(160, y - 5, 30, 8, "F");
-        pdf.text(formatRupiah(d.gajiPokok), 170, y, { align: "right" });
+        pdf.rect(100, y - 6, 50, 10, "F");
+        pdf.text(formatRupiah(d.gajiPokok), 150, y, { align: "right" });
 
         y += 10;
         pdf.text("Tunjangan Jabatan", 25, y);
         pdf.setFillColor(220, 245, 220);
-        pdf.rect(160, y - 5, 30, 8, "F");
-        pdf.text(formatRupiah(d.tunjanganJabatan), 170, y, { align: "right" });
-
+        pdf.rect(100, y - 6, 50, 10, "F");
+        pdf.text(formatRupiah(d.tunjanganJabatan), 150, y, { align: "right" });
+        
         y += 10;
         pdf.text("Tunjangan Lainnya", 25, y);
         pdf.setFillColor(220, 245, 220);
-        pdf.rect(160, y - 5, 30, 8, "F");
-        pdf.text(formatRupiah(d.tunjanganLainnya), 170, y, { align: "right" });
+        pdf.rect(100, y - 6, 50, 10, "F");
+        pdf.text(formatRupiah(d.tunjanganLainnya), 150, y, { align: "right" });
         pdf.setFont("helvetica", "bold");
         pdf.text("+", 190, y);
 
@@ -1969,14 +1969,14 @@ window.printSalaryPDF = async (id) => {
         y += 12;
         pdf.text("Potongan Kehadiran", 25, y);
         pdf.setFillColor(220, 245, 220);
-        pdf.rect(160, y - 5, 30, 8, "F");
-        pdf.text(formatRupiah(d.potonganKehadiran), 170, y, { align: "right" });
+        pdf.rect(100, y - 6, 50, 10, "F");
+        pdf.text(formatRupiah(d.potonganKehadiran), 150, y, { align: "right" });
 
         y += 10;
         pdf.text("Potongan Koperasi", 25, y);
         pdf.setFillColor(220, 245, 220);
-        pdf.rect(160, y - 5, 30, 8, "F");
-        pdf.text(formatRupiah(d.potonganKoperasi), 170, y, { align: "right" });
+        pdf.rect(100, y - 6, 50, 10, "F");
+        pdf.text(formatRupiah(d.potonganKoperasi), 150, y, { align: "right" });
 
         pdf.setFont("helvetica", "bold");
         pdf.text("+", 190, y);
