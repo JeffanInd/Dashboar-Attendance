@@ -1954,7 +1954,7 @@ window.printSalaryPDF = async (id) => {
         pdf.setFillColor(190, 235, 190);
         pdf.rect(140, y - 6, 50, 10, "F");
         pdf.text("Gross Salary", 25, y);
-        pdf.text("Rp", 130, y);
+        pdf.text("Rp", 135, y);
         pdf.text(formatNominal(grossSalary), 190, y, { align: "right" });
 
         y += 8;
@@ -1996,7 +1996,7 @@ window.printSalaryPDF = async (id) => {
         pdf.setFillColor(255, 210, 210);
         pdf.rect(140, y - 6, 50, 10, "F");
         pdf.text("Total Potongan", 25, y);
-        pdf.text("Rp", 130, y);
+        pdf.text("Rp", 135, y);
         pdf.text(
             formatNominal(totalPotongan),
             190,
@@ -2037,7 +2037,7 @@ window.printSalaryPDF = async (id) => {
         pdf.setFillColor(180, 230, 180);
         pdf.rect(140, y - 7, 50, 11, "F");
     
-        pdf.text("Rp", 130, y);
+        pdf.text("Rp", 135, y);
         pdf.text(
             formatNominal(takeHomePay),
             190,
