@@ -1923,28 +1923,27 @@ window.printSalaryPDF = async (id) => {
         pdf.setFont("helvetica", "normal");
 
         y += 12;
-
         pdf.text("Gaji Pokok", 25, y);
         pdf.setFillColor(220, 245, 220);
-        pdf.rect(115, y - 6, 75, 10, "F");
-        pdf.text("Rp", 120, y);
-        pdf.text(formatNominal(d.gajiPokok), 190, y, { align: "right" });
+        pdf.rect(90, y - 6, 50, 10, "F");
+        pdf.text("Rp", 105, y);
+        pdf.text(formatNominal(d.gajiPokok), 140, y, { align: "right" });
 
         y += 10;
-
         pdf.text("Tunjangan Jabatan", 25, y);
         pdf.setFillColor(220, 245, 220);
-        pdf.rect(115, y - 6, 75, 10, "F");
-        pdf.text("Rp", 120, y);
-        pdf.text(formatNominal(d.tunjanganJabatan), 190, y, { align: "right" });
+        pdf.rect(90, y - 6, 50, 10, "F");
+        pdf.text("Rp", 105, y);
+        pdf.text(formatNominal(d.tunjanganJabatan), 140, y, { align: "right" });
 
         y += 10;
-
         pdf.text("Tunjangan Lainnya", 25, y);
         pdf.setFillColor(220, 245, 220);
-        pdf.rect(115, y - 6, 75, 10, "F");
-        pdf.text("Rp", 120, y);
-        pdf.text(formatNominal(d.tunjanganLainnya), 190, y, { align: "right" });
+        pdf.rect(90, y - 6, 50, 10, "F");
+        pdf.text("Rp", 105, y);
+        pdf.text(formatNominal(d.tunjanganLainnya), 140, y, { align: "right" });
+        pdf.setFont("helvetica", "bold");
+        pdf.text("+", 190, y);
 
         y += 8;
         pdf.setDrawColor(30, 150, 80);
@@ -1952,19 +1951,11 @@ window.printSalaryPDF = async (id) => {
         pdf.line(15, y, 195, y);
 
         y += 8;
-
         pdf.setFillColor(190, 235, 190);
-        pdf.rect(115, y - 6, 75, 10, "F");
+        pdf.rect(140, y - 6, 50, 10, "F");
         pdf.text("Gross Salary", 25, y);
         pdf.text("Rp", 120, y);
-        pdf.text(
-            formatNominal(grossSalary),
-            190,
-            y,
-            {
-                align: "right"
-            }
-        );
+        pdf.text(formatNominal(grossSalary), 190, y, { align: "right" });
 
         y += 8;
         pdf.line(15, y, 195, y);
@@ -1980,20 +1971,18 @@ window.printSalaryPDF = async (id) => {
         pdf.setFont("helvetica", "normal");
 
         y += 12;
-
         pdf.text("Potongan Kehadiran", 25, y);
         pdf.setFillColor(255, 220, 220);
-        pdf.rect(115, y - 6, 75, 10, "F");
-        pdf.text("Rp", 120, y);
-        pdf.text(formatNominal(d.potonganKehadiran), 190, y, { align: "right" });
+        pdf.rect(90, y - 6, 60, 10, "F");
+        pdf.text("Rp", 105, y);
+        pdf.text(formatNominal(d.potonganKehadiran), 140, y, { align: "right" });
 
         y += 10;
-
         pdf.text("Potongan Koperasi", 25, y);
         pdf.setFillColor(255, 220, 220);
-        pdf.rect(115, y - 6, 75, 10, "F");
-        pdf.text("Rp", 120, y);
-        pdf.text(formatNominal(d.potonganKoperasi), 190, y, { align: "right" });
+        pdf.rect(90, y - 6, 60, 10, "F");
+        pdf.text("Rp", 105, y);
+        pdf.text(formatNominal(d.potonganKoperasi), 140, y, { align: "right" });
 
         pdf.setFont("helvetica", "bold");
         pdf.text("+", 190, y);
@@ -2008,7 +1997,14 @@ window.printSalaryPDF = async (id) => {
         pdf.rect(140, y - 6, 100, 10, "F");
         pdf.text("Total Potongan", 25, y);
         pdf.text("Rp", 120, y);
-        pdf.text(formatNominal(grossSalary), 190, y, { align: "right" });
+        pdf.text(
+            formatNominal(totalPotongan),
+            190,
+            y,
+            {
+                align: "right"
+            }
+        );
 
         y += 8;
 
@@ -2040,13 +2036,8 @@ window.printSalaryPDF = async (id) => {
 
         pdf.setFillColor(180, 230, 180);
         pdf.rect(140, y - 7, 50, 11, "F");
-
-        pdf.text(
-            "Rp",
-            120,
-            y + 2
-        );
-
+    
+        pdf.text("Rp", 120, y);
         pdf.text(
             formatNominal(takeHomePay),
             190,
@@ -2072,6 +2063,7 @@ window.printSalaryPDF = async (id) => {
         );
     }
 };
+
 function formatNominal(value) {
     return Number(value || 0).toLocaleString("id-ID");
 }
