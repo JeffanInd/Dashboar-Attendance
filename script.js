@@ -1844,44 +1844,45 @@ window.printSalaryPDF = async (id) => {
             );
         }
 
-         /* =====================
-           HEADER
+        /* =====================
+        HEADER
         ===================== */
         pdf.setFont("helvetica", "bold");
         pdf.setFontSize(18);
-        pdf.text(namaPerusahaan, 45, 18);
+        pdf.text(namaPerusahaan, 45, 16);
+
         pdf.setFont("helvetica", "normal");
         pdf.setFontSize(9);
-        pdf.text(alamatPerusahaan, 45, 26);
+        pdf.text(alamatPerusahaan, 45, 23);
+
         pdf.setLineWidth(0.8);
-        pdf.line(15, 35, 195, 40);
+        pdf.line(15, 32, 195, 32);
 
         pdf.setLineWidth(0.2);
-        pdf.setFontSize(15);
+        pdf.setFontSize(14);
         pdf.setFont("helvetica", "bold");
-        pdf.text("SLIP GAJI KARYAWAN", 115, 45, {
+
+        pdf.text("SLIP GAJI KARYAWAN", 115, 40, {
             align: "center"
-        }
-        );
+        });
 
         /* =====================
            DATA KARYAWAN
         ===================== */
         pdf.setFillColor(240, 240, 240);
-        pdf.line(15, 45, 195, 58);
-        pdf.setFontSize(11);
+        pdf.line(15, 47, 195, 47);
+        pdf.setFontSize(10);
         pdf.setFont("helvetica", "normal");
-
-        pdf.text(`ID Karyawan : ${d.kodeKaryawan}`, 25, 68);
-        pdf.text(`Nama : ${d.namaKaryawan}`, 25, 77);
-        pdf.text(`Jabatan : ${d.jabatan || "-"}`, 25, 86);
-        pdf.text(`Periode : ${getNamaBulan(d.bulan)} ${d.tahun}`, 120, 68);
-        pdf.text(`Status : ${d.status}`, 120, 77);
+        pdf.text(`ID Karyawan : ${d.kodeKaryawan}`, 25, 56);
+        pdf.text(`Nama : ${d.namaKaryawan}`, 25, 64);
+        pdf.text(`Jabatan : ${d.jabatan || "-"}`, 25, 72);
+        pdf.text(`Periode : ${getNamaBulan(d.bulan)} ${d.tahun}`, 120, 56);
+        pdf.text(`Status : ${d.status}`, 120, 64);
 
         /* =====================
            DATA KEHADIRAN TABLE
         ===================== */
-        let y = 80;
+        let y = 82;
         pdf.setFont("helvetica", "bold");
         pdf.text("DATA KEHADIRAN", 20, y);
 
@@ -1915,7 +1916,7 @@ window.printSalaryPDF = async (id) => {
         /* =====================
         PENDAPATAN
         ===================== */
-        y += 25;
+        y += 20;
         pdf.setFont("helvetica", "bold");
         pdf.setFontSize(11);
         pdf.text("PENDAPATAN", 20, y);
@@ -1970,7 +1971,7 @@ window.printSalaryPDF = async (id) => {
         /* =====================
         POTONGAN
         ===================== */
-        y += 18;
+        y += 12;
 
         pdf.setFont("helvetica", "bold");
         pdf.text("POTONGAN", 20, y);
@@ -2006,6 +2007,7 @@ window.printSalaryPDF = async (id) => {
         pdf.rect(140, y - 6, 50, 10, "F");
 
         pdf.text("Total Potongan", 25, y);
+
         pdf.text(
             formatRupiah(totalPotongan),
             190,
@@ -2023,8 +2025,9 @@ window.printSalaryPDF = async (id) => {
         pdf.setLineWidth(0.2);
 
         /* =====================
-TAKE HOME PAY
-===================== */
+        TAKE HOME PAY
+        ===================== */
+
         y += 20;
 
         pdf.setDrawColor(30, 100, 220);
