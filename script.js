@@ -2012,39 +2012,43 @@ window.printSalaryPDF = async (id) => {
         pdf.setDrawColor(0);
         pdf.setLineWidth(0.2);
 
-        /* =====================
+       /* =====================
         TAKE HOME PAY
         ===================== */
-        y += 15;
-
+        y += 13;
+        
         pdf.setDrawColor(30, 100, 220);
         pdf.setLineWidth(1);
-
+        
+        // garis atas dan bawah
         pdf.line(15, y - 5, 195, y - 5);
-        pdf.line(15, y + 5, 195, y + 5);
-
+        pdf.line(15, y + 7, 195, y + 7);
+        
         pdf.setFont("helvetica", "bold");
         pdf.setFontSize(14);
-
+        
         pdf.text(
             "TAKE HOME PAY",
             25,
-            y + 2
+            y + 3
         );
-
+        
+        // kotak hijau mengikuti area garis
         pdf.setFillColor(180, 230, 180);
-        pdf.rect(140, y - 7, 50, 11, "F");
-
-        pdf.text("Rp", 142, y);
+        pdf.rect(140, y - 6, 50, 11, "F");
+        
+        // nilai
+        pdf.text("Rp", 142, y + 2);
+        
         pdf.text(
             formatNominal(takeHomePay),
             190,
-            y + 2,
+            y + 3,
             {
                 align: "right"
             }
         );
-
+        
         /* =====================
         QR CODE SLIP GAJI
         ===================== */
