@@ -1973,14 +1973,14 @@ window.printSalaryPDF = async (id) => {
         y += 12;
         pdf.text("Potongan Kehadiran", 25, y);
         pdf.setFillColor(255, 220, 220);
-        pdf.rect(90, y - 6, 60, 10, "F");
+        pdf.rect(90, y - 6, 50, 10, "F");
         pdf.text("Rp", 105, y);
         pdf.text(formatNominal(d.potonganKehadiran), 140, y, { align: "right" });
 
         y += 10;
         pdf.text("Potongan Koperasi", 25, y);
         pdf.setFillColor(255, 220, 220);
-        pdf.rect(90, y - 6, 60, 10, "F");
+        pdf.rect(90, y - 6, 50, 10, "F");
         pdf.text("Rp", 105, y);
         pdf.text(formatNominal(d.potonganKoperasi), 140, y, { align: "right" });
 
@@ -1994,7 +1994,7 @@ window.printSalaryPDF = async (id) => {
 
         y += 8;
         pdf.setFillColor(255, 210, 210);
-        pdf.rect(140, y - 6, 100, 10, "F");
+        pdf.rect(140, y - 6, 50, 10, "F");
         pdf.text("Total Potongan", 25, y);
         pdf.text("Rp", 120, y);
         pdf.text(
