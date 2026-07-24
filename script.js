@@ -2021,7 +2021,7 @@ window.printSalaryPDF = async (id) => {
         pdf.setLineWidth(1);
         
         // garis atas dan bawah
-        pdf.line(15, y - 5, 195, y - 5);
+        pdf.line(15, y - 8, 195, y - 8);
         pdf.line(15, y + 7, 195, y + 7);
         
         pdf.setFont("helvetica", "bold");
@@ -2035,7 +2035,7 @@ window.printSalaryPDF = async (id) => {
         
         // kotak hijau mengikuti area garis
         pdf.setFillColor(180, 230, 180);
-        pdf.rect(140, y - 6, 50, 11, "F");
+        pdf.rect(140, y - 5, 50, 11, "F");
         
         // nilai
         pdf.text("Rp", 142, y + 2);
@@ -2070,7 +2070,7 @@ window.printSalaryPDF = async (id) => {
             qrImage,
             "PNG",
             155,
-            y + 15,
+            y + 7,
             30,
             30
         );
