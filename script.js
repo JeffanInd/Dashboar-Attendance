@@ -1926,19 +1926,19 @@ window.printSalaryPDF = async (id) => {
         pdf.text("Gaji Pokok", 25, y);
         pdf.setFillColor(220, 245, 220);
         pdf.rect(160, y - 5, 30, 8, "F");
-        pdf.text(formatRupiah(d.gajiPokok), 190, y, { align: "right" });
+        pdf.text(formatRupiah(d.gajiPokok), 170, y, { align: "right" });
 
         y += 10;
         pdf.text("Tunjangan Jabatan", 25, y);
         pdf.setFillColor(220, 245, 220);
         pdf.rect(160, y - 5, 30, 8, "F");
-        pdf.text(formatRupiah(d.tunjanganJabatan), 190, y, { align: "right" });
+        pdf.text(formatRupiah(d.tunjanganJabatan), 170, y, { align: "right" });
 
         y += 10;
         pdf.text("Tunjangan Lainnya", 25, y);
         pdf.setFillColor(220, 245, 220);
         pdf.rect(160, y - 5, 30, 8, "F");
-        pdf.text(formatRupiah(d.tunjanganLainnya), 190, y, { align: "right" });
+        pdf.text(formatRupiah(d.tunjanganLainnya), 170, y, { align: "right" });
         pdf.setFont("helvetica", "bold");
         pdf.text("+", 190, y);
 
@@ -1970,13 +1970,13 @@ window.printSalaryPDF = async (id) => {
         pdf.text("Potongan Kehadiran", 25, y);
         pdf.setFillColor(220, 245, 220);
         pdf.rect(160, y - 5, 30, 8, "F");
-        pdf.text(formatRupiah(d.potonganKehadiran), 190, y, { align: "right" });
+        pdf.text(formatRupiah(d.potonganKehadiran), 170, y, { align: "right" });
 
         y += 10;
         pdf.text("Potongan Koperasi", 25, y);
         pdf.setFillColor(220, 245, 220);
         pdf.rect(160, y - 5, 30, 8, "F");
-        pdf.text(formatRupiah(d.potonganKoperasi), 190, y, { align: "right" });
+        pdf.text(formatRupiah(d.potonganKoperasi), 170, y, { align: "right" });
 
         pdf.setFont("helvetica", "bold");
         pdf.text("+", 190, y);
