@@ -1913,9 +1913,9 @@ window.printSalaryPDF = async (id) => {
         pdf.line(115, y, 115, y + 10);
         pdf.line(150, y, 150, y + 10);
 
-       /* =====================
-        PENDAPATAN
-        ===================== */
+        /* =====================
+         PENDAPATAN
+         ===================== */
         y += 20;
         pdf.setFont("helvetica", "bold");
         pdf.setFontSize(11);
@@ -1925,20 +1925,20 @@ window.printSalaryPDF = async (id) => {
         y += 12;
         pdf.text("Gaji Pokok", 25, y);
         pdf.setFillColor(220, 245, 220);
-        pdf.rect(100, y - 6, 50, 10, "F");
-        pdf.text(formatRupiah(d.gajiPokok), 150, y, { align: "right" });
+        pdf.rect(90, y - 6, 50, 10, "F");
+        pdf.text(formatNominal(d.gajiPokok), 140, y, { align: "right" });
 
         y += 10;
         pdf.text("Tunjangan Jabatan", 25, y);
         pdf.setFillColor(220, 245, 220);
-        pdf.rect(100, y - 6, 50, 10, "F");
-        pdf.text(formatRupiah(d.tunjanganJabatan), 150, y, { align: "right" });
-        
+        pdf.rect(90, y - 6, 50, 10, "F");
+        pdf.text(formatNominal(d.tunjanganJabatan), 140, y, { align: "right" });
+
         y += 10;
         pdf.text("Tunjangan Lainnya", 25, y);
         pdf.setFillColor(220, 245, 220);
-        pdf.rect(100, y - 6, 50, 10, "F");
-        pdf.text(formatRupiah(d.tunjanganLainnya), 150, y, { align: "right" });
+        pdf.rect(90, y - 6, 50, 10, "F");
+        pdf.text(formatNominal(d.tunjanganLainnya), 140, y, { align: "right" });
         pdf.setFont("helvetica", "bold");
         pdf.text("+", 190, y);
 
@@ -1951,7 +1951,7 @@ window.printSalaryPDF = async (id) => {
         pdf.setFillColor(190, 235, 190);
         pdf.rect(140, y - 6, 50, 10, "F");
         pdf.text("Gross Salary", 25, y);
-        pdf.text(formatRupiah(grossSalary), 190, y, { align: "right" });
+        pdf.text(formatNominal(grossSalary), 190, y, { align: "right" });
 
         y += 8;
         pdf.line(15, y, 195, y);
@@ -1968,15 +1968,15 @@ window.printSalaryPDF = async (id) => {
 
         y += 12;
         pdf.text("Potongan Kehadiran", 25, y);
-        pdf.setFillColor(220, 245, 220);
-        pdf.rect(100, y - 6, 50, 10, "F");
-        pdf.text(formatRupiah(d.potonganKehadiran), 150, y, { align: "right" });
+        pdf.setFillColor(255, 235, 235);
+        pdf.rect(90, y - 6, 50, 10, "F");
+        pdf.text(formatNominal(d.potonganKehadiran), 140, y, { align: "right" });
 
         y += 10;
         pdf.text("Potongan Koperasi", 25, y);
-        pdf.setFillColor(220, 245, 220);
-        pdf.rect(100, y - 6, 50, 10, "F");
-        pdf.text(formatRupiah(d.potonganKoperasi), 150, y, { align: "right" });
+        pdf.setFillColor(255, 235, 235);
+        pdf.rect(90, y - 6, 50, 10, "F");
+        pdf.text(formatNominal(d.potonganKoperasi), 140, y, { align: "right" });
 
         pdf.setFont("helvetica", "bold");
         pdf.text("+", 190, y);
@@ -1987,11 +1987,11 @@ window.printSalaryPDF = async (id) => {
         pdf.line(15, y, 195, y);
 
         y += 8;
-        pdf.setFillColor(190, 235, 190);
+        pdf.setFillColor(255, 210, 210);
         pdf.rect(140, y - 6, 50, 10, "F");
         pdf.text("Total Potongan", 25, y);
         pdf.text(
-            formatRupiah(totalPotongan),
+            formatNominal(totalPotongan),
             190,
             y,
             {
@@ -2031,7 +2031,7 @@ window.printSalaryPDF = async (id) => {
         pdf.rect(140, y - 7, 50, 11, "F");
 
         pdf.text(
-            formatRupiah(takeHomePay),
+            formatNominal(takeHomePay),
             190,
             y + 2,
             {
@@ -2056,15 +2056,9 @@ window.printSalaryPDF = async (id) => {
     }
 };
 
-function formatRupiah(value) {
-    return "Rp " +
-        Number(value || 0)
-            .toLocaleString(
-                "id-ID"
-            );
-
+function formatNominal(value) {
+    return Number(value || 0).toLocaleString("id-ID");
 }
-
 function getNamaBulan(bulan) {
     const bulanArray = [
         "", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
