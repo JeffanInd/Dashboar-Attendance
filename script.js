@@ -1,7 +1,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { getFirestore, collection, getDocs, getDoc, addDoc, doc, setDoc, deleteDoc, updateDoc, orderBy, query, where } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-import { getStorage,ref,uploadBytes,getDownloadURL} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+
 
 const firebaseConfig = {
     apiKey: "AIzaSyB6IOPUC-6JdFGhDdLCxfupc1dye92ACr0",
@@ -16,7 +16,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
-const storage = getStorage(app);
 
 let editId = null;
 let chartInstances = [];
@@ -643,13 +642,13 @@ window.showDataEmployee = () => {
             <table>
                 <thead>
                     <tr>
-                        <th>ID Attendance</th>
+                        <th>ID Employee</th>
                         <th>Employee Name</th>
                         <th>Gender</th>
                         <th>Jobs</th>
                         <th>Start Work Date</th>
                         <th>Contact</th>
-                        <th>Status</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody id="dataEmployeeTable"></tbody>
@@ -718,7 +717,8 @@ gap:30px;
 align-items:flex-start;
 ">
 <div>
-<img 
+<img
+id="fotoPreview" 
 src="${d.foto || 'https://via.placeholder.com/150'}"
 style="
 width:150px;
@@ -730,7 +730,8 @@ border-radius:10px;
 <input 
 type="file"
 id="uploadFoto"
-accept="image/*">
+accept="image/*"
+onchange="previewFoto(event)">
 <br><br>
 <button onclick="uploadEmployeePhoto('${id}')">
 Upload Photo
@@ -753,26 +754,37 @@ Upload Photo
 </div>
 `;
 }
+window.previewFoto = (event)=>{
+const img = document.getElementById("fotoPreview");
+img.src = URL.createObjectURL(
+event.target.files[0]
+);
+
+}
 window.uploadEmployeePhoto = async(id)=>{
-const file =
+const file = 
 document.getElementById("uploadFoto").files[0];
 if(!file){
 alert("Pilih foto terlebih dahulu");
 return;
 }
-const storageRef =
-ref(storage,`employee/${id}/${file.name}`);
-await uploadBytes(storageRef,file);
-const url =
-await getDownloadURL(storageRef);
+if(file.size > 500000){
+alert("Ukuran foto maksimal 500 KB");
+return;
+}
+const reader = new FileReader();
+reader.onload = async function(){
+const imageBase64 = reader.result;
 await updateDoc(
 doc(db,"employees",id),
 {
-foto:url
+foto:imageBase64
 }
 );
 alert("Foto berhasil disimpan");
 viewEmployee(id);
+};
+reader.readAsDataURL(file);
 }
 
 /* ATTENDANCE */
