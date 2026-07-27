@@ -19,14 +19,14 @@ text-align:center
 }
 .login-logo{
     display:block;
-    width:80px;
-    height:80px;
+    width:100px;
+    height:100px;
     object-fit:contain;
-    margin:0 auto 8px;
+    margin:0 auto 2px;
 }
 .sidebar-logo{
     display:block;
-    width:80px;
+    width:95px;
     height:auto;
     margin:10px auto 20px;
 }
