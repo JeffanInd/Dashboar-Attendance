@@ -98,6 +98,19 @@ background:#1d4ed8
 margin-top:12px;
 font-size:14px
 }
+.header-company h3{
+    font-size:24px;
+    color:#16a34a; /* hijau */
+    margin:0;
+    font-weight:700;
+}
+
+.header-company span{
+    display:block;
+    margin-top:4px;
+    font-size:13px;
+    color:#000; /* hitam */
+}
 
 /* FORM KARYAWAN */
 .employee-form-grid{
