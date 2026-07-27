@@ -210,6 +210,36 @@ text-align:left
 background:#2563eb
 }
 /* ===========================
+   SIDEBAR BOTTOM
+=========================== */
+.sidebar-bottom{
+    position:fixed;
+    left:0;
+    bottom:0;
+    width:250px;
+    height:45px;
+    background:#000;
+    color:white;
+    overflow:hidden;
+    display:flex;
+    align-items:center;
+    z-index:300;
+}
+.running-text{
+    white-space:nowrap;
+    animation:running 15s linear infinite;
+    font-size:12px;
+}
+
+@keyframes running{
+    from{
+        transform:translateX(250px);
+    }
+    to{
+        transform:translateX(-100%);
+    }
+}
+/* ===========================
    SUB MENU SIDEBAR
 =========================== */
 .menu-btn{
