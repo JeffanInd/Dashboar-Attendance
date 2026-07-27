@@ -1,6 +1,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { getFirestore, collection, getDocs, getDoc, addDoc, doc, setDoc, deleteDoc, updateDoc, orderBy, query, where } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import {  getStorage,ref,uploadBytes,getDownloadURL} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyB6IOPUC-6JdFGhDdLCxfupc1dye92ACr0",
@@ -15,6 +16,8 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
+const storage = getStorage(app);
+
 let editId = null;
 let chartInstances = [];
 let attendanceTemp = [];
@@ -413,7 +416,8 @@ window.saveEmployee = async () => {
             nomorRekening: document.getElementById("rekening").value,
             bank: document.getElementById("bank").value,
             tanggalMulaiKerja: document.getElementById("tanggalMulaiKerja").value,
-            status: "Active"
+            status: "Active",
+            foto:""
         };
 
         if (editId) {
@@ -678,6 +682,11 @@ async function loadDataEmployee() {
         <td>${d.tanggalMulaiKerja || ""}</td>
         <td>${d.noHp || ""}</td>
         <td>
+        <button 
+            class="edit"
+            onclick="viewEmployee('${docSnap.id}')">
+            👁 View
+            </button>
             <button
             class="${status == "Active" ? "edit" : "delete"}"
             onclick="changeEmployeeStatus('${docSnap.id}','${status}')">
@@ -701,6 +710,77 @@ window.changeEmployeeStatus = async (id, status) => {
         }
     );
     loadDataEmployee();
+}
+window.viewEmployee = async(id)=>{
+const snap = await getDoc(
+    doc(db,"employees",id)
+);
+const d = snap.data();
+const content=document.getElementById("content");
+content.innerHTML=`
+<div class="card">
+<h2>Employee Biodata</h2>
+<div style="
+display:flex;
+gap:30px;
+align-items:flex-start;
+">
+<div>
+<img 
+src="${d.foto || 'https://via.placeholder.com/150'}"
+style="
+width:150px;
+height:150px;
+object-fit:cover;
+border-radius:10px;
+">
+<br><br>
+<input 
+type="file"
+id="uploadFoto"
+accept="image/*">
+<br><br>
+<button onclick="uploadEmployeePhoto('${id}')">
+Upload Photo
+</button>
+</div>
+<div>
+<h2>${d.namaKaryawan}</h2>
+<p><b>ID :</b> ${d.kodeKaryawan}</p>
+<p><b>Jobs :</b> ${d.jabatan}</p>
+<p><b>Gender :</b> ${d.jenisKelamin}</p>
+<p><b>Birthday :</b> ${d.tanggalLahir}</p>
+<p><b>Address :</b> ${d.alamat}</p>
+<p><b>Education :</b> ${d.pendidikanTerakhir}</p>
+<p><b>Contact :</b> ${d.noHp}</p>
+<p><b>Bank :</b> ${d.bank}</p>
+<p><b>Account :</b> ${d.nomorRekening}</p>
+<p><b>Start Work :</b> ${d.tanggalMulaiKerja}</p>
+</div>
+</div>
+</div>
+`;
+}
+window.uploadEmployeePhoto = async(id)=>{
+const file =
+document.getElementById("uploadFoto").files[0];
+if(!file){
+alert("Pilih foto terlebih dahulu");
+return;
+}
+const storageRef =
+ref(storage,`employee/${id}/${file.name}`);
+await uploadBytes(storageRef,file);
+const url =
+await getDownloadURL(storageRef);
+await updateDoc(
+doc(db,"employees",id),
+{
+foto:url
+}
+);
+alert("Foto berhasil disimpan");
+viewEmployee(id);
 }
 
 /* ATTENDANCE */
