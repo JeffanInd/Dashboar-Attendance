@@ -431,7 +431,23 @@ font-size:13px;
 .view-btn:hover {
     background: #1d4ed8;
 }
+/* BIODATA EMPLOYEE */
+.biodata p{
+    display:flex;
+    margin:8px 0;
+    font-size:15px;
+}
 
+.biodata b{
+    width:120px;
+    display:inline-block;
+    color:#334155;
+}
+
+.biodata span{
+    width:20px;
+    display:inline-block;
+}
 /* STAT */
 .stat-container{
 display:grid;
