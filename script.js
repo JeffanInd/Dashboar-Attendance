@@ -760,6 +760,10 @@ Upload Photo
 <p><b>Account</b><span>:</span>${d.nomorRekening}</p>
 <p><b>Start Work</b><span>:</span>${d.tanggalMulaiKerja}</p>
 </div>
+<br>
+<button class="back-btn" onclick="showDataEmployee()">
+⬅ Back to Data Employee
+</button>
 </div>
 </div>
 </div>
