@@ -431,28 +431,46 @@ font-size:13px;
 .view-btn:hover {
     background: #1d4ed8;
 }
+
 /* BIODATA EMPLOYEE */
-.biodata p{
+.biodata-title{
+    margin-bottom:30px;
+    color:#1e293b;
+}
+.biodata-container{
     display:flex;
-    margin:8px 0;
-    font-size:15px;
+    gap:40px;
+    align-items:flex-start;
 }
 
-.biodata b{
-    width:120px;
-    display:inline-block;
-    color:#334155;
+/* FOTO EMPLOYEE */
+.employee-photo{
+    text-align:center;
 }
-
-.biodata span{
-    width:20px;
-    display:inline-block;
+.employee-photo img{
+    width:150px;
+    height:150px;
+    object-fit:cover;
+    border-radius:10px;
+    border:3px solid #e2e8f0;
 }
-.back-btn{
+/* AREA UPLOAD */
+.employee-photo input{
     margin-top:20px;
+}
+/* TOMBOL UPLOAD */
+.employee-photo button{
+    margin-top:15px;
+}
+/* BIODATA TEXT */
+.biodata{
+    margin-top:5px;
+}
+/* TOMBOL BACK */
+.back-btn{
+    margin-top:35px;
     background:#64748b;
 }
-
 .back-btn:hover{
     background:#475569;
 }
@@ -467,7 +485,6 @@ background:white;
 padding:25px;
 border-radius:18px
 }
-
 /* DATA ATTENDANCE */
 .attendance-filter{
 display:flex;
