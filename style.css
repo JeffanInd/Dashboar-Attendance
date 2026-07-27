@@ -213,9 +213,9 @@ text-align:left
 background:#2563eb
 }
 /* ===========================
-   SIDEBAR BOTTOM
+   RUNNING TEXT FOOTER
 =========================== */
-.sidebar-bottom{
+.running-text{
     position:fixed;
     left:250px;
     right:0;
@@ -228,17 +228,18 @@ background:#2563eb
     overflow:hidden;
     z-index:300;
 }
-.running-text{
+
+.running-content{
     white-space:nowrap;
-    font-size:12px;
+    font-size:13px;
+    font-weight:600;
+    padding-left:100%;
     animation:running 15s linear infinite;
 }
-
 @keyframes running{
     from{
-        transform:translateX(100%);
+        transform:translateX(0);
     }
-
     to{
         transform:translateX(-100%);
     }
