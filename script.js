@@ -681,8 +681,18 @@ async function loadDataEmployee() {
         <td>${d.tanggalMulaiKerja || ""}</td>
         <td>${d.noHp || ""}</td>
         <td>
-        <button class="view-btn">onclick="viewEmployee('${docSnap.id}')"> View</button>  
-        <button class="${status == "Active" ? "edit" : "delete"}"  onclick="changeEmployeeStatus('${docSnap.id}','${status}')"> ${status} </button>
+        <button 
+        class="view-btn" 
+        onclick="viewEmployee('${docSnap.id}')">
+        View
+        </button>
+
+        <button 
+        class="${status == "Active" ? "edit" : "delete"}"  
+        onclick="changeEmployeeStatus('${docSnap.id}','${status}')">
+        ${status}
+        </button>
+
         </td>
         </tr>
         `;
