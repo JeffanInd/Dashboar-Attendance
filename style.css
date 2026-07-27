@@ -422,6 +422,15 @@ font-size:13px;
 .delete{ 
   background:#dc2626 
 }
+.view-btn {
+    background: #2563eb;
+    padding: 8px 12px;
+    font-size: 13px;
+}
+
+.view-btn:hover {
+    background: #1d4ed8;
+}
 
 /* STAT */
 .stat-container{
