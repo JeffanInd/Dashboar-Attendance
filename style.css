@@ -69,9 +69,9 @@ padding-right:45px
 .eye{
   position:absolute;
   right:14px;top:50%;
-  transform:translateY(-65%);
+  transform:translateY(-50%);
   cursor:pointer;
-  font-size:17px;
+  font-size:20px;
   color:#64748b;
   z-index:10
 }
