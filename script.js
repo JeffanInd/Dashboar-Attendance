@@ -719,22 +719,29 @@ const d = snap.data();
 const content=document.getElementById("content");
 content.innerHTML=`
 <div class="card">
-<h2 class="biodata-title">
-Employee Biodata
-</h2>
-<div class="biodata-container">
-<div class="employee-photo">
+<h2>Employee Biodata</h2>
+<div style="
+display:flex;
+gap:30px;
+align-items:flex-start;
+">
+<div>
 <img
 id="fotoPreview" 
 src="${d.foto || 'https://via.placeholder.com/150'}"
->
-<br>
+style="
+width:150px;
+height:150px;
+object-fit:cover;
+border-radius:10px;
+">
+<br><br>
 <input 
 type="file"
 id="uploadFoto"
 accept="image/*"
 onchange="previewFoto(event)">
-<br>
+<br><br>
 <button onclick="uploadEmployeePhoto('${id}')">
 Upload Photo
 </button>
