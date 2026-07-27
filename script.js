@@ -724,6 +724,7 @@ content.innerHTML=`
 display:flex;
 gap:30px;
 align-items:flex-start;
+margin-top:30px;
 ">
 <div>
 <img
