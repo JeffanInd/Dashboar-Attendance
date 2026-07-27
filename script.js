@@ -748,16 +748,18 @@ Upload Photo
 </div>
 <div>
 <h2>${d.namaKaryawan}</h2>
-<p><b>ID :</b> ${d.kodeKaryawan}</p>
-<p><b>Jobs :</b> ${d.jabatan}</p>
-<p><b>Gender :</b> ${d.jenisKelamin}</p>
-<p><b>Birthday :</b> ${d.tanggalLahir}</p>
-<p><b>Address :</b> ${d.alamat}</p>
-<p><b>Education :</b> ${d.pendidikanTerakhir}</p>
-<p><b>Contact :</b> ${d.noHp}</p>
-<p><b>Bank :</b> ${d.bank}</p>
-<p><b>Account :</b> ${d.nomorRekening}</p>
-<p><b>Start Work :</b> ${d.tanggalMulaiKerja}</p>
+<div class="biodata">
+<p><b>ID</b><span>:</span>${d.kodeKaryawan}</p>
+<p><b>Jobs</b><span>:</span>${d.jabatan}</p>
+<p><b>Gender</b><span>:</span>${d.jenisKelamin}</p>
+<p><b>Birthday</b><span>:</span>${d.tanggalLahir}</p>
+<p><b>Address</b><span>:</span>${d.alamat}</p>
+<p><b>Education</b><span>:</span>${d.pendidikanTerakhir}</p>
+<p><b>Contact</b><span>:</span>${d.noHp}</p>
+<p><b>Bank</b><span>:</span>${d.bank}</p>
+<p><b>Account</b><span>:</span>${d.nomorRekening}</p>
+<p><b>Start Work</b><span>:</span>${d.tanggalMulaiKerja}</p>
+</div>
 </div>
 </div>
 </div>
