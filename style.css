@@ -186,7 +186,10 @@ width:250px;
 background:#0f172a;
 color:white;
 padding:35px 18px;
-z-index:200
+z-index:200;
+
+display:flex;
+flex-direction:column;
 }
 
 .sidebar h2{
@@ -213,17 +216,15 @@ background:#2563eb
    SIDEBAR BOTTOM
 =========================== */
 .sidebar-bottom{
-    position:fixed;
-    left:0;
-    bottom:0;
-    width:250px;
+    margin-top:auto;
+    width:calc(100% + 36px);
+    margin-left:-18px;
     height:45px;
     background:#000;
     color:white;
     overflow:hidden;
     display:flex;
     align-items:center;
-    z-index:300;
 }
 .running-text{
     white-space:nowrap;
