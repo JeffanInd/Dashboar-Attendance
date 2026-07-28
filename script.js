@@ -2512,35 +2512,30 @@ window.showInputSimpanan = () => {
                     </option>
                 </select>
             </div>
-
             <div class="form-group">
                 <label>ID Koperasi</label>
                 <input
                     id="simpananId"
                     readonly>
             </div>
-
             <div class="form-group">
                 <label>Nama</label>
                 <input
                     id="simpananNama"
                     readonly>
             </div>
-
             <div class="form-group">
                 <label>Jabatan</label>
                 <input
                     id="simpananJabatan"
                     readonly>
             </div>
-
             <div class="form-group">
                 <label>Tanggal</label>
                 <input
                     type="date"
                     id="simpananTanggal">
             </div>
-
             <div class="form-group">
                 <label>Jenis Simpanan</label>
                 <select id="jenisSimpanan">
@@ -2588,26 +2583,21 @@ window.showInputSimpanan = () => {
     </div>
     <div class="card">
         <h2>Data Simpanan</h2>
-            <div style="display:flex;gap:10px;margin-bottom:15px">
-                <select id="filterBulanSimpanan" onchange="loadDataSimpanan()">
-                <option value="1">January</option>
-                <option value="2">February</option>
-                <option value="3">March</option>
-                <option value="4">April</option>
-                <option value="5">May</option>
-                <option value="6">June</option>
-                <option value="7">July</option>
-                <option value="8">August</option>
-                <option value="9">September</option>
-                <option value="10">October</option>
-                <option value="11">November</option>
-                <option value="12">December</option>
+        <div class="attendance-filter">
+            <div class="form-group">
+                <label>Month</label>
+                <select id="filterBulanSimpanan">
                 </select>
-                <select id="filterTahunSimpanan"onchange="loadDataSimpanan()">
+            </div>
+            <div class="form-group">
+                <label>Year</label>
+                <select id="filterTahunSimpanan">
                 </select>
-             </div>
+            </div>
+        </div>
+        <br>
         <div class="table-container">
-        <table>
+            <table>
                 <thead>
                     <tr>
                         <th>Tanggal</th>
@@ -2626,32 +2616,36 @@ window.showInputSimpanan = () => {
     `;
     loadAnggotaSimpanan();
     loadFilterSimpanan();
-    const sekarang = new Date();
-    document.getElementById("filterBulanSimpanan").value =
-        sekarang.getMonth()+1;
-    document.getElementById("filterTahunSimpanan").value =
-        sekarang.getFullYear();
-    loadDataSimpanan();
     document.getElementById("simpananTanggal").value =
         new Date().toISOString().split("T")[0];
-    };
+};
 
     function loadFilterSimpanan(){
-    const select =
-    document.getElementById("filterTahunSimpanan");
-    if(!select) return;
-
-    select.innerHTML="";
-    const tahunSekarang =
-    new Date().getFullYear();
-
-    for(let i=tahunSekarang-5;i<=tahunSekarang+5;i++){
-        select.innerHTML += `
-        <option value="${i}">
-            ${i}
-        </option>
-        `;
+    const bulan =  document.getElementById( "filterBulanSimpanan" );
+    const tahun =  document.getElementById( "filterTahunSimpanan" );
+    const namaBulan = [ "January", "February", "March", "April","May","June","July","August","September", "October","November",  "December" ];
+    bulan.innerHTML = "";
+    namaBulan.forEach((b,index)=>{
+        bulan.innerHTML += ` <option value="${index+1}"> ${b}</option>`;   
+       
+    });
+    tahun.innerHTML="";
+    const sekarang = new Date();
+    const tahunSekarang =  sekarang.getFullYear();
+    for(
+        let i=tahunSekarang-5;
+        i<=tahunSekarang+10;
+        i++
+    ){
+        tahun.innerHTML += `<option value="${i}"> ${i}</option> `;
     }
+        
+    bulan.value = sekarang.getMonth()+1;
+    tahun.value =  tahunSekarang;
+    bulan.addEventListener( "change",loadDataSimpanan );
+    tahun.addEventListener("change", loadDataSimpanan);
+
+    loadDataSimpanan();
 }
 
 async function loadAnggotaSimpanan() {
