@@ -1929,21 +1929,17 @@ window.printSalaryPDF = async (id) => {
         ===================== */
         const namaPerusahaan = "PT. NAMA PERUSAHAAN";
         const alamatPerusahaan = "Jl. Contoh Alamat Perusahaan No. 123, Indonesia";
-        const logoURL = "https://link-gambar-logo-perusahaan.com/logo.png";
+        const logoURL = "https://raw.githubusercontent.com/JeffanInd/Dashboar-Attendance/main/logo.jpg";
 
         /* =====================
            LOAD LOGO
         ===================== */
         try {
             const logo = await loadImageBase64(logoURL);
-            pdf.addImage(logo, "PNG", 15, 10, 25, 25);
+            pdf.addImage(logo, "JPEG", 15, 10, 25, 25);
+        } catch (e) {
+            console.error("Logo gagal dimuat:", e);
         }
-        catch (e) {
-            console.log(
-                "Logo gagal dimuat"
-            );
-        }
-
         /* =====================
         HEADER
         ===================== */
@@ -2201,37 +2197,29 @@ function getNamaBulan(bulan) {
 }
 
 function loadImageBase64(url) {
-    return new Promise(
-        (resolve, reject) => {
-            const img =
-                new Image();
-            img.crossOrigin =
-                "Anonymous";
-            img.onload = () => {
-                const canvas = document.createElement("canvas");
-                canvas.width = img.width;
-                canvas.height = img.height;
-                const ctx = canvas.getContext("2d");
-                ctx.drawImage(
-                    img,
-                    0,
-                    0
-                );
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.crossOrigin = "Anonymous";
 
-                resolve(
-                    canvas.toDataURL(
-                        "image/png"
-                    )
-                );
+        img.onload = () => {
+            const canvas = document.createElement("canvas");
+            canvas.width = img.width;
+            canvas.height = img.height;
 
-            };
+            const ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0);
 
-            img.onerror = reject;
-            img.src = url;
-        }
-    );
+            resolve(canvas.toDataURL("image/png"));
+        };
+
+        img.onerror = (err) => {
+            console.error("Gagal memuat gambar:", url);
+            reject(err);
+        };
+
+        img.src = url;
+    });
 }
-
 function generateQRCode(text) {
     return new Promise((resolve, reject) => {
         QRCode.toDataURL(
