@@ -1927,8 +1927,8 @@ window.printSalaryPDF = async (id) => {
         /* =====================
            KONFIGURASI PERUSAHAAN
         ===================== */
-        const namaPerusahaan = "PT. NAMA PERUSAHAAN";
-        const alamatPerusahaan = "Jl. Contoh Alamat Perusahaan No. 123, Indonesia";
+        const namaPerusahaan = "JEFFAN INTERNATIONAL";
+        const alamatPerusahaan = "1307 E. Main St, ste 1 Chattanooga, TN 37404";
         const logoURL = "https://raw.githubusercontent.com/JeffanInd/Dashboar-Attendance/main/logo.jpg";
 
         /* =====================
@@ -1958,7 +1958,7 @@ window.printSalaryPDF = async (id) => {
         pdf.setFontSize(14);
         pdf.setFont("helvetica", "bold");
 
-        pdf.text("SLIP GAJI KARYAWAN", 115, 40, {
+        pdf.text("PAY SLIP EMPLOYEE", 110, 40, {
             align: "center"
         });
 
@@ -1980,7 +1980,7 @@ window.printSalaryPDF = async (id) => {
         ===================== */
         let y = 82;
         pdf.setFont("helvetica", "bold");
-        pdf.text("DATA KEHADIRAN", 20, y);
+        pdf.text("ATTENDANCE DATA", 20, y);
 
         y += 8;
         /* HEADER TABEL */
@@ -2015,25 +2015,25 @@ window.printSalaryPDF = async (id) => {
         y += 20;
         pdf.setFont("helvetica", "bold");
         pdf.setFontSize(11);
-        pdf.text("PENDAPATAN", 20, y);
+        pdf.text("INCOME", 20, y);
         pdf.setFont("helvetica", "normal");
 
         y += 12;
-        pdf.text("Gaji Pokok", 25, y);
+        pdf.text("Basic salary", 25, y);
         pdf.setFillColor(220, 245, 220);
         pdf.rect(90, y - 6, 50, 10, "F");
         pdf.text("Rp", 100, y);
         pdf.text(formatNominal(d.gajiPokok), 140, y, { align: "right" });
 
         y += 10;
-        pdf.text("Tunjangan Jabatan", 25, y);
+        pdf.text("Positional allowance", 25, y);
         pdf.setFillColor(220, 245, 220);
         pdf.rect(90, y - 6, 50, 10, "F");
         pdf.text("Rp", 100, y);
         pdf.text(formatNominal(d.tunjanganJabatan), 140, y, { align: "right" });
 
         y += 10;
-        pdf.text("Tunjangan Lainnya", 25, y);
+        pdf.text("Other Allowances", 25, y);
         pdf.setFillColor(220, 245, 220);
         pdf.rect(90, y - 6, 50, 10, "F");
         pdf.text("Rp", 100, y);
@@ -2063,18 +2063,18 @@ window.printSalaryPDF = async (id) => {
         ===================== */
         y += 12;
         pdf.setFont("helvetica", "bold");
-        pdf.text("POTONGAN", 20, y);
+        pdf.text("SALARY DEDUCTIONS", 20, y);
         pdf.setFont("helvetica", "normal");
 
         y += 12;
-        pdf.text("Potongan Kehadiran", 25, y);
+        pdf.text("Deduct Attendance", 25, y);
         pdf.setFillColor(255, 220, 220);
         pdf.rect(90, y - 6, 50, 10, "F");
         pdf.text("Rp", 100, y);
         pdf.text(formatNominal(d.potonganKehadiran), 140, y, { align: "right" });
 
         y += 10;
-        pdf.text("Potongan Koperasi", 25, y);
+        pdf.text("Deduct Koperasi", 25, y);
         pdf.setFillColor(255, 220, 220);
         pdf.rect(90, y - 6, 50, 10, "F");
         pdf.text("Rp", 100, y);
@@ -2091,7 +2091,7 @@ window.printSalaryPDF = async (id) => {
         y += 8;
         pdf.setFillColor(255, 210, 210);
         pdf.rect(140, y - 6, 50, 10, "F");
-        pdf.text("Total Potongan", 25, y);
+        pdf.text("Total Deductions", 25, y);
         pdf.text("Rp", 142, y);
         pdf.text(
             formatNominal(totalPotongan),
@@ -2149,7 +2149,7 @@ window.printSalaryPDF = async (id) => {
         QR CODE SLIP GAJI
         ===================== */
         const qrData =
-            `PT. JEFFAN INT.
+            `JEFFAN INTERNATIONAL.
         Nama       : ${d.namaKaryawan}
         ID         : ${d.kodeKaryawan}
         Jabatan    : ${d.jabatan || "-"}
