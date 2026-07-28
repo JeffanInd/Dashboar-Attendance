@@ -38,7 +38,7 @@ body {
 
 .sidebar-logo {
     display: block;
-    width: 95px;
+    width: 85px;
     height: auto;
     margin: 10px auto 20px;
 }
@@ -171,7 +171,6 @@ body {
 }
 
 @media(max-width:700px) {
-
     .form-grid,
     .employee-form-grid,
     .attendance-form-grid {
@@ -216,12 +215,12 @@ button:hover {
 .sidebar h2 {
     text-align: center;
     margin-bottom: 40px;
-    font-size: 22px
+    font-size: 20px
 }
 .sidebar h3 {
     text-align: center;
     margin-bottom: 2px;
-    font-size: 16px
+    font-size: 14px
 }
 .sidebar button {
     width: 100%;
