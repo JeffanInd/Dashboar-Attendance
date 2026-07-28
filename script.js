@@ -854,7 +854,7 @@ Submit Attendance
 <select id="filterMonth"></select>
 <select id="filterYear"></select>
 <button onclick="loadAttendance()">
-Cari
+Search
 </button>
 </div>
 <br>
