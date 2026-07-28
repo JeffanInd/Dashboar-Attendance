@@ -2567,7 +2567,6 @@ window.showInputSimpanan = () => {
                     </option>
                 </select>
             </div>
-
             <div class="form-group">
                 <label>Nominal</label>
                 <input
@@ -2575,18 +2574,14 @@ window.showInputSimpanan = () => {
                     id="nominalSimpanan"
                     placeholder="0">
             </div>
-
             <div class="form-group">
                 <label>Keterangan</label>
                 <input
                     id="keteranganSimpanan"
                     placeholder="Keterangan">
             </div>
-
         </div>
-
         <br>
-
         <button onclick="saveSimpanan()">
             Save Simpanan
         </button>
@@ -2594,7 +2589,7 @@ window.showInputSimpanan = () => {
     <div class="card">
         <h2>Data Simpanan</h2>
             <div style="display:flex;gap:10px;margin-bottom:15px">
-                <select id="filterBulanSimpanan">
+                <select id="filterBulanSimpanan" onchange="loadDataSimpanan()">
                 <option value="1">January</option>
                 <option value="2">February</option>
                 <option value="3">March</option>
@@ -2608,11 +2603,8 @@ window.showInputSimpanan = () => {
                 <option value="11">November</option>
                 <option value="12">December</option>
                 </select>
-                <select id="filterTahunSimpanan">
+                <select id="filterTahunSimpanan"onchange="loadDataSimpanan()">
                 </select>
-                <button onclick="loadDataSimpanan()">
-                Search
-                </button>
              </div>
         <div class="table-container">
         <table>
@@ -2632,7 +2624,6 @@ window.showInputSimpanan = () => {
         </div>
     </div>
     `;
-
     loadAnggotaSimpanan();
     loadFilterSimpanan();
     const sekarang = new Date();
@@ -2643,10 +2634,9 @@ window.showInputSimpanan = () => {
     loadDataSimpanan();
     document.getElementById("simpananTanggal").value =
         new Date().toISOString().split("T")[0];
-
     };
-    function loadFilterSimpanan(){
 
+    function loadFilterSimpanan(){
     const select =
     document.getElementById("filterTahunSimpanan");
     if(!select) return;
@@ -2654,14 +2644,13 @@ window.showInputSimpanan = () => {
     select.innerHTML="";
     const tahunSekarang =
     new Date().getFullYear();
-    for(let i=tahunSekarang-5;i<=tahunSekarang+5;i++){
 
-    select.innerHTML +=
-    `
-    <option value="${i}">
-    ${i}
-    </option>
-    `;
+    for(let i=tahunSekarang-5;i<=tahunSekarang+5;i++){
+        select.innerHTML += `
+        <option value="${i}">
+            ${i}
+        </option>
+        `;
     }
 }
 
@@ -2746,10 +2735,17 @@ window.loadDataAnggotaSimpanan = async () => {
 }
 
 async function loadDataSimpanan(){
-    const tbody = document.getElementById("simpananTable");
-    if(!tbody) return;
-    tbody.innerHTML = "";
+    const tbody =
+        document.getElementById("simpananTable");
 
+    if(!tbody) return;
+    tbody.innerHTML = `
+        <tr>
+            <td colspan="6">
+                Loading...
+            </td>
+        </tr>
+    `;
 
     const bulan =
         Number(
@@ -2765,40 +2761,49 @@ async function loadDataSimpanan(){
             ).value
         );
 
-
     const snap =
         await getDocs(
             collection(db,"koperasiSimpanan")
         );
 
-    let data = [];
-    snap.forEach(doc => {
-        const d = doc.data();
+    let data=[];
+    snap.forEach(doc=>{
+        const d=doc.data();
         if(
-            d.bulan == bulan &&
-            d.tahun == tahun
+            Number(d.bulan) === bulan &&
+            Number(d.tahun) === tahun
         ){
-
             data.push({
                 id:doc.id,
                 ...d
             });
-
         }
-
     });
 
-    // urut berdasarkan ID Koperasi
     data.sort((a,b)=>{
-        return String(a.idKoperasi).localeCompare(
+        return String(a.idKoperasi)
+        .localeCompare(
             String(b.idKoperasi),
             undefined,
             {
                 numeric:true
             }
         );
-
     });
+
+    tbody.innerHTML="";
+    if(data.length===0){
+        tbody.innerHTML=`
+        <tr>
+            <td colspan="6">
+                Tidak ada data simpanan
+                bulan ini.
+            </td>
+        </tr>
+        `;
+        return;
+    }
+
     data.forEach(d=>{
         tbody.innerHTML +=`
         <tr>
@@ -2809,11 +2814,8 @@ async function loadDataSimpanan(){
             <td>${d.nominal}</td>
             <td>${d.keterangan}</td>
         </tr>
-
         `;
-
     });
-
 }
 
 window.saveSimpanan = async () => {
