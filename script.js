@@ -2361,38 +2361,20 @@ employees.sort((a,b)=>{return String(a.kodeKaryawan).localeCompare(String(b.kode
 employees.forEach(emp=>{select.innerHTML +=`<option value="${emp.id}">${emp.kodeKaryawan} - ${emp.namaKaryawan}</option>`;});}
 
 window.loadEmployeeKoperasi = async()=>{const id =document.getElementById("koperasiEmployee").value;
-if(!id)return;const snap =await getDoc(doc(db,"employees",id));
+if(!id)return;const snap = await getDoc(doc(db,"employees",id));
 const d=snap.data();document.getElementById("koperasiNama").value =d.namaKaryawan;
 document.getElementById("koperasiJabatan").value =d.jabatan;}
 
-async function generateIdKoperasi(){
-    const date = document.getElementById("koperasiDate").value;if(!date) return;
-    const d = new Date(date);
-    const yy = String(d.getFullYear()).slice(-2);
-    const mm = String(d.getMonth()+1).padStart(2,"0");  
-    const dd = String(d.getDate()).padStart(2,"0"); 
-    const prefix =  `KOP${yy}${mm}${dd}`;
-    const snap = await getDocs(collection(db,"koperasiAnggota"));
-            
-    let nomor = 1;
-    snap.forEach(doc=>{
-        const id = doc.id;
-        if(id.startsWith(prefix)){
-            const n =
-                Number(
-                    id.substring(8)
-                );
-            if(n >= nomor){
-                nomor = n + 1;
-            }
-        }
-    });
-    const anggota =
-        String(nomor).padStart(3,"0");
-    document.getElementById(
-        "koperasiId"
-    ).value =
-        prefix + anggota;
+async function generateIdKoperasi() {
+    const tanggal = document.getElementById("koperasiDate").value;
+    if (!tanggal) return;
+    const snap =  await getDocs(collection(db, "koperasiAnggota"));
+    const nomor =  String(snap.size + 1).padStart(3, "0");
+    const pecah = tanggal.split("-");
+    const tahun = pecah[0].slice(-2);
+    const bulan =  pecah[1];
+    const hari =  pecah[2];
+    document.getElementById(  "koperasiId"  ).value =  `KOP${tahun}${bulan}${hari}${nomor}`;
 }
 
 async function loadDataAnggotaKoperasi(){
@@ -2422,39 +2404,94 @@ async function loadDataAnggotaKoperasi(){
     });
 }
 
-window.saveAnggotaKoperasi = async()=>{
-const id =document.getElementById("koperasiId").value;
-if(!id){alert("Generate ID terlebih dahulu");return;}
-const empId =document.getElementById("koperasiEmployee").value;
-const emp =await getDoc(doc(db,"employees",empId));
-const e=emp.data();await setDoc(doc(db,"koperasiAnggota",id),{
+window.saveAnggotaKoperasi = async () => {
+    try {
+        const id =
+            document.getElementById("koperasiId").value;
 
-idKoperasi:id,
-kodeKaryawan:
-e.kodeKaryawan,
+        if (!id) {
+            alert("Generate ID terlebih dahulu");
+            return;
+        }
 
-namaKaryawan:
-e.namaKaryawan,
+        const empId =
+            document.getElementById(
+                "koperasiEmployee"
+            ).value;
 
-jabatan:
-e.jabatan,
+        if (!empId) {
+            alert("Pilih employee terlebih dahulu");
+            return;
+        }
 
-tanggalMulai:
-document.getElementById(
-"koperasiDate"
-).value,
+        const emp =
+            await getDoc(
+                doc(db, "employees", empId)
+            );
 
-status:"Active",createdAt:new Date()});
-alert("Anggota koperasi berhasil disimpan");
-loadDataAnggotaKoperasi();
-}
+        if (!emp.exists()) {
+            alert("Data employee tidak ditemukan");
+            return;
+        }
+        const e = emp.data();
+        const data = {
+            idKoperasi: id,
+            kodeKaryawan:  e.kodeKaryawan,
+            namaKaryawan:e.namaKaryawan,
+            jabatan: e.jabatan,
+               
 
-window.changeStatusKoperasi =async(id,status)=>{
-const baru =status=="Active"?"Non Active":"Active";
-await updateDoc(doc(db,"koperasiAnggota",id),{status:baru});
-loadDataAnggotaKoperasi();
-}
+            tanggalMulai: document.getElementById( "koperasiDate" ).value,
+            status: "Active",createdAt: new Date()
+        };
 
+        await addDoc(
+            collection(db, "koperasiAnggota"),
+            data
+        );
+        alert( "Anggota koperasi berhasil disimpan" );
+           
+       
+        loadDataAnggotaKoperasi();
+        document.getElementById("koperasiEmployee" ).value = "";
+        document.getElementById( "koperasiNama" ).value = "";
+        document.getElementById( "koperasiJabatan" ).value = "";
+        document.getElementById("koperasiId"  ).value = "";       
+        document.getElementById( "koperasiDate" ).value = "";   
+       
+    }
+    catch(error){
+        console.error(error);
+        alert(error.message);
+    }
+};
+window.changeStatusKoperasi = async (
+    id,
+    status
+) => {
+    try {
+        const statusBaru =
+            status == "Active"
+                ? "Non Active"
+                : "Active";
+        await updateDoc(
+            doc(
+                db,
+                "koperasiAnggota",
+                id
+            ),
+            {
+                status:
+                    statusBaru
+            }
+        );
+        loadDataAnggotaKoperasi();
+    }
+    catch(error){
+        console.error(error);
+        alert(error.message);
+    }
+};
 
 window.showInputSimpanan = () => {
     document.getElementById("content").innerHTML = `
