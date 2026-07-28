@@ -2870,6 +2870,13 @@ window.saveSimpanan = async () => {
         alert(error.message);
     }
 };
+window.showDataKoperasi = () => {
+    document.getElementById("content").innerHTML = `
+    <div class="card">
+        <h2>Data Anggota</h2>
+    </div>
+    `;
+}
 window.showInputPinjaman = () => {
     document.getElementById("content").innerHTML = `
     <div class="card">
