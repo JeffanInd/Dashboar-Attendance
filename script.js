@@ -2299,8 +2299,7 @@ onchange="loadEmployeeKoperasi()">
 <label>Start Date</label>
 <input 
 type="date"
-id="koperasiDate"
-onchange="generateIdKoperasi()">
+id="koperasiDate">
 </div>
 </div>
 <br>
@@ -2347,7 +2346,9 @@ Save Anggota
 `;
 loadEmployeeKoperasiSelect();
 loadDataAnggotaKoperasi();
-}
+
+document .getElementById("koperasiDate").addEventListener("change", generateIdKoperasi
+);
 
 async function loadEmployeeKoperasiSelect(){
 const select = document.getElementById("koperasiEmployee");
@@ -2365,16 +2366,18 @@ if(!id)return;const snap = await getDoc(doc(db,"employees",id));
 const d=snap.data();document.getElementById("koperasiNama").value =d.namaKaryawan;
 document.getElementById("koperasiJabatan").value =d.jabatan;}
 
-async function generateIdKoperasi() {
-    const tanggal = document.getElementById("koperasiDate").value;
-    if (!tanggal) return;
-    const snap =  await getDocs(collection(db, "koperasiAnggota"));
-    const nomor =  String(snap.size + 1).padStart(3, "0");
+async function generateIdKoperasi(){
+    const tanggal =  document.getElementById(  "koperasiDate" ).value;
+    if(!tanggal){
+        return;
+    }
+    const snap = await getDocs( collection(db,"koperasiAnggota" )  );
+    const nomor = String(  snap.size + 1 ) .padStart(3,"0");
     const pecah = tanggal.split("-");
-    const tahun = pecah[0].slice(-2);
-    const bulan =  pecah[1];
+    const tahun =  pecah[0].slice(-2);
+    const bulan = pecah[1];
     const hari =  pecah[2];
-    document.getElementById(  "koperasiId"  ).value =  `KOP${tahun}${bulan}${hari}${nomor}`;
+    document.getElementById( "koperasiId" ).value =`KOP${tahun}${bulan}${hari}${nomor}`;
 }
 
 async function loadDataAnggotaKoperasi(){
