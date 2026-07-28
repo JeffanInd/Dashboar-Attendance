@@ -2280,13 +2280,166 @@ function generateQRCode(text) {
 }
 
 /* KOPERASI */
-window.showAddAnggota = () => {
-    document.getElementById("content").innerHTML = `
-    <div class="card">
-        <h2>Add Anggota</h2>
-    </div>
-    `;
+window.showAddAnggota = async () => {
+const content = document.getElementById("content");
+content.innerHTML = `
+<div class="card">
+<h2>Add Anggota Koperasi</h2>
+<div class="attendance-form-grid">
+<div class="form-group">
+<label>Select Employee</label>
+<select id="koperasiEmployee"
+onchange="loadEmployeeKoperasi()">
+<option value="">
+-- Select Employee --
+</option>
+</select>
+</div>
+<div class="form-group">
+<label>Start Date</label>
+<input 
+type="date"
+id="koperasiDate"
+onchange="generateIdKoperasi()">
+</div>
+</div>
+<br>
+<div class="form-group">
+<label>Nama</label>
+<input 
+id="koperasiNama"
+readonly>
+</div>
+<div class="form-group">
+<label>Jabatan</label>
+<input 
+id="koperasiJabatan"
+readonly>
+</div>
+<div class="form-group">
+<label>ID Koperasi</label>
+<input 
+id="koperasiId"
+readonly>
+</div>
+<br>
+<button onclick="saveAnggotaKoperasi()">
+Save Anggota
+</button>
+</div>
+<div class="card">
+<h2>Data Anggota Koperasi</h2>
+<table>
+<thead>
+<tr>
+<th>ID Koperasi</th>
+<th>Nama</th>
+<th>Jabatan</th>
+<th>Start Date</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody id="koperasiTable">
+</tbody>
+</table>
+</div>
+`;
+loadEmployeeKoperasiSelect();
+loadDataAnggotaKoperasi();
 }
+
+async function loadEmployeeKoperasiSelect(){
+const select = document.getElementById("koperasiEmployee");
+const snap =await getDocs(collection(db,"employees"));
+
+let employees=[];
+snap.forEach(doc=>{
+const d=doc.data();
+if(!d.status || d.status=="Active"){employees.push({id:doc.id,...d});}});
+employees.sort((a,b)=>{return String(a.kodeKaryawan).localeCompare(String(b.kodeKaryawan),undefined,{numeric:true});});
+employees.forEach(emp=>{select.innerHTML +=`<option value="${emp.id}">${emp.kodeKaryawan} - ${emp.namaKaryawan}</option>`;});}
+
+window.loadEmployeeKoperasi = async()=>{const id =document.getElementById("koperasiEmployee").value;
+if(!id)return;const snap =await getDoc(doc(db,"employees",id));
+const d=snap.data();document.getElementById("koperasiNama").value =d.namaKaryawan;
+document.getElementById("koperasiJabatan").value =d.jabatan;}
+
+async function generateIdKoperasi(){const date =document.getElementById("koperasiDate").value;
+if(!date)return;const d=new Date(date);
+const yy =String(d.getFullYear()).slice(-2);
+const mm =String(d.getMonth()+1).padStart(2,"0");
+const dd =String(d.getDate()).padStart(2,"0");
+const prefix =`KOP${yy}${mm}${dd}`;
+const snap =await getDocs(collection(db,"koperasiAnggota"));
+
+let nomor=1;snap.forEach(doc=>{const id=doc.id;if(id.startsWith(prefix)){
+const n =Number(id.substring(9));
+
+if(n>=nomor)nomor=n+1;}});
+const anggota =String(nomor).padStart(3,"0");document.getElementById("koperasiId").value =prefix+anggota;}
+async function loadDataAnggotaKoperasi(){
+    const tbody = document.getElementById("koperasiTable");
+
+    if(!tbody)return;tbody.innerHTML = "";
+    const snap =await getDocs(collection(db,"koperasiAnggota"));
+        
+    let anggota = [];
+    snap.forEach(doc=>{anggota.push({ id: doc.id, ...doc.data()});});  
+    anggota.sort((a,b)=>{return String(a.idKoperasi).localeCompare(String(b.idKoperasi),undefined,{numeric:true, sensitivity:"base"} );});
+    anggota.forEach(d=>{
+        tbody.innerHTML +=`
+        <tr>
+        <td>${d.idKoperasi}</td>
+        <td>${d.namaKaryawan}</td>
+        <td>${d.jabatan}</td>
+        <td>${d.tanggalMulai}</td>
+        <td>${d.status}</td>
+        <td>
+        <button
+        onclick="changeStatusKoperasi('${d.id}','${d.status}')">
+        ${d.status}
+        </button>
+        </td>
+        </tr>
+        `;
+    });
+}
+
+window.saveAnggotaKoperasi = async()=>{
+const id =document.getElementById("koperasiId").value;
+if(!id){alert("Generate ID terlebih dahulu");return;}
+const empId =document.getElementById("koperasiEmployee").value;
+const emp =await getDoc(doc(db,"employees",empId));
+const e=emp.data();await setDoc(doc(db,"koperasiAnggota",id),{
+
+idKoperasi:id,
+kodeKaryawan:
+e.kodeKaryawan,
+
+namaKaryawan:
+e.namaKaryawan,
+
+jabatan:
+e.jabatan,
+
+tanggalMulai:
+document.getElementById(
+"koperasiDate"
+).value,
+
+status:"Active",createdAt:new Date()});
+alert("Anggota koperasi berhasil disimpan");
+loadDataAnggotaKoperasi();
+}
+
+window.changeStatusKoperasi =async(id,status)=>{
+const baru =status=="Active"?"Non Active":"Active";
+await updateDoc(doc(db,"koperasiAnggota",id),{status:baru});
+loadDataAnggotaKoperasi();
+}
+
+
 window.showInputSimpanan = () => {
     document.getElementById("content").innerHTML = `
     <div class="card">
