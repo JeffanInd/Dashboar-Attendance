@@ -2304,13 +2304,13 @@ id="koperasiDate">
 </div>
 <br>
 <div class="form-group">
-<label>Nama</label>
+<label>Name</label>
 <input 
 id="koperasiNama"
 readonly>
 </div>
 <div class="form-group">
-<label>Jabatan</label>
+<label>Jobs</label>
 <input 
 id="koperasiJabatan"
 readonly>
@@ -2323,7 +2323,7 @@ readonly>
 </div>
 <br>
 <button onclick="saveAnggotaKoperasi()">
-Save Anggota
+Save Data Koperasi
 </button>
 </div>
 <div class="card">
@@ -2332,8 +2332,8 @@ Save Anggota
 <thead>
 <tr>
 <th>ID Koperasi</th>
-<th>Nama</th>
-<th>Jabatan</th>
+<th>Name</th>
+<th>Jobs</th>
 <th>Start Date</th>
 <th>Status</th>
 <th>Action</th>
@@ -2397,6 +2397,7 @@ async function loadDataAnggotaKoperasi(){
         <td>${d.status}</td>
         <td>
         <button
+        class="${d.status == "Active" ? "edit" : "delete"}"
         onclick="changeStatusKoperasi('${d.id}','${d.status}')">
         ${d.status}
         </button>
@@ -2422,7 +2423,7 @@ window.saveAnggotaKoperasi = async () => {
             ).value;
 
         if (!empId) {
-            alert("Pilih employee terlebih dahulu");
+            alert("Please select an employee first.");
             return;
         }
 
@@ -2432,7 +2433,7 @@ window.saveAnggotaKoperasi = async () => {
             );
 
         if (!emp.exists()) {
-            alert("Data employee tidak ditemukan");
+            alert("Employee data not found");
             return;
         }
         const e = emp.data();
