@@ -1374,10 +1374,8 @@ Search
 
 
 function fillSalaryMonthYear(monthId, yearId, monthNow, yearNow) {
-
     const month = document.getElementById(monthId);
     const year = document.getElementById(yearId);
-
     const namaBulan = [
         "January",
         "February",
@@ -1411,6 +1409,7 @@ ${y}
 </option>`;
     }
 }
+
 window.generateSalary = async () => {
     const bulan = Number(document.getElementById("salaryMonth").value);
     const tahun = Number(document.getElementById("salaryYear").value);
@@ -1433,7 +1432,6 @@ Loading...
         );
 
         let attendance = [];
-
         attendanceSnap.forEach(doc => {
             const d = doc.data();
 
@@ -1445,10 +1443,26 @@ Loading...
             }
         });
 
-        let html = "";
+        let employees = [];
 
         employeeSnap.forEach(doc => {
-            const emp = doc.data();
+            employees.push(doc.data());
+        });
+
+        employees.sort((a, b) => {
+            return String(a.kodeKaryawan).localeCompare(
+                String(b.kodeKaryawan),
+                undefined,
+                {
+                    numeric: true,
+                    sensitivity: "base"
+                }
+            );
+        });
+
+        let html = "";
+
+        employees.forEach(emp => {
 
             let hadir = 0;
             let izin = 0;
@@ -1584,6 +1598,7 @@ value="${alpha}">
         alert(error.message);
     }
 };
+
 window.calculateSalary = (kode) => {
     const basic =
         Number(
