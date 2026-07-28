@@ -1936,7 +1936,7 @@ window.printSalaryPDF = async (id) => {
         ===================== */
         try {
             const logo = await loadImageBase64(logoURL);
-            pdf.addImage(logo, "JPEG", 15, 10, 25, 25);
+            pdf.addImage(logo, "JPEG", 15, 10, 18, 18);
         } catch (e) {
             console.error("Logo gagal dimuat:", e);
         }
