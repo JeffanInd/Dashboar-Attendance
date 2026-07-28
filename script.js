@@ -1018,7 +1018,7 @@ window.removeAttendance = (i) => {
 
 window.submitAttendance = async () => {
     if (attendanceTemp.length == 0) {
-        alert("Belum ada data attendance.");
+        alert("There is no attendance data yet.");
         return;
     }
 
