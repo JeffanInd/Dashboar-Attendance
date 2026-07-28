@@ -40,7 +40,7 @@ body {
     display: block;
     width: 85px;
     height: auto;
-    margin: 10px auto 20px;
+    margin: 10px auto 5px;
 }
 
 .company-logo {
@@ -219,7 +219,7 @@ button:hover {
 }
 .sidebar h3 {
     text-align: center;
-    margin-bottom: 2px;
+    margin-bottom: 5px;
     font-size: 14px
 }
 .sidebar button {
