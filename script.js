@@ -2346,9 +2346,8 @@ Save Anggota
 `;
 loadEmployeeKoperasiSelect();
 loadDataAnggotaKoperasi();
-
-document .getElementById("koperasiDate").addEventListener("change", generateIdKoperasi
-);
+document .getElementById("koperasiDate").addEventListener("change", generateIdKoperasi);
+};
 
 async function loadEmployeeKoperasiSelect(){
 const select = document.getElementById("koperasiEmployee");
