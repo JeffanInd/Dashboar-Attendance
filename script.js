@@ -2278,7 +2278,6 @@ function generateQRCode(text) {
         );
     });
 }
-
 /* KOPERASI */
 window.showAddAnggota = async () => {
 const content = document.getElementById("content");
@@ -2356,14 +2355,18 @@ const snap =await getDocs(collection(db,"employees"));
 let employees=[];
 snap.forEach(doc=>{
 const d=doc.data();
-if(!d.status || d.status=="Active"){employees.push({id:doc.id,...d});}});
+if(!d.status || d.status=="Active"){
+employees.push({id:doc.id,...d});}});
 employees.sort((a,b)=>{return String(a.kodeKaryawan).localeCompare(String(b.kodeKaryawan),undefined,{numeric:true});});
 employees.forEach(emp=>{select.innerHTML +=`<option value="${emp.id}">${emp.kodeKaryawan} - ${emp.namaKaryawan}</option>`;});}
 
-window.loadEmployeeKoperasi = async()=>{const id =document.getElementById("koperasiEmployee").value;
-if(!id)return;const snap = await getDoc(doc(db,"employees",id));
-const d=snap.data();document.getElementById("koperasiNama").value =d.namaKaryawan;
-document.getElementById("koperasiJabatan").value =d.jabatan;}
+window.loadEmployeeKoperasi = async()=>{
+    const id = document.getElementById("koperasiEmployee").value;
+    if(!id)return;
+    const snap = await getDoc(doc(db,"employees",id));
+    const d=snap.data();
+    document.getElementById("koperasiNama").value =d.namaKaryawan;
+    document.getElementById("koperasiJabatan").value =d.jabatan;}
 
 async function generateIdKoperasi(){
     const tanggal =  document.getElementById(  "koperasiDate" ).value;
@@ -2439,13 +2442,11 @@ window.saveAnggotaKoperasi = async () => {
         const e = emp.data();
         const data = {
             idKoperasi: id,
-            kodeKaryawan:  e.kodeKaryawan,
             namaKaryawan:e.namaKaryawan,
             jabatan: e.jabatan,
-               
-
             tanggalMulai: document.getElementById( "koperasiDate" ).value,
-            status: "Active",createdAt: new Date()
+            status: "Active",
+            createdAt: new Date()
         };
 
         await addDoc(
@@ -2500,9 +2501,375 @@ window.showInputSimpanan = () => {
     document.getElementById("content").innerHTML = `
     <div class="card">
         <h2>Input Simpanan</h2>
+        <div class="attendance-form-grid">
+            <div class="form-group">
+                <label>Anggota Koperasi</label>
+                <select
+                    id="simpananAnggota"
+                    onchange="loadDataAnggotaSimpanan()">
+                    <option value="">
+                        -- Select Anggota --
+                    </option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>ID Koperasi</label>
+                <input
+                    id="simpananId"
+                    readonly>
+            </div>
+
+            <div class="form-group">
+                <label>Nama</label>
+                <input
+                    id="simpananNama"
+                    readonly>
+            </div>
+
+            <div class="form-group">
+                <label>Jabatan</label>
+                <input
+                    id="simpananJabatan"
+                    readonly>
+            </div>
+
+            <div class="form-group">
+                <label>Tanggal</label>
+                <input
+                    type="date"
+                    id="simpananTanggal">
+            </div>
+
+            <div class="form-group">
+                <label>Jenis Simpanan</label>
+                <select id="jenisSimpanan">
+                    <option value="Simpanan Pokok">
+                        Simpanan Pokok
+                    </option>
+                    <option value="Simpanan Wajib">
+                        Simpanan Wajib
+                    </option>
+                    <option value="Simpanan Sukarela">
+                        Simpanan Sukarela
+                    </option>
+                    <option value="Simpanan THR">
+                        Simpanan THR
+                    </option>
+                    <option value="Simpanan Travelling">
+                        Simpanan Travelling
+                    </option>
+                    <option value="Simpanan Tunjangan">
+                        Simpanan Tunjangan
+                    </option>
+                    <option value="Simpanan Lainnya">
+                        Simpanan Lainnya
+                    </option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Nominal</label>
+                <input
+                    type="number"
+                    id="nominalSimpanan"
+                    placeholder="0">
+            </div>
+
+            <div class="form-group">
+                <label>Keterangan</label>
+                <input
+                    id="keteranganSimpanan"
+                    placeholder="Keterangan">
+            </div>
+
+        </div>
+
+        <br>
+
+        <button onclick="saveSimpanan()">
+            Save Simpanan
+        </button>
+    </div>
+    <div class="card">
+        <h2>Data Simpanan</h2>
+            <div style="display:flex;gap:10px;margin-bottom:15px">
+                <select id="filterBulanSimpanan">
+                <option value="1">January</option>
+                <option value="2">February</option>
+                <option value="3">March</option>
+                <option value="4">April</option>
+                <option value="5">May</option>
+                <option value="6">June</option>
+                <option value="7">July</option>
+                <option value="8">August</option>
+                <option value="9">September</option>
+                <option value="10">October</option>
+                <option value="11">November</option>
+                <option value="12">December</option>
+                </select>
+                <select id="filterTahunSimpanan">
+                </select>
+                <button onclick="loadDataSimpanan()">
+                Search
+                </button>
+             </div>
+        <div class="table-container">
+        <table>
+                <thead>
+                    <tr>
+                        <th>Tanggal</th>
+                        <th>ID Koperasi</th>
+                        <th>Nama</th>
+                        <th>Jenis</th>
+                        <th>Nominal</th>
+                        <th>Keterangan</th>
+                    </tr>
+                </thead>
+                <tbody id="simpananTable">
+                </tbody>
+            </table>
+        </div>
     </div>
     `;
+
+    loadAnggotaSimpanan();
+    loadFilterSimpanan();
+    const sekarang = new Date();
+    document.getElementById("filterBulanSimpanan").value =
+        sekarang.getMonth()+1;
+    document.getElementById("filterTahunSimpanan").value =
+        sekarang.getFullYear();
+    loadDataSimpanan();
+    document.getElementById("simpananTanggal").value =
+        new Date().toISOString().split("T")[0];
+
+    };
+    function loadFilterSimpanan(){
+
+    const select =
+    document.getElementById("filterTahunSimpanan");
+    if(!select) return;
+
+    select.innerHTML="";
+    const tahunSekarang =
+    new Date().getFullYear();
+    for(let i=tahunSekarang-5;i<=tahunSekarang+5;i++){
+
+    select.innerHTML +=
+    `
+    <option value="${i}">
+    ${i}
+    </option>
+    `;
+    }
 }
+
+async function loadAnggotaSimpanan() {
+    const select =
+        document.getElementById("simpananAnggota");
+    select.innerHTML = `
+    <option value="">
+        -- Select Anggota --
+    </option>
+    `;
+
+    const snap =
+        await getDocs(
+            collection(db, "koperasiAnggota")
+        );
+
+    let anggota = [];
+    snap.forEach(doc => {
+        const d = doc.data();
+        if (d.status == "Active") {
+            anggota.push({
+                id: doc.id,
+                ...d
+            });
+
+        }
+
+    });
+
+    anggota.sort((a, b) => {
+        return String(a.idKoperasi).localeCompare(
+            String(b.idKoperasi),
+            undefined,
+            {
+                numeric: true,
+                sensitivity: "base"
+            }
+        );
+
+    });
+
+    anggota.forEach(a => {
+        select.innerHTML += `
+        <option value="${a.id}">
+            ${a.idKoperasi} - ${a.namaKaryawan}
+        </option>
+        `;
+
+    });
+}
+
+window.loadDataAnggotaSimpanan = async () => {
+    const id =
+        document.getElementById(
+            "simpananAnggota"
+        ).value;
+
+    if (!id) {
+
+        document.getElementById("simpananId").value = "";
+        document.getElementById("simpananNama").value = "";
+        document.getElementById("simpananJabatan").value = "";
+        return;
+
+    }
+
+    const snap =
+        await getDoc(
+            doc(db, "koperasiAnggota", id)
+        );
+
+    if (!snap.exists()) return;
+    const d = snap.data();
+    document.getElementById("simpananId").value =
+        d.idKoperasi;
+    document.getElementById("simpananNama").value =
+        d.namaKaryawan;
+    document.getElementById("simpananJabatan").value =
+        d.jabatan;
+
+}
+
+async function loadDataSimpanan(){
+    const tbody = document.getElementById("simpananTable");
+    if(!tbody) return;
+    tbody.innerHTML = "";
+
+
+    const bulan =
+        Number(
+            document.getElementById(
+                "filterBulanSimpanan"
+            ).value
+        );
+
+    const tahun =
+        Number(
+            document.getElementById(
+                "filterTahunSimpanan"
+            ).value
+        );
+
+
+    const snap =
+        await getDocs(
+            collection(db,"koperasiSimpanan")
+        );
+
+    let data = [];
+    snap.forEach(doc => {
+        const d = doc.data();
+        if(
+            d.bulan == bulan &&
+            d.tahun == tahun
+        ){
+
+            data.push({
+                id:doc.id,
+                ...d
+            });
+
+        }
+
+    });
+
+    // urut berdasarkan ID Koperasi
+    data.sort((a,b)=>{
+        return String(a.idKoperasi).localeCompare(
+            String(b.idKoperasi),
+            undefined,
+            {
+                numeric:true
+            }
+        );
+
+    });
+    data.forEach(d=>{
+        tbody.innerHTML +=`
+        <tr>
+            <td>${d.tanggal}</td>
+            <td>${d.idKoperasi}</td>
+            <td>${d.namaKaryawan}</td>
+            <td>${d.jenisSimpanan}</td>
+            <td>${d.nominal}</td>
+            <td>${d.keterangan}</td>
+        </tr>
+
+        `;
+
+    });
+
+}
+
+window.saveSimpanan = async () => {
+    try {
+
+        const idKoperasi =
+            document.getElementById("simpananId").value;
+        if (!idKoperasi) {
+            alert("Please select Anggota Koperasi.");
+            return;
+        }
+        const tanggal =
+            document.getElementById("simpananTanggal").value;
+        if (!tanggal) {
+            alert("Please select Date.");
+            return;
+        }
+        const jenis =
+            document.getElementById("jenisSimpanan").value;
+        const nominal =
+            Number(
+                document.getElementById("nominalSimpanan").value
+            );
+        if (nominal <= 0) {
+            alert("Nominal harus lebih dari 0.");
+            return;
+        }
+
+        const data = {
+            idKoperasi: idKoperasi,
+            namaKaryawan: document.getElementById("simpananNama").value,
+            jabatan: document.getElementById("simpananJabatan").value,
+            tanggal: tanggal,
+            bulan: Number(tanggal.split("-")[1]),
+            tahun: Number(tanggal.split("-")[0]),
+            jenisSimpanan: jenis,
+            nominal: nominal,
+            keterangan: document.getElementById("keteranganSimpanan").value,
+            createdAt: new Date()
+        };
+        await addDoc(
+            collection(db, "koperasiSimpanan"),
+            data
+        );
+
+        alert("Data simpanan berhasil disimpan.");
+        loadDataSimpanan();
+        document.getElementById("nominalSimpanan").value = "";
+        document.getElementById("keteranganSimpanan").value = "";
+
+    }
+    catch (error) {
+        console.error(error);
+        alert(error.message);
+    }
+};
 window.showInputPinjaman = () => {
     document.getElementById("content").innerHTML = `
     <div class="card">
