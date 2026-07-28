@@ -2365,22 +2365,38 @@ if(!id)return;const snap =await getDoc(doc(db,"employees",id));
 const d=snap.data();document.getElementById("koperasiNama").value =d.namaKaryawan;
 document.getElementById("koperasiJabatan").value =d.jabatan;}
 
-async function generateIdKoperasi(){const date =document.getElementById("koperasiDate").value;
-if(!date)return;const d=new Date(date);
-const yy =String(d.getFullYear()).slice(-2);
-const mm =String(d.getMonth()+1).padStart(2,"0");
-const dd =String(d.getDate()).padStart(2,"0");
-const prefix =`KOP${yy}${mm}${dd}`;
-const snap =await getDocs(collection(db,"koperasiAnggota"));
+async function generateIdKoperasi(){
+    const date = document.getElementById("koperasiDate").value;if(!date) return;
+    const d = new Date(date);
+    const yy = String(d.getFullYear()).slice(-2);
+    const mm = String(d.getMonth()+1).padStart(2,"0");  
+    const dd = String(d.getDate()).padStart(2,"0"); 
+    const prefix =  `KOP${yy}${mm}${dd}`;
+    const snap = await getDocs(collection(db,"koperasiAnggota"));
+            
+    let nomor = 1;
+    snap.forEach(doc=>{
+        const id = doc.id;
+        if(id.startsWith(prefix)){
+            const n =
+                Number(
+                    id.substring(8)
+                );
+            if(n >= nomor){
+                nomor = n + 1;
+            }
+        }
+    });
+    const anggota =
+        String(nomor).padStart(3,"0");
+    document.getElementById(
+        "koperasiId"
+    ).value =
+        prefix + anggota;
+}
 
-let nomor=1;snap.forEach(doc=>{const id=doc.id;if(id.startsWith(prefix)){
-const n =Number(id.substring(9));
-
-if(n>=nomor)nomor=n+1;}});
-const anggota =String(nomor).padStart(3,"0");document.getElementById("koperasiId").value =prefix+anggota;}
 async function loadDataAnggotaKoperasi(){
     const tbody = document.getElementById("koperasiTable");
-
     if(!tbody)return;tbody.innerHTML = "";
     const snap =await getDocs(collection(db,"koperasiAnggota"));
         
