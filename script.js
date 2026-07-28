@@ -1444,9 +1444,11 @@ Loading...
         });
 
         let employees = [];
-
         employeeSnap.forEach(doc => {
-            employees.push(doc.data());
+        const emp = doc.data();
+        if (emp.status == "Active") {
+            employees.push(emp);
+            }
         });
 
         employees.sort((a, b) => {
