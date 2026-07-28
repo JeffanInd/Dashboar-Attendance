@@ -882,23 +882,45 @@ Cari
 
 async function loadEmployeeSelect() {
     const select = document.getElementById("employeeSelect");
+
     if (!select) return;
-    select.innerHTML = `
-<option value="">
--- Select Employee --
-</option>
-`;
+    select.innerHTML = ` <option value="">-- Select Employee -- </option>`;
+
     const snap = await getDocs(
         collection(db, "employees")
     );
 
+    let employees = [];
     snap.forEach(doc => {
         const d = doc.data();
+        // hanya ambil employee Active
+        if (!d.status || d.status == "Active") {
+
+            employees.push({
+                id: doc.id,
+                ...d
+            });
+        }
+    });
+
+    employees.sort((a, b) => {
+        return String(a.kodeKaryawan).localeCompare(
+            String(b.kodeKaryawan),
+            undefined,
+            {
+                numeric: true,
+                sensitivity: "base"
+            }
+        );
+    });
+
+    employees.forEach(emp => {
+
         select.innerHTML += `
-<option value="${doc.id}">
-${d.kodeKaryawan} - ${d.namaKaryawan}
-</option>
-`;
+        <option value="${emp.id}">
+            ${emp.kodeKaryawan} - ${emp.namaKaryawan}
+        </option>
+        `;
     });
 }
 
