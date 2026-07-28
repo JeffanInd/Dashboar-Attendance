@@ -152,31 +152,31 @@ window.loadDashboard = () => {
 <div class="kpi-container">
 
 <div class="kpi-card blue">
-<h4>Total Karyawan</h4>
+<h4>Total Employees</h4>
 <h1>250</h1>
 <span>Employee Active</span>
 </div>
 
 <div class="kpi-card green">
-<h4>Kehadiran Hari Ini</h4>
+<h4>Today Attendance</h4>
 <h1>96%</h1>
 <span>Present</span>
 </div>
 
 <div class="kpi-card orange">
-<h4>Terlambat</h4>
+<h4>Late Arrival</h4>
 <h1>12</h1>
 <span>Late Employee</span>
 </div>
 
 <div class="kpi-card purple">
-<h4>Karyawan Baru</h4>
+<h4>New Employees</h4>
 <h1>8</h1>
 <span>This Month</span>
 </div>
 
 <div class="kpi-card red">
-<h4>Departemen</h4>
+<h4>Department</h4>
 <h1>12</h1>
 <span>Total Division</span>
 </div>
@@ -292,7 +292,7 @@ window.showAddEmployee = () => {
 <option value="BRI">BRI</option>
 <option value="CIMB Niaga">CIMB Niaga</option>
 <option value="Danamon">Danamon</option>
-<option value="Lainnya">Lainnya</option>
+<option value="Lainnya">Other</option>
 </select>
 </div>
 </div>
@@ -391,14 +391,14 @@ window.saveEmployee = async () => {
         for (const id of fields) {
             const el = document.getElementById(id);
             if (!el || String(el.value).trim() === "") {
-                alert("Silahkan isi semua data karyawan terlebih dahulu!");
+                alert("Please fill in all employee data first!");
                 if (el) el.focus();
                 return;
             }
         }
 
         if (document.getElementById("kode").value == "") {
-            alert("Silahkan pilih Start Work Date terlebih dahulu.");
+            alert("Please select the Start Date first!");
             return;
         }
 
@@ -431,7 +431,7 @@ window.saveEmployee = async () => {
             );
         }
 
-        alert("Data berhasil disimpan");
+        alert("Data saved successfully.");
         clearForm();
         generateCode();
         loadEmployees();
@@ -582,7 +582,7 @@ window.editEmployee = async (id) => {
 
 /* DELETE */
 window.deleteEmployee = async (id) => {
-    if (confirm("Hapus data karyawan?")) {
+    if (confirm("Delete employee data?")) {
         try {
             await deleteDoc(
                 doc(db, "employees", id)
@@ -781,11 +781,11 @@ window.uploadEmployeePhoto = async(id)=>{
 const file = 
 document.getElementById("uploadFoto").files[0];
 if(!file){
-alert("Pilih foto terlebih dahulu");
+alert("Please select a photo first!");
 return;
 }
 if(file.size > 500000){
-alert("Ukuran foto maksimal 500 KB");
+alert("Maximum photo size 500 KB");
 return;
 }
 const reader = new FileReader();
@@ -797,7 +797,7 @@ doc(db,"employees",id),
 foto:imageBase64
 }
 );
-alert("Foto berhasil disimpan");
+alert("Photo saved successfully");
 viewEmployee(id);
 };
 reader.readAsDataURL(file);
@@ -837,7 +837,7 @@ window.showInputAttendance = async () => {
 <th>Employee Name</th>
 <th>Jobs</th>
 <th>Status</th>
-<th>Hapus</th>
+<th>Action</th>
 </tr>
 </thead>
 <tbody id="attendanceTempTable"></tbody>
@@ -908,13 +908,13 @@ window.addAttendanceRow = async () => {
 
     // VALIDASI TANGGAL
     if (!tanggal) {
-        alert("Silahkan pilih tanggal absensi terlebih dahulu!");
+        alert("Please select the date of absence first!");
         document.getElementById("attendanceDate").focus();
         return;
     }
     // VALIDASI KARYAWAN
     if (!id) {
-        alert("Silahkan pilih karyawan terlebih dahulu!");
+        alert("Please select employees first!");
         document.getElementById("employeeSelect").focus();
         return;
     }
@@ -931,7 +931,7 @@ window.addAttendanceRow = async () => {
                 emp => emp.kode === d.kodeKaryawan
             );
             if (sudahAda) {
-                alert("Karyawan ini sudah ditambahkan!");
+                alert("This employee has been added!");
                 return;
             }
             attendanceTemp.push({
@@ -1003,7 +1003,7 @@ window.submitAttendance = async () => {
     for (const d of attendanceTemp) {
         if (!d.tanggal) {
             alert(
-                "Data attendance ditemukan tanpa tanggal. Silahkan periksa kembali."
+                "Attendance data found without date. Please check again."
             );
 
             return;
@@ -1627,7 +1627,7 @@ window.submitAllSalary = async () => {
         );
         if (rows.length == 0) {
             alert(
-                "Generate salary terlebih dahulu"
+                "Please do the salary generate process first."
             );
             return;
         }
@@ -1870,7 +1870,7 @@ window.printSalaryPDF = async (id) => {
 
         const snapshot = await getDoc(ref);
         if (!snapshot.exists()) {
-            alert("Data salary tidak ditemukan");
+            alert("Salary data not found");
             return;
         }
 
