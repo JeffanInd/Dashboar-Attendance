@@ -224,9 +224,8 @@ button:hover {
 }
 .sidebar h4 {
     text-align: center;
-    margin-top: 2px;
     margin-bottom: 10px;
-    font-size: 12px
+    font-size: 10px
 }
 .sidebar button {
     width: 100%;
