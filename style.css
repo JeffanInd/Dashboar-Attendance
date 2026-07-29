@@ -250,14 +250,14 @@ button:hover {
     position: fixed;
     left: 250px;
     right: 0;
-    bottom: 0;
-    height: 45px;
-    background: #0f172a;
-    color: white;
+    bottom: 10px;              
+    background: transparent;   
+    color: #000;              
     display: flex;
     align-items: center;
     overflow: hidden;
     z-index: 9999;
+    pointer-events: none;     
 }
 
 .running-content {
@@ -267,18 +267,15 @@ button:hover {
     font-size: 13px;
     font-weight: 600;
     animation: marquee 20s linear infinite;
+    text-shadow: 0 1px 2px rgba(255,255,255,0.6); 
 }
 
 @keyframes marquee {
-    0% {
-        transform: translateX(0);
+    from { transform: translateX(0);   
     }
-
-    100% {
-        transform: translateX(-100%);
+    to {transform: translateX(-100%);
     }
 }
-
 /* ===========================
    SUB MENU SIDEBAR
 =========================== */
