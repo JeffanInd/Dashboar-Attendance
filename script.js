@@ -2188,15 +2188,11 @@ window.printSalaryPDF = async (id) => {
         QR CODE SLIP GAJI
         ===================== */
         const qrData =
-            `JEFFAN INTERNATIONAL.
-        Nama       : ${d.namaKaryawan}
-        ID         : ${d.kodeKaryawan}
-        Jabatan    : ${d.jabatan || "-"}
-        Periode    : ${getNamaBulan(d.bulan)} ${d.tahun}
-
-        Gross Salary : ${formatNominal(grossSalary)}
-        Potongan     : ${formatNominal(totalPotongan)}
-        Take Home Pay: ${formatNominal(takeHomePay)}`;
+        `JEFFAN INTERNATIONAL
+        Nama: ${d.namaKaryawan}
+        ID: ${d.kodeKaryawan}
+        Jabatan: ${d.jabatan || "-"}
+        Periode: ${getNamaBulan(d.bulan)} ${d.tahun}`;
         
         console.log(QRCode);
         const qrImage = await generateQRCode(qrData);
@@ -2264,14 +2260,14 @@ function generateQRCode(text) {
         QRCode.toDataURL(
             text,
             {
-                width: 120,
-                margin: 1
+                width: 500,
+                margin: 2,
+                errorCorrectionLevel: "H"
             },
-            function (error, url) {
+            (error, url) => {
                 if (error) {
                     reject(error);
-                }
-                else {
+                } else {
                     resolve(url);
                 }
             }
