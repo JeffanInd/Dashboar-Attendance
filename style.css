@@ -155,6 +155,7 @@ body {
 }
 
 @media(max-width:700px) {
+
     .form-grid,
     .employee-form-grid,
     .attendance-form-grid {
@@ -201,17 +202,20 @@ button:hover {
     margin-bottom: 10px;
     font-size: 20px
 }
+
 .sidebar h3 {
     text-align: center;
     margin-bottom: 5px;
     font-size: 14px
 }
+
 .sidebar h4 {
     text-align: center;
     margin-top: 2px;
     margin-bottom: 15px;
     font-size: 11px
 }
+
 .sidebar button {
     width: 100%;
     margin-bottom: 12px;
@@ -234,14 +238,14 @@ button:hover {
     position: fixed;
     left: 250px;
     right: 0;
-    bottom: 10px;              
-    background: transparent;   
-    color: #000;              
+    bottom: 10px;
+    background: transparent;
+    color: #000;
     display: flex;
     align-items: center;
     overflow: hidden;
     z-index: 9999;
-    pointer-events: none;     
+    pointer-events: none;
 }
 
 .running-content {
@@ -251,15 +255,19 @@ button:hover {
     font-size: 13px;
     font-weight: 600;
     animation: marquee 25s linear infinite;
-    text-shadow: 0 1px 2px rgba(255,255,255,0.6); 
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.6);
 }
 
 @keyframes marquee {
-    from { transform: translateX(0);   
+    from {
+        transform: translateX(0);
     }
-    to {transform: translateX(-100%);
+
+    to {
+        transform: translateX(-100%);
     }
 }
+
 /* ===========================
    SUB MENU SIDEBAR
 =========================== */
@@ -334,6 +342,7 @@ header {
     box-shadow: 0 2px 15px rgba(0, 0, 0, .08);
     z-index: 100
 }
+
 .header-company h3 {
     font-size: 24px;
     color: #16a34a;
@@ -341,6 +350,7 @@ header {
     margin: 0;
     font-weight: 700;
 }
+
 .header-company span {
     display: block;
     margin-top: 4px;
@@ -348,10 +358,12 @@ header {
     color: #000;
     /* hitam */
 }
+
 .company {
     display: flex;
     flex-direction: column
 }
+
 .company h2 {
     font-size: 22px;
     color: #1e293b
@@ -716,4 +728,78 @@ table tr:hover {
     .chart-box canvas {
         height: 260px !important
     }
+}
+
+/* PENYESUAIAN RESPONSIF UNTUK UJI COBA */
+@media (max-width: 768px) {
+    html, body {
+        min-height: 100%;
+        height: auto;
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+    #dashboard {
+        display: flex;
+        flex-direction: column;
+        height: auto;
+        min-height: 100vh;
+    }
+    .sidebar {
+        position: relative;
+        inset: auto;
+        width: 100%;
+        height: auto;
+        max-height: none;
+        padding: 18px 14px;
+    }
+    .sidebar-logo { width: 68px; }
+    .sidebar button { margin-bottom: 7px; padding: 11px 12px; }
+    .submenu { padding-left: 10px; }
+    .main {
+        margin-left: 0;
+        width: 100%;
+        height: auto;
+        min-height: 0;
+    }
+    header {
+        position: relative;
+        left: auto;
+        right: auto;
+        top: auto;
+        height: auto;
+        min-height: 80px;
+        padding: 16px;
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 12px;
+    }
+    .header-company h3 { font-size: 20px; }
+    .header-company span { font-size: 12px; }
+    .header-right, .clock { margin-left: 0; min-width: 0; align-items: flex-start; }
+    #content {
+        height: auto;
+        min-height: 55vh;
+        margin-top: 0;
+        overflow: visible;
+        padding: 14px;
+        padding-bottom: 28px;
+    }
+    .card { padding: 16px; border-radius: 12px; }
+    .employee-form-grid, .attendance-form-grid, .stat-container, .kpi-container, .chart-grid {
+        grid-template-columns: minmax(0, 1fr) !important;
+    }
+    .attendance-filter { flex-wrap: wrap; align-items: stretch; }
+    .attendance-filter .form-group { width: 100%; }
+    .table-container { max-width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .running-text {
+        position: relative;
+        left: auto;
+        right: auto;
+        bottom: auto;
+        width: 100%;
+        padding: 8px 0;
+    }
+}
+@media (min-width: 769px) {
+    .sidebar { overflow-y: auto; }
 }
